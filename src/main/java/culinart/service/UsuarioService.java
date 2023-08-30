@@ -33,6 +33,15 @@ public class UsuarioService {
         throw new IllegalArgumentException("Operação não suportada: " + operacao);
     }
 
+    public ResponseEntity<Usuario> executarOperacao(OperacaoEnum operacao, Usuario usuario,Long idUsuario) throws IllegalArgumentException {
+        IOperacao estrategia = estrategias.get(operacao);
+        if (estrategia != null) {
+            AtualizarUsuarioStrategy atualizarUsuarioStrategy = new AtualizarUsuarioStrategy();
+            return atualizarUsuarioStrategy.executarOperacaoPorId(usuario, idUsuario);
+        }
+        throw new IllegalArgumentException("Operação não suportada: " + operacao);
+    }
+
     public ResponseEntity<List<Usuario>> executarOperacao(OperacaoEnum operacao) throws IllegalArgumentException {
         IOperacao estrategia = estrategias.get(operacao);
         if (estrategia != null) {

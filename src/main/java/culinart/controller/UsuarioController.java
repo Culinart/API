@@ -54,19 +54,21 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuario);
     }
 
-    @PutMapping
-    public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.executarOperacao(OperacaoEnum.ATUALIZAR, usuario);
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario, @PathVariable Long idUsuario) {
+        return usuarioService.executarOperacao(OperacaoEnum.ATUALIZAR, usuario, idUsuario);
     }
 
     @DeleteMapping("/{idUsuario}")
-    public ResponseEntity<Void> excluirUsuario(@PathVariable Long idUsuario) {
+    public ResponseEntity<Usuario> excluirUsuario(@PathVariable Long idUsuario) {
+        return usuarioService.executarOperacao(OperacaoEnum.EXCLUIR, retornaUsuarioPorId(idUsuario).getBody());
+    }
+
+    private ResponseEntity<Usuario> retornaUsuarioPorId(Long idUsuario) {
         int index = idUsuario.intValue() - 1;
         if (index < 0 || index >= listaDeUsuarios.size()) {
             return ResponseEntity.status(404).build(); // Índice inválido
         }
-        Usuario usuario = listaDeUsuarios.get(index);
-        usuarioService.executarOperacao(OperacaoEnum.EXCLUIR, usuario);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(200).body(listaDeUsuarios.get(index));
     }
 }
