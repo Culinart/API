@@ -18,6 +18,9 @@ public class LerUsuarioStrategy implements IOperacao {
     }
 
     public ResponseEntity<List<Usuario>> executarOperacaoLeituraTotal() {
+        if(UsuarioController.listaDeUsuarios.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
         return ResponseEntity.status(200).body(UsuarioController.listaDeUsuarios);
     }
 }

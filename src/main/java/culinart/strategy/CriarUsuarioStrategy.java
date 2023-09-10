@@ -13,7 +13,7 @@ private Long idContador = 0L;
     @Override
     public ResponseEntity executarOperacao(Usuario usuario) {
         if (verificarSeUsuarioJaExiste(usuario) || !verificaLoginUsuarioEhValido(usuario)) {
-            return ResponseEntity.status(400).build();
+            return ResponseEntity.status(409).build();
         }
         idContador++;
         usuario.setId(idContador);
