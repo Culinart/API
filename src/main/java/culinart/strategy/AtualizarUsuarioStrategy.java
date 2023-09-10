@@ -12,8 +12,8 @@ public class AtualizarUsuarioStrategy implements IOperacao {
         if (index < 0 || index >= UsuarioController.listaDeUsuarios.size()) {
             return ResponseEntity.status(404).build(); // Índice inválido
         }
-
         UsuarioController.listaDeUsuarios.set(index, usuario);
+        usuario.setId(idUsuario);
         return ResponseEntity.status(200).body(usuario);
     }
 
