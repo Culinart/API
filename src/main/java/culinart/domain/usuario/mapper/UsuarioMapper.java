@@ -2,6 +2,9 @@ package culinart.domain.usuario.mapper;
 
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioDTO;
+import culinart.domain.usuario.dto.UsuarioDetalhesDto;
+
+import java.util.List;
 
 public class UsuarioMapper {
     public static Usuario of(UsuarioDTO usuarioDTO){
@@ -25,5 +28,9 @@ public class UsuarioMapper {
         usuarioDTO.setNome(usuario.getNome());
 
         return usuarioDTO;
+    }
+
+    public static List<UsuarioDetalhesDto> of(List<Usuario> all) {
+        return null;
     }
 }

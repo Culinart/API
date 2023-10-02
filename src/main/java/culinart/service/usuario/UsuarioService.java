@@ -2,6 +2,7 @@ package culinart.service.usuario;
 
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioDTO;
+import culinart.domain.usuario.dto.UsuarioDetalhesDto;
 import culinart.domain.usuario.mapper.UsuarioMapper;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.service.usuario.Utils.UsuarioUtils;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,37 +20,50 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ResponseEntity<UsuarioDTO> criarUsuario(UsuarioDTO usuarioDTO) {
-
-        if (!UsuarioUtils.validaEmailUsuarioDTO(usuarioDTO) ||
-                !UsuarioUtils.validaNomeUsuarioDTO(usuarioDTO) ||
-                !UsuarioUtils.validaSenhaUsuarioDTO(usuarioDTO)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        final Usuario novoUsuario = UsuarioMapper.of(usuarioDTO);
-        this.usuarioRepository.save(novoUsuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
-    public ResponseEntity<UsuarioDTO> obterUsuarioPorId(Long id) {
+    public boolean buscaNaoPossuiResultado(){
+        return usuarioRepository.findAll().isEmpty();
+    }
 
-        if(UsuarioUtils.validaIdUsuario(id,usuarioRepository)){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public boolean filmeIsPresent(Long id){
         Optional<Usuario> usuario = usuarioRepository.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(UsuarioMapper.of(usuario.get()));
+        return usuario.isPresent();
     }
 
-    public ResponseEntity<UsuarioDTO> atualizarUsuario(Long id, UsuarioDTO usuarioDTO) {
-        return null;
+    public Usuario cadastrarFilme(Usuario usuario){
+        if(buscarFilmePorBuscaBinaria(usuario.getEmail())){
+            throw new IllegalArgumentException("Usuario já cadastrado");
+        }
+        return usuarioRepository.save(usuario);
     }
 
-    public ResponseEntity<Void> deletarUsuario(Long id) {
-        return null;
+    public List<UsuarioDetalhesDto> listarTodosOsFilmes() {
+        return UsuarioMapper.of(usuarioRepository.findAll());
     }
 
+    public Usuario listarFilmePorId(Long id){
+        return usuarioRepository.findById(id).get();
+    }
 
+    public boolean buscarFilmePorBuscaBinaria(String nomeDoFilme) {
+        List<Usuario> vetor = usuarioRepository.findAll();
+        for (int i = 0; i < vetor.toArray().length; i++) {
+            if (vetor.get(i).getEmail().equals(nomeDoFilme)) {   // se encontrou
+                return true;                     // retorna seu índice
+            }
+        }
+        return false;
+    }
 
+    public Usuario atualizarFilme(Long id, Usuario usuario) {
+        usuario.setId(id);
+        return usuarioRepository.save(usuario);
+    }
 
+    public void deletarFilme(Long id) {
+        usuarioRepository.delete(usuarioRepository.findById(id).get());
+    }
 }
