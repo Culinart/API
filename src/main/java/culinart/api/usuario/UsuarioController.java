@@ -1,10 +1,12 @@
 package culinart.api.usuario;
 
 import culinart.domain.usuario.Usuario;
-import culinart.domain.usuario.dto.UsuarioDTO;
-import culinart.domain.usuario.dto.UsuarioDetalhesDto;
+import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
+import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
+import culinart.domain.usuario.mapper.UsuarioMapper;
 import culinart.service.usuario.UsuarioService;
-import jakarta.validation.Valid;
+import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
+import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,48 +25,53 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDetalhesDto>> listarTodosOsFilmes() {
+    public ResponseEntity<List<UsuarioExibicaoDTO>> listarTodosUsuarios() {
         if (usuarioService.buscaNaoPossuiResultado()) {
             return ResponseEntity.status(204).build();
         }
-        return ResponseEntity.status(200).body(usuarioService.listarTodosOsFilmes());
+        return ResponseEntity.status(200).body(usuarioService.listarTodosOsUsuarios());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> listarFilmePorId(@PathVariable Long id) {
-        if (!usuarioService.filmeIsPresent(id)) {
+    public ResponseEntity<UsuarioExibicaoDTO> listarUsuarioPorID(@PathVariable Long id) {
+        if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.status(200).body(usuarioService.listarFilmePorId(id));
+        return ResponseEntity.status(200).body(usuarioService.listarUsuarioPorId(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Usuario> cadastrarFilme(@RequestBody Usuario usuario) {
+    @PostMapping("/cadastro")
+    public ResponseEntity<UsuarioExibicaoDTO> cadastrarUsuario(@RequestBody UsuarioCriacaoDTO usuarioCriacao) {
         try {
-            return ResponseEntity.status(201).body(usuarioService.cadastrarFilme(usuario));
+            return ResponseEntity.status(201).body(
+                    usuarioService.cadastrarUsuario(usuarioCriacao)
+            );
         } catch (Exception e) {
             return ResponseEntity.status(400).build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarFilme(@PathVariable Long id, @RequestBody Usuario usuario){
-        if (!usuarioService.filmeIsPresent(id)) {
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario){
+        if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.status(200).body(usuarioService.atualizarFilme(id,usuario));
+        return ResponseEntity.status(200).body(usuarioService.atualizarUsuario(id,usuario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarFilme(@PathVariable Long id){
-        if (!usuarioService.filmeIsPresent(id)) {
+    public ResponseEntity<Void> DesativarUsuario(@PathVariable Long id){
+        if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
-        usuarioService.deletarFilme(id);
+        usuarioService.desativarUsuario(id);
         return ResponseEntity.status(204).build();
     }
 
-    public UsuarioService getUsuarioService() {
-        return usuarioService;
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDTO){
+        UsuarioTokenDTO usuarioTokenDTO = this.usuarioService.autenticar(usuarioLoginDTO);
+        return ResponseEntity.ok(usuarioTokenDTO);
     }
+
 }
