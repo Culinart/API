@@ -1,36 +1,45 @@
 package culinart.domain.usuario.mapper;
 
 import culinart.domain.usuario.Usuario;
-import culinart.domain.usuario.dto.UsuarioDTO;
-import culinart.domain.usuario.dto.UsuarioDetalhesDto;
+import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
+import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
+import culinart.service.usuario.autenticacao.dto.UsuarioDetalhesDto;
+import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 
 import java.util.List;
 
 public class UsuarioMapper {
-    public static Usuario of(UsuarioDTO usuarioDTO){
+    public static Usuario of(UsuarioCriacaoDTO usuarioCriacaoDTO) {
         Usuario usuario = new Usuario();
 
-        usuario.setNome(usuarioDTO.getNome());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setSenha(usuarioDTO.getSenha());
+        usuario.setNome(usuarioCriacaoDTO.getNome());
+        usuario.setEmail(usuarioCriacaoDTO.getEmail());
+        usuario.setSenha(usuarioCriacaoDTO.getSenha());
         usuario.setPermissao(1);
         usuario.setIsAtivo(1);
-        usuario.setEndereco(null);
+        usuario.setEndereco(usuario.getEndereco());
 
         return usuario;
     }
 
-    public static UsuarioDTO of(Usuario usuario){
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
+    public static UsuarioExibicaoDTO of(Usuario usuario) {
+        UsuarioExibicaoDTO usuarioExibicaoDTO = new UsuarioExibicaoDTO();
 
-        usuarioDTO.setEmail(usuario.getEmail());
-        usuarioDTO.setSenha(usuario.getSenha());
-        usuarioDTO.setNome(usuario.getNome());
+        usuarioExibicaoDTO.setId(usuario.getId());
+        usuarioExibicaoDTO.setEmail(usuario.getEmail());
+        usuarioExibicaoDTO.setNome(usuario.getNome());
+        usuarioExibicaoDTO.setEndereco(usuario.getEndereco());
 
-        return usuarioDTO;
+        return usuarioExibicaoDTO;
     }
 
-    public static List<UsuarioDetalhesDto> of(List<Usuario> all) {
-        return null;
+    public static UsuarioTokenDTO of(Usuario usuario, String token) {
+        UsuarioTokenDTO usuarioTokenDTO = new UsuarioTokenDTO();
+        usuarioTokenDTO.setUserID(usuario.getId());
+        usuarioTokenDTO.setEmail(usuario.getEmail());
+        usuarioTokenDTO.setNome(usuario.getNome());
+        usuarioTokenDTO.setToken(token);
+        return usuarioTokenDTO;
     }
+
 }
