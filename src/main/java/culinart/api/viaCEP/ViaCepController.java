@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
     }
 
     @GetMapping("/{cep}")
-    public ResponseEntity<String> consultarCEP(@PathVariable String cep) {
+    public ResponseEntity<String> buscarCEP(@PathVariable String cep) {
+        System.out.println("entrou na buscaCEP");
         String resposta = service.consultarCEP(cep);
 
         if (resposta != null) {
@@ -29,5 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
             return ResponseEntity.notFound().build();
         }
     }
+
 
     }

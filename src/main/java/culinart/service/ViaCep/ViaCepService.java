@@ -1,10 +1,12 @@
 package culinart.service.ViaCep;
 
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+@Service
 public class ViaCepService {
     public String consultarCEP(String cep) {
         try {
