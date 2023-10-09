@@ -1,4 +1,4 @@
-package culinart.service.usuario;
+package culinart.utils;
 
 public class ListaObj <T>{
 
