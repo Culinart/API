@@ -3,7 +3,8 @@ package culinart.api.usuario;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
-import culinart.domain.usuario.mapper.UsuarioMapper;
+import culinart.integration.ViaCep.ViaCepIntegrationService;
+import culinart.integration.ViaCep.dto.ViaCepResponse;
 import culinart.service.usuario.UsuarioService;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
@@ -18,10 +19,12 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final ViaCepIntegrationService viaCepIntegrationService;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, ViaCepIntegrationService viaCepIntegrationService) {
         this.usuarioService = usuarioService;
+        this.viaCepIntegrationService = viaCepIntegrationService;
     }
 
     @GetMapping
@@ -72,6 +75,11 @@ public class UsuarioController {
     public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDTO){
         UsuarioTokenDTO usuarioTokenDTO = this.usuarioService.autenticar(usuarioLoginDTO);
         return ResponseEntity.ok(usuarioTokenDTO);
+    }
+
+    @GetMapping("/buscarCEP")
+    public ResponseEntity<ViaCepResponse> getCEP(@RequestParam String cep) {
+        return ResponseEntity.ok(viaCepIntegrationService.getCEP(cep));
     }
 
 }
