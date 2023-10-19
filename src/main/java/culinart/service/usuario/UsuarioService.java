@@ -25,7 +25,6 @@ import java.util.Optional;
 @Service
 public class UsuarioService {
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
@@ -37,13 +36,12 @@ public class UsuarioService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
     public UsuarioExibicaoDTO cadastrarUsuario(UsuarioCriacaoDTO usuario) {
-        if (buscarUsuarioPorBuscaBinaria(usuario.getEmail())) {
+        if (verificaSeUsuarioJaExistePorEmail(usuario.getEmail())) {
             throw new IllegalArgumentException("Usuario já cadastrado");
         }
         Usuario novoUsuario = UsuarioMapper.of(usuario);
@@ -78,7 +76,7 @@ public class UsuarioService {
         usuarioRepository.save(usuarioDesativado);
     }
 
-    public Boolean buscarUsuarioPorBuscaBinaria(String email) {
+    public Boolean verificaSeUsuarioJaExistePorEmail(String email) {
         List<Usuario> vetor = usuarioRepository.findAll();
         for (int i = 0; i < vetor.toArray().length; i++) {
             if (vetor.get(i).getEmail().equals(email)) {

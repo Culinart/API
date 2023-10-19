@@ -33,11 +33,14 @@ import java.util.List;
 public class SecurityConfiguracao {
     private static final String ORIGENS_PERMITIDAS = "*";
 
-    @Autowired
-    private AutenticacaoService autenticacaoService;
 
-    @Autowired
+    private AutenticacaoService autenticacaoService;
     private AutenticacaoEntryPoint autenticacaoJwtEntryPoint;
+
+    public SecurityConfiguracao(AutenticacaoService autenticacaoService, AutenticacaoEntryPoint autenticacaoJwtEntryPoint) {
+        this.autenticacaoService = autenticacaoService;
+        this.autenticacaoJwtEntryPoint = autenticacaoJwtEntryPoint;
+    }
 
     private static final AntPathRequestMatcher[] URL_PERMITIDAS = {
             new AntPathRequestMatcher("/swagger-ui/**"),

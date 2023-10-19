@@ -16,7 +16,7 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    private Integer endereco;
+    private Endereco endereco;
     private Integer permissao;
 
     @Column(name = "is_ativo")

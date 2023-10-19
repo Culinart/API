@@ -1,5 +1,6 @@
 package culinart.domain.usuario.dto;
 
+import culinart.domain.usuario.Endereco;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,6 @@ public class UsuarioExibicaoDTO {
     private Long id;
     private String nome;
     private String email;
-    private Integer endereco;
+    private Endereco endereco;
 
 }
