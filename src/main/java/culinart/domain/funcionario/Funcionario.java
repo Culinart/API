@@ -24,7 +24,6 @@ public class Funcionario {
     private String turno;
     @Column(name = "data_nascimento")
     private String dataNascimento;
-
     @Column(name = "is_ativo")
     private Integer isAtivo;
 }

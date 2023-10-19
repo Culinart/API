@@ -8,11 +8,11 @@ import culinart.domain.funcionario.repository.FuncionarioRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -36,21 +36,37 @@ public class FuncionarioService {
         Funcionario novoFunc = FuncionarioMapper.of(func);
         String senhaCriptografada = passwordEncoder.encode(func.getSenha());
         novoFunc.setSenha(senhaCriptografada);
-
-        return FuncionarioMapper.of(novoFunc);
+        return FuncionarioMapper.of(repository.save(novoFunc));
     }
 
+    public FuncionarioExibicaoDTO atualizarFuncionario(Integer id, Funcionario funcionario) {
+        Optional<Funcionario> func = repository.findById(id);
+        if (func.isPresent()) {
+            Funcionario funcionarioExistente = func.get();
+            funcionarioExistente.setNome(funcionario.getNome());
+            funcionarioExistente.setEmail(funcionario.getEmail());
+            funcionarioExistente.setSenha(funcionario.getSenha());
+            funcionarioExistente.setPermissao(funcionario.getPermissao());
+            funcionarioExistente.setCpf(funcionario.getCpf());
+            funcionarioExistente.setTel(funcionario.getTel());
+            funcionarioExistente.setArea(funcionario.getArea());
+            funcionarioExistente.setCargo(funcionario.getCargo());
+            funcionarioExistente.setTurno(funcionario.getTurno());
+            funcionarioExistente.setDataNascimento(funcionario.getDataNascimento());
+            funcionarioExistente.setIsAtivo(funcionario.getIsAtivo());
+            Funcionario funcionarioAtualizado = repository.save(funcionarioExistente);
 
+            return FuncionarioMapper.of(funcionarioAtualizado);
+        } else {
+            System.out.println("Funcionário não encontrado");
+            return null;
+        }
+    }
 
-
-
-
-
-
-
-
-
-
+    public String deletarFuncionario(Integer id){
+        this.repository.deleteById(id);
+        return "Deletado com sucesso";
+    }
 
     public Boolean buscarFuncionarioPorBuscaBinaria(String email) {
         List<Funcionario> vetor = repository.findAll();
@@ -61,4 +77,9 @@ public class FuncionarioService {
         }
         return Boolean.FALSE;
     }
+    public Boolean funcionarioIsEmpty(Integer id) {
+        Optional<Funcionario> funcionario = repository.findById(id);
+        return funcionario.isEmpty();
+    }
+
 }
