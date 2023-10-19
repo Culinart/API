@@ -3,6 +3,7 @@ package culinart.service.funcionario;
 import culinart.domain.fornecedor.Funcionario;
 import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.domain.fornecedor.repository.FuncionarioRepository;
+import culinart.utils.ListaObj;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,27 +20,34 @@ public class FuncionarioService {
 
     public List<FuncionarioDTO> funcionariosOrdenadosDTO() {
         List<FuncionarioDTO> funcionariosDTO = buscarFuncionariosDTO();
+        ListaObj<FuncionarioDTO> vetorFuncionarios = new ListaObj<>(funcionariosDTO.size());
 
-        FuncionarioDTO[] funcionariosArray = funcionariosDTO.toArray(new FuncionarioDTO[0]);
+        for (FuncionarioDTO funcionarioDTO : funcionariosDTO) {
+            vetorFuncionarios.adiciona(funcionarioDTO);
+        }
 
-        for (int i = 0; i < funcionariosArray.length - 1; i++) {
+        ordenarVetor(vetorFuncionarios);
+
+        return vetorFuncionarios.toList();
+    }
+
+    private void ordenarVetor(ListaObj<FuncionarioDTO> vetorFuncionarios) {
+        for (int i = 0; i < vetorFuncionarios.getTamanho() - 1; i++) {
             int indiceMenor = i;
-            for (int j = i + 1; j < funcionariosArray.length; j++) {
-                if (funcionariosArray[j].getNome().compareTo(funcionariosArray[indiceMenor].getNome()) < 0) {
+            for (int j = i + 1; j < vetorFuncionarios.getTamanho(); j++) {
+                if (vetorFuncionarios.getElemento(j).getNome().compareTo(vetorFuncionarios.getElemento(indiceMenor).getNome()) < 0) {
                     indiceMenor = j;
                 }
             }
-            FuncionarioDTO aux = funcionariosArray[i];
-            funcionariosArray[i] = funcionariosArray[indiceMenor];
-            funcionariosArray[indiceMenor] = aux;
+            FuncionarioDTO aux = vetorFuncionarios.getElemento(i);
+            vetorFuncionarios.setElemento(i, vetorFuncionarios.getElemento(indiceMenor));
+            vetorFuncionarios.setElemento(indiceMenor, aux);
         }
-        return List.of(funcionariosArray);
     }
 
     public List<FuncionarioDTO> buscarFuncionariosDTO() {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
 
-        // Converter Funcionario em FuncionarioDTO
         List<FuncionarioDTO> funcionarioDTOs = funcionarios.stream()
                 .map(funcionario -> {
                     FuncionarioDTO dto = new FuncionarioDTO();
@@ -51,5 +59,4 @@ public class FuncionarioService {
 
         return funcionarioDTOs;
     }
-
 }
