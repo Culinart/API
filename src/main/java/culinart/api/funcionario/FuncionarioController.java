@@ -3,10 +3,14 @@ package culinart.api.funcionario;
 import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.service.funcionario.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+<<<<<<< HEAD
 import culinart.domain.fornecedor.Funcionario;
 import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
@@ -14,8 +18,14 @@ import culinart.service.funcionario.FuncionarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+=======
+import org.springframework.web.server.ResponseStatusException;
+>>>>>>> 19738591b282af4c11e8247bd6bd716d70a3ac55
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -65,6 +75,28 @@ public class FuncionarioController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(funcionariosOrdenadosPorNomeDTO);
+    }
+
+    @GetMapping("/download/csv")
+    public ResponseEntity<byte[]> download(){
+        List<FuncionarioDTO> funcionariosOrdenadosPorNomeDTO = funcionarioService.funcionariosOrdenadosDTO();
+        String nomeArquivo = funcionarioService.gerarArquivoCsv(funcionariosOrdenadosPorNomeDTO);
+        try {
+            File file = new File(nomeArquivo);
+            byte[] csvContent = Files.readAllBytes(file.toPath());
+
+            // Configura a resposta HTTP
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=funcionarios.csv");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.parseMediaType("text/csv"))
+                    .body(csvContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(500, "Erro ao ler ou enviar o arquivo CSV", e);
+        }
     }
 
 }

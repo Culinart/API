@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.utils.ListaObj;
 import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -124,6 +129,109 @@ public class FuncionarioService {
                 .collect(Collectors.toList());
 
         return funcionarioDTOs;
+    }
+
+    public String gerarArquivoCsv(List<FuncionarioDTO> listaOrdenadaFunc) {
+        String nomeArquivo = "funcionarios.csv";
+        gravaArquivoCsv(listaOrdenadaFunc, nomeArquivo);
+        leExibeArquivoCsv(nomeArquivo);
+        return nomeArquivo;
+    }
+
+
+    public void gravaArquivoCsv(List<FuncionarioDTO> lista, String nomeArq) {
+        FileWriter arq = null;
+        Formatter saida = null;
+        Boolean deuRuim = false;
+
+        try {
+            arq = new FileWriter(nomeArq);
+            saida = new Formatter(arq);
+        }
+        catch (IOException erro) {
+            System.out.println("Erro ao abrir o arquivo");
+            System.exit(1);
+        }
+
+        try {
+            saida.format("%s;%s\n","Nome", "Email");
+            for (int i = 0; i < lista.size(); i++) {
+                FuncionarioDTO func = lista.get(i);
+                saida.format("%s;%s\n",func.getNome(), func.getEmail());
+            }
+        }
+        catch (FormatterClosedException erro) {
+            System.out.println("Erro ao gravar o arquivo");
+            erro.printStackTrace();
+            deuRuim = true;
+        }
+        finally {
+            saida.close();
+            try {
+                arq.close();
+            }
+            catch (IOException erro) {
+                System.out.println("Erro ao fechar o arquivo");
+                deuRuim = true;
+            }
+            if (deuRuim) {
+                System.exit(1);
+
+            }
+        }
+
+    }
+
+    public void leExibeArquivoCsv(String nomeArq) {
+        FileReader arq = null;
+        Scanner entrada = null;
+        Boolean deuRuim = false;
+
+        try {
+            arq = new FileReader(nomeArq);
+            entrada = new Scanner(arq).useDelimiter(";|\\n");
+        }
+        catch (FileNotFoundException erro) {
+            System.out.println("Arquivo não encontrado!");
+            System.exit(1);
+        }
+
+        try {
+            while (entrada.hasNext()) {
+
+
+                String nome = entrada.next();
+                String email = entrada.next();
+
+
+                System.out.printf("%-15s %-9s\n",nome, email);
+            }
+        }
+        catch (NoSuchElementException erro) {
+            System.out.println("Arquivo com problemas");
+            erro.printStackTrace();
+            deuRuim = true;
+        }
+        catch (IllegalStateException erro) {
+            System.out.println("Erro na leitura do arquivo");
+            erro.printStackTrace();
+            deuRuim = true;
+        }
+        finally {
+            entrada.close();
+            try {
+                arq.close();
+            }
+            catch (IOException erro) {
+                System.out.println("Erro ao fechar o arquivo");
+                deuRuim = true;
+            }
+            if (deuRuim) {
+                System.exit(1);
+            }
+        }
+
+
     }
 }
 
