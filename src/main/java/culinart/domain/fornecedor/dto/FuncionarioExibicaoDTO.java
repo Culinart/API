@@ -1,4 +1,4 @@
-package culinart.domain.funcionario.dto;
+package culinart.domain.fornecedor.dto;
 
 import lombok.Getter;
 import lombok.Setter;

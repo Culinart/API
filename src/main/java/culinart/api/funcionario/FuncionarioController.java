@@ -1,30 +1,25 @@
 package culinart.api.funcionario;
 
-import culinart.domain.funcionario.Funcionario;
-import culinart.domain.funcionario.dto.FuncionarioCriacaoDTO;
-import culinart.domain.funcionario.dto.FuncionarioExibicaoDTO;
-import culinart.domain.funcionario.repository.FuncionarioRepository;
-import culinart.domain.usuario.Usuario;
-import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
-import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
+import culinart.domain.fornecedor.Funcionario;
+import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
+import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.service.funcionario.FuncionarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/Funcionario")
 public class FuncionarioController {
 
-    private final FuncionarioService service;
+    private final FuncionarioService funcionarioService;
 
     @GetMapping
     public ResponseEntity<List<FuncionarioExibicaoDTO>> listagemGeral() {
-        List<FuncionarioExibicaoDTO> funcionarios = this.service.listarFunc();
+        List<FuncionarioExibicaoDTO> funcionarios = this.funcionarioService.listarFunc();
 
         if (funcionarios.isEmpty()){
             return ResponseEntity.noContent().build();
@@ -35,7 +30,7 @@ public class FuncionarioController {
     @PostMapping("/cadastro")
     public ResponseEntity<FuncionarioExibicaoDTO> cadastrarFuncionario(@RequestBody FuncionarioCriacaoDTO funcionarioCriacao) {
         try {
-            return ResponseEntity.status(201).body(service.cadastrarFuncionario(funcionarioCriacao));
+            return ResponseEntity.status(201).body(funcionarioService.cadastrarFuncionario(funcionarioCriacao));
         } catch (Exception e) {
             return ResponseEntity.status(400).build();
         }
@@ -43,7 +38,7 @@ public class FuncionarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<FuncionarioExibicaoDTO> atualizarFuncionario(@PathVariable Integer id, @RequestBody Funcionario funcionario){
-        FuncionarioExibicaoDTO funcAtt = this.service.atualizarFuncionario(id, funcionario);
+        FuncionarioExibicaoDTO funcAtt = this.funcionarioService.atualizarFuncionario(id, funcionario);
         if (funcAtt != null){
             return ResponseEntity.status(200).body(funcAtt);
         }else{
@@ -53,6 +48,6 @@ public class FuncionarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> DesativarFuncionario(@PathVariable Integer id){
-        return ResponseEntity.status(200).body(service.deletarFuncionario(id));
+        return ResponseEntity.status(200).body(funcionarioService.deletarFuncionario(id));
     }
 }

@@ -1,7 +1,10 @@
-package culinart.domain.funcionario.dto;
+package culinart.domain.fornecedor.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -14,6 +17,7 @@ public class FuncionarioCriacaoDTO {
     private String area;
     private String cargo;
     private String turno;
-    private String dataNascimento;
+    private LocalDate dataNascimento;
     private Integer permissao;
+    private LocalDate dataCriacao;
 }

@@ -1,10 +1,11 @@
-package culinart.domain.funcionario.mapper;
+package culinart.domain.fornecedor.mapper;
 
-import culinart.domain.funcionario.Funcionario;
+import culinart.domain.fornecedor.Funcionario;
 
-import culinart.domain.funcionario.dto.FuncionarioCriacaoDTO;
-import culinart.domain.funcionario.dto.FuncionarioExibicaoDTO;
-import culinart.domain.usuario.Usuario;
+import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
+import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
+
+import java.time.LocalDate;
 
 
 public class FuncionarioMapper {
@@ -22,13 +23,14 @@ public class FuncionarioMapper {
         func.setCargo(funcionarioCriacaoDTO.getCargo());
         func.setTurno(funcionarioCriacaoDTO.getTurno());
         func.setIsAtivo(1);
+        func.setDataCriacao(LocalDate.now());
 
         return func;
     }
 
     public static FuncionarioExibicaoDTO of(Funcionario funcionario) {
         FuncionarioExibicaoDTO FuncionarioExibicaoDTO = new FuncionarioExibicaoDTO();
-
+        FuncionarioExibicaoDTO.setId(funcionario.getId());
         FuncionarioExibicaoDTO.setNome(funcionario.getNome());
         FuncionarioExibicaoDTO.setEmail(funcionario.getEmail());
         FuncionarioExibicaoDTO.setPermissao(funcionario.getPermissao());
