@@ -8,10 +8,12 @@ import culinart.domain.fornecedor.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import culinart.domain.fornecedor.dto.FuncionarioDTO;
+import culinart.utils.ListaObj;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Service
@@ -20,14 +22,14 @@ public class FuncionarioService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public List<FuncionarioExibicaoDTO> listarFunc(){
+    public List<FuncionarioExibicaoDTO> listarFunc() {
         List<Funcionario> funcionarios = this.funcionarioRepository.findAll();
         return funcionarios.stream()
                 .map(FuncionarioMapper::of)
                 .collect(Collectors.toList());
     }
 
-    public FuncionarioExibicaoDTO cadastrarFuncionario(FuncionarioCriacaoDTO func){
+    public FuncionarioExibicaoDTO cadastrarFuncionario(FuncionarioCriacaoDTO func) {
         if (buscarFuncionarioPorBuscaBinaria(func.getEmail())) {
             throw new IllegalArgumentException("Usuario já cadastrado");
         }
@@ -61,7 +63,7 @@ public class FuncionarioService {
         }
     }
 
-    public String deletarFuncionario(Integer id){
+    public String deletarFuncionario(Integer id) {
         this.funcionarioRepository.deleteById(id);
         return "Deletado com sucesso";
     }
@@ -75,27 +77,12 @@ public class FuncionarioService {
         }
         return Boolean.FALSE;
     }
+
     public Boolean funcionarioIsEmpty(Integer id) {
         Optional<Funcionario> funcionario = funcionarioRepository.findById(id);
         return funcionario.isEmpty();
     }
 
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
-import culinart.domain.fornecedor.repository.FuncionarioRepository;
-import culinart.utils.ListaObj;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Service
-public class FuncionarioService {
-
-    private final FuncionarioRepository funcionarioRepository;
-
-    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
-        this.funcionarioRepository = funcionarioRepository;
-    }
 
     public List<FuncionarioDTO> funcionariosOrdenadosDTO() {
         List<FuncionarioDTO> funcionariosDTO = buscarFuncionariosDTO();
@@ -139,3 +126,4 @@ public class FuncionarioService {
         return funcionarioDTOs;
     }
 }
+
