@@ -10,22 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-<<<<<<< HEAD
 import culinart.domain.fornecedor.Funcionario;
 import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
-import culinart.service.funcionario.FuncionarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-=======
 import org.springframework.web.server.ResponseStatusException;
->>>>>>> 19738591b282af4c11e8247bd6bd716d70a3ac55
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
