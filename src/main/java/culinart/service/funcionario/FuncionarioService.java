@@ -109,6 +109,7 @@ public class FuncionarioService {
             }
             if (deuRuim) {
                 System.exit(1);
+
             }
         }
 
