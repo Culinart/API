@@ -36,7 +36,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioExibicaoDTO> listarUsuarioPorID(@PathVariable Long id) {
+    public ResponseEntity<UsuarioExibicaoDTO> listarUsuarioPorID(@PathVariable int id) {
         if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
@@ -55,7 +55,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario){
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario){
         if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
@@ -63,7 +63,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> DesativarUsuario(@PathVariable Long id){
+    public ResponseEntity<Void> DesativarUsuario(@PathVariable int id){
         if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }

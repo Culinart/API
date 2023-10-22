@@ -62,17 +62,17 @@ public class UsuarioService {
         return lista;
     }
 
-    public UsuarioExibicaoDTO listarUsuarioPorId(Long id) {
+    public UsuarioExibicaoDTO listarUsuarioPorId(int id) {
         return UsuarioMapper.of(usuarioRepository.findById(id).get());
     }
 
 
-    public UsuarioExibicaoDTO atualizarUsuario(Long id, Usuario usuario) {
+    public UsuarioExibicaoDTO atualizarUsuario(int id, Usuario usuario) {
         usuario.setId(id);
         return UsuarioMapper.of(usuarioRepository.save(usuario));
     }
 
-    public void desativarUsuario(Long id) {
+    public void desativarUsuario(int id) {
         Usuario usuarioDesativado = usuarioRepository.findById(id).get();
         usuarioDesativado.setIsAtivo(0);
         usuarioRepository.save(usuarioDesativado);
@@ -92,7 +92,7 @@ public class UsuarioService {
         return usuarioRepository.findAll().isEmpty();
     }
 
-    public Boolean usuarioIsEmpty(Long id) {
+    public Boolean usuarioIsEmpty(int id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         return usuario.isEmpty();
     }
