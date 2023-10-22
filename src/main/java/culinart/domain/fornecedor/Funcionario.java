@@ -1,5 +1,6 @@
 package culinart.domain.fornecedor;
 
+import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -16,16 +17,19 @@ import java.time.LocalDateTime;
 public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String nome;
     private String email;
     private String senha;
+    private Integer permissao;
     private String cpf;
     private String tel;
-    private LocalDate data_nascimento;
     private String area;
     private String cargo;
     private String turno;
-    private Boolean is_ativo;
-    private LocalDateTime data_criacao;
+    @Column(name = "data_nascimento")
+    private LocalDate dataNascimento;
+    @Column(name = "is_ativo")
+    private Integer isAtivo;
+    private LocalDate dataCriacao;
 }
