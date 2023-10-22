@@ -1,5 +1,6 @@
 package culinart.domain.usuario.dto;
 
+import culinart.domain.endereco.Endereco;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,13 +11,16 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Objects;
+
 @Getter
 @Setter
 public class UsuarioExibicaoDTO {
 
-    private Long id;
+    private int id;
     private String nome;
     private String email;
-    private Integer endereco;
+    private List<Endereco> enderecos;
 
 }

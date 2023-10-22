@@ -17,7 +17,6 @@ public class UsuarioMapper {
         usuario.setSenha(usuarioCriacaoDTO.getSenha());
         usuario.setPermissao(1);
         usuario.setIsAtivo(1);
-        usuario.setEndereco(usuario.getEndereco());
 
         return usuario;
     }
@@ -28,7 +27,7 @@ public class UsuarioMapper {
         usuarioExibicaoDTO.setId(usuario.getId());
         usuarioExibicaoDTO.setEmail(usuario.getEmail());
         usuarioExibicaoDTO.setNome(usuario.getNome());
-        usuarioExibicaoDTO.setEndereco(usuario.getEndereco());
+        usuarioExibicaoDTO.setEnderecos(usuario.getEndereco());
 
         return usuarioExibicaoDTO;
     }
