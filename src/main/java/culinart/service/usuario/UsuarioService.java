@@ -1,6 +1,7 @@
 package culinart.service.usuario;
 
 import culinart.api.usuario.configuration.security.jwt.GerenciadorTokenJwt;
+import culinart.domain.endereco.Endereco;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
@@ -69,13 +70,18 @@ public class UsuarioService {
 
     public UsuarioExibicaoDTO atualizarUsuario(int id, Usuario usuario) {
         usuario.setId(id);
+        Optional<Usuario> usuarioAnterior = usuarioRepository.findById(id);
+        if(usuarioAnterior.isEmpty()){
+            throw new IllegalArgumentException("Usuario não existe");
+        }
+        List<Endereco> listaEndereço = usuarioAnterior.get().getEndereco();
+        usuario.setEndereco(listaEndereço);
         return UsuarioMapper.of(usuarioRepository.save(usuario));
     }
 
     public void desativarUsuario(int id) {
         Usuario usuarioDesativado = usuarioRepository.findById(id).get();
-        usuarioDesativado.setIsAtivo(0);
-        usuarioRepository.save(usuarioDesativado);
+        usuarioRepository.delete(usuarioDesativado);
     }
 
     public Boolean buscarUsuarioPorBuscaBinaria(String email) {
