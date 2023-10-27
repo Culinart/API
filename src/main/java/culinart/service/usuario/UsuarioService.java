@@ -1,11 +1,10 @@
 package culinart.service.usuario;
 
 import culinart.api.usuario.configuration.security.jwt.GerenciadorTokenJwt;
-import culinart.domain.endereco.Endereco;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
-import culinart.domain.usuario.mapper.UsuarioMapper;
+import culinart.domain.usuario.dto.mapper.UsuarioMapper;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
@@ -44,27 +43,27 @@ public class UsuarioService {
     }
 
     public UsuarioExibicaoDTO cadastrarUsuario(UsuarioCriacaoDTO usuario) {
-        if (buscarUsuarioPorBuscaBinaria(usuario.getEmail())) {
-            throw new IllegalArgumentException("Usuario já cadastrado");
+        if (this.usuarioRepository.existsByEmail(usuario.getEmail())) {
+            System.out.println("Entrou aqui");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Usuario já cadastrado");
         }
-        Usuario novoUsuario = UsuarioMapper.of(usuario);
+        Usuario novoUsuario = UsuarioMapper.toDTO(usuario);
 
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
-
-        return UsuarioMapper.of(usuarioRepository.save(novoUsuario));
+        return UsuarioMapper.toDTO(usuarioRepository.save(novoUsuario));
     }
 
     public List<UsuarioExibicaoDTO> listarTodosOsUsuarios() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
         for (Usuario usuario : usuarioRepository.findAll()) {
-            lista.add(UsuarioMapper.of(usuario));
+            lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
     }
 
     public UsuarioExibicaoDTO listarUsuarioPorId(int id) {
-        return UsuarioMapper.of(usuarioRepository.findById(id).get());
+        return UsuarioMapper.toDTO(usuarioRepository.findById(id).get());
     }
 
 
@@ -74,24 +73,13 @@ public class UsuarioService {
         if(usuarioAnterior.isEmpty()){
             throw new IllegalArgumentException("Usuario não existe");
         }
-        List<Endereco> listaEndereço = usuarioAnterior.get().getEndereco();
-        usuario.setEndereco(listaEndereço);
-        return UsuarioMapper.of(usuarioRepository.save(usuario));
+        return UsuarioMapper.toDTO(usuarioRepository.save(usuario));
     }
 
     public void desativarUsuario(int id) {
         Usuario usuarioDesativado = usuarioRepository.findById(id).get();
-        usuarioRepository.delete(usuarioDesativado);
-    }
-
-    public Boolean buscarUsuarioPorBuscaBinaria(String email) {
-        List<Usuario> vetor = usuarioRepository.findAll();
-        for (int i = 0; i < vetor.toArray().length; i++) {
-            if (vetor.get(i).getEmail().equals(email)) {
-                return Boolean.TRUE;
-            }
-        }
-        return Boolean.FALSE;
+        usuarioDesativado.setIsAtivo(0);
+        usuarioRepository.save(usuarioDesativado);
     }
 
     public Boolean buscaNaoPossuiResultado() {
@@ -122,6 +110,22 @@ public class UsuarioService {
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return UsuarioMapper.of(usuarioAutenticado,token);
+        return UsuarioMapper.toDTO(usuarioAutenticado,token);
+    }
+
+    public List<UsuarioExibicaoDTO> exibirUsuariosAtivos() {
+        List<UsuarioExibicaoDTO> lista = new ArrayList<>();
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(1)) { //TODO: Mudar para enum lá na frente
+            lista.add(UsuarioMapper.toDTO(usuario));
+        }
+        return lista;
+    }
+
+    public List<UsuarioExibicaoDTO> exibirUsuariosInativos() {
+        List<UsuarioExibicaoDTO> lista = new ArrayList<>();
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(0)) { //TODO: Mudar para enum lá na frente
+            lista.add(UsuarioMapper.toDTO(usuario));
+        }
+        return lista;
     }
 }

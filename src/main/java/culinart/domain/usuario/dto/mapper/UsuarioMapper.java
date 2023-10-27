@@ -1,15 +1,12 @@
-package culinart.domain.usuario.mapper;
+package culinart.domain.usuario.dto.mapper;
 
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
-import culinart.service.usuario.autenticacao.dto.UsuarioDetalhesDto;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 
-import java.util.List;
-
 public class UsuarioMapper {
-    public static Usuario of(UsuarioCriacaoDTO usuarioCriacaoDTO) {
+    public static Usuario toDTO(UsuarioCriacaoDTO usuarioCriacaoDTO) {
         Usuario usuario = new Usuario();
 
         usuario.setNome(usuarioCriacaoDTO.getNome());
@@ -21,18 +18,18 @@ public class UsuarioMapper {
         return usuario;
     }
 
-    public static UsuarioExibicaoDTO of(Usuario usuario) {
+    public static UsuarioExibicaoDTO toDTO(Usuario usuario) {
         UsuarioExibicaoDTO usuarioExibicaoDTO = new UsuarioExibicaoDTO();
 
         usuarioExibicaoDTO.setId(usuario.getId());
         usuarioExibicaoDTO.setEmail(usuario.getEmail());
         usuarioExibicaoDTO.setNome(usuario.getNome());
-        usuarioExibicaoDTO.setEnderecos(usuario.getEndereco());
+        usuarioExibicaoDTO.setIsAtivo(usuario.getIsAtivo());
 
         return usuarioExibicaoDTO;
     }
 
-    public static UsuarioTokenDTO of(Usuario usuario, String token) {
+    public static UsuarioTokenDTO toDTO(Usuario usuario, String token) {
         UsuarioTokenDTO usuarioTokenDTO = new UsuarioTokenDTO();
         usuarioTokenDTO.setUserID(usuario.getId());
         usuarioTokenDTO.setEmail(usuario.getEmail());

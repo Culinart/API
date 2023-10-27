@@ -2,22 +2,21 @@ package culinart.service.funcionario;
 
 import culinart.domain.fornecedor.Funcionario;
 import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
+import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.fornecedor.mapper.FuncionarioMapper;
 import culinart.domain.fornecedor.repository.FuncionarioRepository;
+import culinart.utils.ListaObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
-import culinart.utils.ListaObj;
-import java.util.List;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
