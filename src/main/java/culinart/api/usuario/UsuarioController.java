@@ -4,7 +4,6 @@ import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
 import culinart.integration.ViaCep.ViaCepIntegrationService;
-import culinart.integration.ViaCep.dto.ViaCepResponse;
 import culinart.service.usuario.UsuarioService;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
@@ -19,12 +18,10 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final ViaCepIntegrationService viaCepIntegrationService;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, ViaCepIntegrationService viaCepIntegrationService) {
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        this.viaCepIntegrationService = viaCepIntegrationService;
     }
 
     @GetMapping
@@ -45,25 +42,19 @@ public class UsuarioController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<UsuarioExibicaoDTO> cadastrarUsuario(@RequestBody UsuarioCriacaoDTO usuarioCriacao) {
-        try {
-            return ResponseEntity.status(201).body(
-                    usuarioService.cadastrarUsuario(usuarioCriacao)
-            );
-        } catch (Exception e) {
-            return ResponseEntity.status(400).build();
-        }
+        return ResponseEntity.status(201).body(usuarioService.cadastrarUsuario(usuarioCriacao));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario){
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario) {
         if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.status(200).body(usuarioService.atualizarUsuario(id,usuario));
+        return ResponseEntity.status(200).body(usuarioService.atualizarUsuario(id, usuario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> DesativarUsuario(@PathVariable int id){
+    public ResponseEntity<Void> DesativarUsuario(@PathVariable int id) {
         if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
@@ -72,14 +63,24 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDTO){
+    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDTO) {
         UsuarioTokenDTO usuarioTokenDTO = this.usuarioService.autenticar(usuarioLoginDTO);
         return ResponseEntity.ok(usuarioTokenDTO);
     }
 
-    @GetMapping("/buscarCEP")
-    public ResponseEntity<ViaCepResponse> getCEP(@RequestParam String cep) {
-        return ResponseEntity.ok(viaCepIntegrationService.getCEP(cep));
+    @GetMapping("/ativos")
+    public ResponseEntity<List<UsuarioExibicaoDTO>> exibirUsuariosAtivos(){
+        if (usuarioService.exibirUsuariosAtivos().isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.ok(usuarioService.exibirUsuariosAtivos());
+    }
+    @GetMapping("/inativos")
+    public ResponseEntity<List<UsuarioExibicaoDTO>> exibirUsuariosInativos(){
+        if (usuarioService.exibirUsuariosInativos().isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.ok(usuarioService.exibirUsuariosInativos());
     }
 
 }
