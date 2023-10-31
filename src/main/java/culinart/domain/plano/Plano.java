@@ -1,6 +1,7 @@
 package culinart.domain.plano;
 
 import culinart.domain.usuario.Usuario;
+import culinart.utils.enums.DiaSemanaEnum;
 import culinart.utils.enums.PreferenciaEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class Plano {
 
     private LocalDateTime horaEntrega;
 
-    private String diaSemana;
+    private DiaSemanaEnum diaSemana;
 
     private Integer isAtivo;
 

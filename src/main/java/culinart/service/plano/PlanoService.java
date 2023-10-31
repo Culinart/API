@@ -7,6 +7,7 @@ import culinart.domain.plano.mapper.PlanoMapper;
 import culinart.domain.plano.repository.PlanoRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.repository.UsuarioRepository;
+import culinart.utils.enums.DiaSemanaEnum;
 import culinart.utils.enums.PreferenciaEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,11 +55,12 @@ public class PlanoService {
 
         planoCadastroDTO.setUsuario(usuarioOptional.get());
 
-        List<PreferenciaEnum> preferenciaEnums = atribuirPreferencia(planoCadastroDTO.getPreferencias());
         Plano plano = PlanoMapper.toEntity(planoCadastroDTO);
+        List<PreferenciaEnum> preferenciaEnums = atribuirPreferencia(planoCadastroDTO.getPreferencias());
+        DiaSemanaEnum diaSemanaEnum = DiaSemanaEnum.valueOf(planoCadastroDTO.getDiaSemana().toUpperCase());
 
         plano.setPreferences(preferenciaEnums);
-
+        plano.setDiaSemana(diaSemanaEnum);
         return PlanoMapper.toDTO( this.planoRepository.save(plano));
     }
 
@@ -70,10 +72,12 @@ public class PlanoService {
         novoPlano.setUsuario(planoOptional.get().getUsuario());
         novoPlano.setId(planoOptional.get().getId());
 
-        List<PreferenciaEnum> preferenciaEnums = atribuirPreferencia(novoPlano.getPreferencias());
         Plano plano = PlanoMapper.toEntity(novoPlano);
+        List<PreferenciaEnum> preferenciaEnums = atribuirPreferencia(novoPlano.getPreferencias());
+        DiaSemanaEnum diaSemanaEnum = DiaSemanaEnum.valueOf(novoPlano.getDiaSemana().toUpperCase());
 
         plano.setPreferences(preferenciaEnums);
+        plano.setDiaSemana(diaSemanaEnum);
 
         planoRepository.save(plano);
         return PlanoMapper.toDTO(plano);

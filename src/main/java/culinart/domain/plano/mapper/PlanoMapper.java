@@ -4,6 +4,7 @@ import culinart.domain.plano.Plano;
 import culinart.domain.plano.dto.PlanoCadastroDTO;
 import culinart.domain.plano.dto.PlanoExibicaoDTO;
 import culinart.domain.usuario.dto.mapper.UsuarioMapper;
+import culinart.utils.enums.DiaSemanaEnum;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class PlanoMapper {
                 planoDTO.getValorAjuste(),
                 planoDTO.getQtdDiasSemana(),
                 planoDTO.getHoraEntrega(),
-                planoDTO.getDiaSemana(),
+                DiaSemanaEnum.valueOf(planoDTO.getDiaSemana().toUpperCase()),
                 planoDTO.getIsAtivo(),
                 planoDTO.getUsuario()
         );
