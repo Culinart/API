@@ -25,7 +25,7 @@ public class ReceitaService {
 
     public Receita cadastrarReceita(Receita receita) {
         if (receitaRepository.existsByNome(receita.getNome())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receita já cadastrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita já cadastrada");
         }
 
         return receitaRepository.save(receita);
@@ -33,7 +33,7 @@ public class ReceitaService {
 
     public Receita atualizarReceita(int id, Receita receita) {
         if (receitaRepository.findById(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receita não encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada");
         }
         receita.setId(id);
         return receitaRepository.save(receita);
@@ -41,7 +41,7 @@ public class ReceitaService {
 
     public void deletarReceita(int id) {
         if (receitaRepository.findById(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receita não encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada");
         }
 
         receitaRepository.delete(receitaRepository.findById(id).get());
