@@ -7,6 +7,7 @@ import culinart.integration.ViaCep.ViaCepIntegrationService;
 import culinart.integration.ViaCep.dto.ViaCepResponse;
 import culinart.service.endereco.EnderecoService;
 import culinart.service.endereco.usuario.EnderecoUsuarioService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +63,7 @@ public class EnderecoController {
             @RequestParam int numero,
             @RequestParam String complemento
     ) {
-        return ResponseEntity.ok(enderecoService.cadastrarEnderecoAoUsuarioPorId(cep, complemento ,idUsuario, numero));
+        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoService.cadastrarEnderecoAoUsuarioPorId(cep, complemento ,idUsuario, numero));
     }
 
     @PutMapping("/{idEndereco}")
