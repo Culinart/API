@@ -14,14 +14,15 @@ public class FuncionarioMapper {
 
         func.setNome(funcionarioCriacaoDTO.getNome());
         func.setEmail(funcionarioCriacaoDTO.getEmail());
-        func.setSenha(funcionarioCriacaoDTO.getSenha());
-        func.setPermissao(funcionarioCriacaoDTO.getPermissao());
+        func.setDataContratacao(funcionarioCriacaoDTO.getDataContratacao());
         func.setCpf(funcionarioCriacaoDTO.getCpf());
         func.setTel(funcionarioCriacaoDTO.getTel());
         func.setDataNascimento(funcionarioCriacaoDTO.getDataNascimento());
-        func.setArea(funcionarioCriacaoDTO.getArea());
+        func.setRg(funcionarioCriacaoDTO.getRg());
         func.setCargo(funcionarioCriacaoDTO.getCargo());
         func.setTurno(funcionarioCriacaoDTO.getTurno());
+        func.setPermissao(funcionarioCriacaoDTO.getPermissao());
+        func.setSenha("sptech");
         func.setIsAtivo(1);
         func.setDataCriacao(LocalDate.now());
 
@@ -33,12 +34,11 @@ public class FuncionarioMapper {
         FuncionarioExibicaoDTO.setId(funcionario.getId());
         FuncionarioExibicaoDTO.setNome(funcionario.getNome());
         FuncionarioExibicaoDTO.setEmail(funcionario.getEmail());
-        FuncionarioExibicaoDTO.setPermissao(funcionario.getPermissao());
         FuncionarioExibicaoDTO.setCpf(funcionario.getCpf());
         FuncionarioExibicaoDTO.setTel(funcionario.getTel());
-        FuncionarioExibicaoDTO.setArea(funcionario.getArea());
         FuncionarioExibicaoDTO.setCargo(funcionario.getCargo());
         FuncionarioExibicaoDTO.setTurno(funcionario.getTurno());
+        FuncionarioExibicaoDTO.setPermissao(funcionario.getPermissao());
 
         return FuncionarioExibicaoDTO;
     }

@@ -37,7 +37,7 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarios);
     }
 
-    @PostMapping("/cadastro")
+    @PostMapping
     public ResponseEntity<FuncionarioExibicaoDTO> cadastrarFuncionario(@RequestBody FuncionarioCriacaoDTO funcionarioCriacao) {
         try {
             return ResponseEntity.status(201).body(funcionarioService.cadastrarFuncionario(funcionarioCriacao));

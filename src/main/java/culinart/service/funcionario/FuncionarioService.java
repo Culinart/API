@@ -38,7 +38,7 @@ public class FuncionarioService {
             throw new IllegalArgumentException("Usuario já cadastrado");
         }
         Funcionario novoFunc = FuncionarioMapper.of(func);
-        String senhaCriptografada = passwordEncoder.encode(func.getSenha());
+        String senhaCriptografada = passwordEncoder.encode(novoFunc.getSenha());
         novoFunc.setSenha(senhaCriptografada);
         return FuncionarioMapper.of(funcionarioRepository.save(novoFunc));
     }
@@ -51,12 +51,9 @@ public class FuncionarioService {
             funcionarioExistente.setEmail(funcionario.getEmail());
             funcionarioExistente.setSenha(passwordEncoder.encode(funcionario.getSenha()));
             funcionarioExistente.setPermissao(funcionario.getPermissao());
-            funcionarioExistente.setCpf(funcionario.getCpf());
             funcionarioExistente.setTel(funcionario.getTel());
-            funcionarioExistente.setArea(funcionario.getArea());
             funcionarioExistente.setCargo(funcionario.getCargo());
             funcionarioExistente.setTurno(funcionario.getTurno());
-            funcionarioExistente.setDataNascimento(funcionario.getDataNascimento());
             funcionarioExistente.setIsAtivo(funcionario.getIsAtivo());
             Funcionario funcionarioAtualizado = funcionarioRepository.save(funcionarioExistente);
 
