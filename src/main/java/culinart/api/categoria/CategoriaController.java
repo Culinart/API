@@ -43,13 +43,13 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<IngredienteExibicaoDTO> cadastarCategoria(@RequestBody Categoria categoria){
+    public ResponseEntity<CategoriaExibicaoDTO> cadastarCategoria(@RequestBody Categoria categoria){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CategoriaMapper.toDTO(categoriaService.cadastrarCategoria(categoria)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<IngredienteExibicaoDTO> atualizarCategoria(@PathVariable int id, @RequestBody Categoria categoria){
+    public ResponseEntity<CategoriaExibicaoDTO> atualizarCategoria(@PathVariable int id, @RequestBody Categoria categoria){
         return ResponseEntity.ok(CategoriaMapper.toDTO(categoriaService.atualizarCategoria(id,categoria)));
     }
 
