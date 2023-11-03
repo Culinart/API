@@ -1,5 +1,6 @@
 package culinart.domain.receita.ingrediente.dto;
 
+import culinart.utils.enums.UnidadeMedidaEnum;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,4 +19,5 @@ public class IngredienteExibicaoDTO {
     private Integer id;
     private String nome;
     private Double quantidade;
+    private UnidadeMedidaEnum unidadeMedidaEnum;
 }

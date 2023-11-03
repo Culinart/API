@@ -1,6 +1,7 @@
 package culinart.domain.receita.ingrediente;
 
 
+import culinart.utils.enums.UnidadeMedidaEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class Ingrediente {
     private Integer id;
     private String nome;
     private Double quantidade;
-
+    private UnidadeMedidaEnum unidadeMedidaEnum;
 
 
 }

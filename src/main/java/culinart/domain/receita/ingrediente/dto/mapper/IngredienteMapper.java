@@ -12,6 +12,7 @@ public class IngredienteMapper {
                 .id(ingrediente.getId())
                 .nome(ingrediente.getNome())
                 .quantidade(ingrediente.getQuantidade())
+                .unidadeMedidaEnum(ingrediente.getUnidadeMedidaEnum())
                 .build();
     }
 }
