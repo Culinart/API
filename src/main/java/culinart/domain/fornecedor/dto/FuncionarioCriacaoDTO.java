@@ -1,14 +1,10 @@
 package culinart.domain.fornecedor.dto;
 
-import jakarta.persistence.Column;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.time.LocalDate;
 
 
-@Getter
-@Setter
+@Data
 public class FuncionarioCriacaoDTO {
     private Integer id;
     private String nome;

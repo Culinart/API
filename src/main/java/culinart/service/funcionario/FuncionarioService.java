@@ -10,11 +10,10 @@ import culinart.utils.ListaObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -228,6 +227,92 @@ public class FuncionarioService {
         }
 
 
+    }
+
+
+    public List<FuncionarioExibicaoDTO> leArquivoTxt(MultipartFile file){
+        BufferedReader entrada = null;
+        String registro, tipoRegistro;
+        String email, nome, cpf, tel, rg, cargo, turno;
+        LocalDate dataContratacao, dataNascimento;
+        Integer permissao;
+        int contaRegDadosLidos = 0;
+        int qtdRegDadosGravados;
+        List<FuncionarioExibicaoDTO> listaFuncsAdicionados = new ArrayList<>();
+        try {
+            entrada = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo " + e);
+        }
+
+        try {
+            registro = entrada.readLine();
+            while (registro != null){
+                tipoRegistro = registro.substring(0,2);
+                if (tipoRegistro.equals("00")){
+                    System.out.println("É um registro de header ");
+                    System.out.println("Tipo de arquivo " + registro.substring(2,4));
+                    System.out.println("Data e hora de geração do arquivo " + registro.substring(4,14));
+                    System.out.println("Versão do documento " + registro.substring(14,16));
+                } else if (tipoRegistro.equals("01")) {
+                    System.out.println("É um registro de trailer");
+                    qtdRegDadosGravados= Integer.parseInt(registro.substring(2, 4));
+                    if (contaRegDadosLidos == qtdRegDadosGravados){
+                        System.out.println("Quantidade de registros de dados gravados é compatível com a " +
+                                "quantidade de registros de dados lidos");
+                    }else {
+                        System.out.println("Quantidade de registros de dados gravados é incompatível com a " +
+                                "quantidade de registros de dados lidos");
+                    }
+                }else if (tipoRegistro.equals("02")) {
+                    System.out.println("É um registro de corpo");
+                    System.out.println("É um registro de corpo");
+                    System.out.println("É um registro de corpo");
+                    nome = registro.substring(2, 46).trim();
+                    System.out.println("Nome: " + registro.substring(2, 46));
+                    email = registro.substring(46, 91).trim();
+                    System.out.println("Email: " + registro.substring(46, 91));
+                    dataContratacao = LocalDate.parse(registro.substring(91, 101).trim());
+                    System.out.println("Data de Contratação: " + registro.substring(91, 101));
+                    cpf = registro.substring(101, 112).trim();
+                    System.out.println("CPF: " + registro.substring(101, 112));
+                    tel = registro.substring(112, 123).trim();
+                    System.out.println("Telefone: " + registro.substring(112, 123));
+                    dataNascimento = LocalDate.parse(registro.substring(123, 133).trim());
+                    System.out.println("Data de Nascimento: " + registro.substring(123, 133));
+                    rg = registro.substring(133, 142).trim();
+                    System.out.println("RG: " + registro.substring(133, 142));
+                    cargo = registro.substring(142, 162).trim();
+                    System.out.println("Cargo: " + registro.substring(142, 162));
+                    turno = registro.substring(162, 172).trim();
+                    System.out.println("Turno: " + registro.substring(162, 172));
+                    permissao = Integer.valueOf(registro.substring(172, 173).trim());
+                    System.out.println("Permissão: " + registro.substring(172, 173));
+
+
+                    contaRegDadosLidos++;
+                    FuncionarioCriacaoDTO funcCriacao = new FuncionarioCriacaoDTO();
+                    funcCriacao.setNome(nome);
+                    funcCriacao.setEmail(email);
+                    funcCriacao.setDataContratacao(dataContratacao);
+                    funcCriacao.setCpf(cpf);
+                    funcCriacao.setTel(tel);
+                    funcCriacao.setDataNascimento(dataNascimento);
+                    funcCriacao.setRg(rg);
+                    funcCriacao.setCargo(cargo);
+                    funcCriacao.setTurno(turno);
+                    funcCriacao.setPermissao(permissao);
+                    listaFuncsAdicionados.add(cadastrarFuncionario(funcCriacao));
+                }else {
+                    System.out.println("Registro inválido");
+                }
+                registro = entrada.readLine();
+            }
+            entrada.close();
+        }catch (IOException err){
+            System.out.println("Erro ao ler os registros" + err);
+        }
+        return listaFuncsAdicionados;
     }
 }
 
