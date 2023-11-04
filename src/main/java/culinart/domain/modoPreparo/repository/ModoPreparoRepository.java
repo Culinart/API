@@ -1,6 +1,6 @@
-package culinart.domain.receita.modoPreparo.repository;
+package culinart.domain.modoPreparo.repository;
 
-import culinart.domain.receita.modoPreparo.ModoPreparo;
+import culinart.domain.modoPreparo.ModoPreparo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

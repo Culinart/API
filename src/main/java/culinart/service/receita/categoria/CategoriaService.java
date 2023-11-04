@@ -1,4 +1,4 @@
-package culinart.service.categoria;
+package culinart.service.receita.categoria;
 
 import culinart.domain.categoria.Categoria;
 import culinart.domain.categoria.repository.CategoriaRepository;

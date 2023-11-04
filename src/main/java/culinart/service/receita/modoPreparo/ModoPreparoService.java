@@ -1,7 +1,7 @@
 package culinart.service.receita.modoPreparo;
 
-import culinart.domain.receita.modoPreparo.ModoPreparo;
-import culinart.domain.receita.modoPreparo.repository.ModoPreparoRepository;
+import culinart.domain.modoPreparo.ModoPreparo;
+import culinart.domain.modoPreparo.repository.ModoPreparoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

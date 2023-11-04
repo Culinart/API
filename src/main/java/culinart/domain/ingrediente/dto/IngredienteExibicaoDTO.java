@@ -1,4 +1,4 @@
-package culinart.domain.receita.ingrediente.dto;
+package culinart.domain.ingrediente.dto;
 
 import culinart.utils.enums.UnidadeMedidaEnum;
 import jakarta.persistence.GeneratedValue;

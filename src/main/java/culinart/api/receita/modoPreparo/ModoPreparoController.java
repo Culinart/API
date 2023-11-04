@@ -1,8 +1,8 @@
 package culinart.api.receita.modoPreparo;
 
-import culinart.domain.receita.modoPreparo.ModoPreparo;
-import culinart.domain.receita.modoPreparo.dto.ModoPreparoExibicaoDTO;
-import culinart.domain.receita.modoPreparo.dto.mapper.ModoPreparoMapper;
+import culinart.domain.modoPreparo.ModoPreparo;
+import culinart.domain.modoPreparo.dto.ModoPreparoExibicaoDTO;
+import culinart.domain.modoPreparo.dto.mapper.ModoPreparoMapper;
 import culinart.service.receita.modoPreparo.ModoPreparoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

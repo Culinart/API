@@ -1,4 +1,4 @@
-package culinart.service.preferencia;
+package culinart.service.receita.preferencia;
 
 import culinart.domain.preferencia.Preferencia;
 import culinart.domain.preferencia.repository.PreferenciaRepository;

@@ -1,6 +1,6 @@
-package culinart.domain.receita.ingrediente.repository;
+package culinart.domain.ingrediente.repository;
 
-import culinart.domain.receita.ingrediente.Ingrediente;
+import culinart.domain.ingrediente.Ingrediente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

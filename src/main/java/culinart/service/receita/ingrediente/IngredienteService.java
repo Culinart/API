@@ -1,7 +1,7 @@
 package culinart.service.receita.ingrediente;
 
-import culinart.domain.receita.ingrediente.Ingrediente;
-import culinart.domain.receita.ingrediente.repository.IngredienteRepository;
+import culinart.domain.ingrediente.Ingrediente;
+import culinart.domain.ingrediente.repository.IngredienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

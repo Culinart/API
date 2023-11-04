@@ -1,4 +1,4 @@
-package culinart.domain.receita.ingrediente;
+package culinart.domain.ingrediente;
 
 
 import culinart.utils.enums.UnidadeMedidaEnum;

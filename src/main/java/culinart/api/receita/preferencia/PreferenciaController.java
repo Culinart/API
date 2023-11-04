@@ -1,12 +1,9 @@
-package culinart.api.preferencia;
+package culinart.api.receita.preferencia;
 
 import culinart.domain.preferencia.Preferencia;
 import culinart.domain.preferencia.dto.PreferenciaExibicaoDTO;
 import culinart.domain.preferencia.mapper.PreferenciaMapper;
-import culinart.domain.receita.Receita;
-import culinart.domain.receita.dto.ReceitaExibicaoDTO;
-import culinart.domain.receita.dto.mapper.ReceitaMapper;
-import culinart.service.preferencia.PreferenciaService;
+import culinart.service.receita.preferencia.PreferenciaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

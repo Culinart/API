@@ -1,7 +1,7 @@
-package culinart.domain.receita.ingrediente.dto.mapper;
+package culinart.domain.ingrediente.dto.mapper;
 
-import culinart.domain.receita.ingrediente.Ingrediente;
-import culinart.domain.receita.ingrediente.dto.IngredienteExibicaoDTO;
+import culinart.domain.ingrediente.Ingrediente;
+import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
 
 public class IngredienteMapper {
     public static IngredienteExibicaoDTO toDTO(Ingrediente ingrediente) {

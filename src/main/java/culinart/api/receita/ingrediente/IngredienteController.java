@@ -1,8 +1,8 @@
 package culinart.api.receita.ingrediente;
 
-import culinart.domain.receita.ingrediente.Ingrediente;
-import culinart.domain.receita.ingrediente.dto.IngredienteExibicaoDTO;
-import culinart.domain.receita.ingrediente.dto.mapper.IngredienteMapper;
+import culinart.domain.ingrediente.Ingrediente;
+import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
+import culinart.domain.ingrediente.dto.mapper.IngredienteMapper;
 import culinart.service.receita.ingrediente.IngredienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

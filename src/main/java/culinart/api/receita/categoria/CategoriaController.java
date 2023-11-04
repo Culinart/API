@@ -1,13 +1,9 @@
-package culinart.api.categoria;
+package culinart.api.receita.categoria;
 
 import culinart.domain.categoria.Categoria;
 import culinart.domain.categoria.dto.CategoriaExibicaoDTO;
 import culinart.domain.categoria.mapper.CategoriaMapper;
-import culinart.domain.receita.ingrediente.Ingrediente;
-import culinart.domain.receita.ingrediente.dto.IngredienteExibicaoDTO;
-import culinart.domain.receita.ingrediente.dto.mapper.IngredienteMapper;
-import culinart.service.categoria.CategoriaService;
-import culinart.service.receita.ingrediente.IngredienteService;
+import culinart.service.receita.categoria.CategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

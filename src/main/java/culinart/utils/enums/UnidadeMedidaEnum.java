@@ -4,6 +4,7 @@ public enum UnidadeMedidaEnum {
     LITRO,
     KILO,
     GRAMA,
+    MILIGRAMA,
     MILILITRO,
     XICARA,
     SEM_UNIDADE,

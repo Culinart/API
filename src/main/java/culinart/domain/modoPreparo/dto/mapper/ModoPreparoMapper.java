@@ -1,7 +1,7 @@
-package culinart.domain.receita.modoPreparo.dto.mapper;
+package culinart.domain.modoPreparo.dto.mapper;
 
-import culinart.domain.receita.modoPreparo.ModoPreparo;
-import culinart.domain.receita.modoPreparo.dto.ModoPreparoExibicaoDTO;
+import culinart.domain.modoPreparo.ModoPreparo;
+import culinart.domain.modoPreparo.dto.ModoPreparoExibicaoDTO;
 
 public class ModoPreparoMapper {
     public static ModoPreparoExibicaoDTO toDTO (ModoPreparo modoPreparo){
