@@ -1,10 +1,11 @@
 package culinart.domain.receita;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import culinart.domain.ingrediente.Ingrediente;
+import culinart.domain.modoPreparo.ModoPreparo;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,4 +23,10 @@ public class Receita {
     private Double tempoPreparo;
 
     private String descricao;
+
+    @OneToMany
+    private List<Ingrediente> ingredientes;
+
+    @OneToMany
+    private List<ModoPreparo> modoPreparos;
 }
