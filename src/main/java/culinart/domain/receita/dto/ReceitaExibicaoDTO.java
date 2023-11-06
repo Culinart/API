@@ -1,11 +1,15 @@
 package culinart.domain.receita.dto;
 
+import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
+import culinart.domain.modoPreparo.dto.ModoPreparoExibicaoDTO;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Builder
 @Data
@@ -18,4 +22,6 @@ public class ReceitaExibicaoDTO {
     private String nome;
     private Double tempoPreparo;
     private String descricao;
+    private List<IngredienteExibicaoDTO> ingredientes;
+    private List<ModoPreparoExibicaoDTO> modoPreparos;
 }
