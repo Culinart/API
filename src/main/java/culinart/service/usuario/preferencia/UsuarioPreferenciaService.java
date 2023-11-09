@@ -6,7 +6,6 @@ import culinart.domain.preferencia.repository.PreferenciaRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.domain.usuarioPreferencia.UsuarioPreferencia;
-import culinart.domain.usuarioPreferencia.dto.UsuarioPreferenciaCadastroDTO;
 import culinart.domain.usuarioPreferencia.repository.UsuarioPreferenciaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,11 +29,11 @@ public class UsuarioPreferenciaService {
         );
     }
 
-    public UsuarioPreferencia cadastrarPreferenciasDoUsuario(int idUsuario, UsuarioPreferenciaCadastroDTO dto) {
+    public UsuarioPreferencia cadastrarPreferenciasDoUsuario(int idUsuario, int idUsuarioPreferencia) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
-        Preferencia preferencia = preferenciaRepository.findByNome(dto.getNome())
+        Preferencia preferencia = preferenciaRepository.findById(idUsuarioPreferencia)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia não encontrada no sistema"));
 
@@ -49,7 +48,7 @@ public class UsuarioPreferenciaService {
         }
 
         for (Preferencia preferenciaDaVez : usuarioPreferenciaOptional.get().getPreferencias()) {
-            if (preferenciaDaVez.getNome().equals(dto.getNome())) {
+            if (preferenciaDaVez.getNome().equals(preferencia.getNome())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Preferencia já está associada ao usuario");
             }
         }
@@ -59,11 +58,11 @@ public class UsuarioPreferenciaService {
         return usuarioPreferenciaRepository.save((usuarioPreferencia));
     }
 
-    public void deletarPreferenciasDoUsuario(int idUsuario, PreferenciaDelecaoDTO dto) {
+    public void deletarPreferenciasDoUsuario(int idUsuario, int idUsuarioPreferencia) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
-        Preferencia preferencia = preferenciaRepository.findByNome(dto.getNome())
+        Preferencia preferencia = preferenciaRepository.findById(idUsuarioPreferencia )
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia não encontrada no sistema"));
 

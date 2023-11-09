@@ -22,6 +22,6 @@ public class Usuario {
     private String telefone;
 
     @Column(name = "is_ativo")
-    private Integer isAtivo;
+    private StatusAtivoEnum isAtivo;
 
 }

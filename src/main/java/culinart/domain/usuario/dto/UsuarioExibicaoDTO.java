@@ -1,5 +1,6 @@
 package culinart.domain.usuario.dto;
 
+import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +17,6 @@ public class UsuarioExibicaoDTO {
     private String nome;
     private String email;
     private String telefone;
-    private Integer isAtivo;
+    private StatusAtivoEnum isAtivo;
 
 }
