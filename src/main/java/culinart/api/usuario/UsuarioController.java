@@ -3,10 +3,13 @@ package culinart.api.usuario;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
-import culinart.integration.ViaCep.ViaCepIntegrationService;
+import culinart.domain.usuario.dto.mapper.UsuarioMapper;
+import culinart.domain.usuarioPreferencia.dto.UsuarioPreferenciaExibicaoDTO;
+import culinart.domain.usuarioPreferencia.dto.mapper.UsuarioPreferenciaMapper;
 import culinart.service.usuario.UsuarioService;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.service.usuario.preferencia.UsuarioPreferenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
+
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+
 
     @Autowired
     public UsuarioController(UsuarioService usuarioService) {
@@ -83,4 +88,28 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.exibirUsuariosInativos());
     }
 
+    @PatchMapping("/senhas/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarSenhaUsuario(@PathVariable int idUsuario, String senha){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.atualizarSenhaUsuario(idUsuario,senha)));
+    }
+
+    @PutMapping("/permissionar/administrador/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioAdministrador(int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioAdministrador(idUsuario)));
+    }
+
+    @PutMapping("/permissionar/cliente/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioCliente(int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioCliente(idUsuario)));
+    }
+
+    @PutMapping("/permissionar/funcionario/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioFuncionario(int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioFuncionario(idUsuario)));
+    }
+
+    @PutMapping("/ativar/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> ativarUsuario(@PathVariable int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.ativarUsuario(idUsuario)));
+    }
 }
