@@ -16,7 +16,7 @@ public class UsuarioMapper {
         usuario.setSenha(usuarioCriacaoDTO.getSenha());
         usuario.setTelefone(usuarioCriacaoDTO.getTelefone());
         usuario.setPermissao(PermissaoEnum.USUARIO);
-        usuario.setIsAtivo(StatusAtivoEnum.INATIVO.getCodigo());
+        usuario.setIsAtivo(StatusAtivoEnum.INATIVO);
 
         return usuario;
     }

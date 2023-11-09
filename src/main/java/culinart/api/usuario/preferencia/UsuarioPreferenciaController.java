@@ -1,7 +1,6 @@
 package culinart.api.usuario.preferencia;
 
 import culinart.domain.preferencia.dto.PreferenciaDelecaoDTO;
-import culinart.domain.usuarioPreferencia.dto.UsuarioPreferenciaCadastroDTO;
 import culinart.domain.usuarioPreferencia.dto.UsuarioPreferenciaExibicaoDTO;
 import culinart.domain.usuarioPreferencia.dto.mapper.UsuarioPreferenciaMapper;
 import culinart.service.usuario.preferencia.UsuarioPreferenciaService;
@@ -21,21 +20,21 @@ public class UsuarioPreferenciaController {
                 preferenciaService.exibirTodasPreferenciasDeUsuario(idUsuario)));
     }
 
-    @PostMapping("/{idUsuario}")
+    @PostMapping("/{idUsuarioPreferencia}/{idUsuario}")
     public ResponseEntity<UsuarioPreferenciaExibicaoDTO> cadastrarPreferenciasDoUsuario(
             @PathVariable int idUsuario,
-            @RequestBody UsuarioPreferenciaCadastroDTO preferenciaDTO
+            @PathVariable int idUsuarioPreferencia
     ){
         return ResponseEntity.ok(UsuarioPreferenciaMapper.toDTO(
-                preferenciaService.cadastrarPreferenciasDoUsuario(idUsuario,preferenciaDTO)));
+                preferenciaService.cadastrarPreferenciasDoUsuario(idUsuario,idUsuarioPreferencia)));
     }
 
-    @DeleteMapping("/{idUsuario}")
+    @DeleteMapping("/{idUsuarioPreferencia}/{idUsuario}")
     public ResponseEntity<Void> deletarPreferenciasDoUsuario(
             @PathVariable int idUsuario,
-            @RequestBody PreferenciaDelecaoDTO preferenciaDTO
+            @PathVariable int idUsuarioPreferencia
     ){
-        preferenciaService.deletarPreferenciasDoUsuario(idUsuario, preferenciaDTO);
+        preferenciaService.deletarPreferenciasDoUsuario(idUsuario, idUsuarioPreferencia);
         return ResponseEntity.noContent().build();
     }
 
