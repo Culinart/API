@@ -1,7 +1,9 @@
 package culinart.domain.usuario;
 
+import culinart.domain.email.Assinante;
+import culinart.domain.email.ReceitaEmail;
+import culinart.service.email.EnviadorEmailService;
 import culinart.utils.enums.PermissaoEnum;
-import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Usuario {
+public class Usuario implements Assinante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +26,9 @@ public class Usuario {
     @Column(name = "is_ativo")
     private Integer isAtivo;
 
+    @Override
+    public void receberReceita(EnviadorEmailService enviadorEmailService, ReceitaEmail receitaEmail, String emailEmpresa) {
+        enviadorEmailService.sendEmail( emailEmpresa,this.email, receitaEmail.getTitulo(), receitaEmail.getConteudo());
+
+    }
 }
