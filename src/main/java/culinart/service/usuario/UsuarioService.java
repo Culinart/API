@@ -118,7 +118,7 @@ public class UsuarioService {
 
     public List<UsuarioExibicaoDTO> exibirUsuariosAtivos() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
-        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.ATIVO)) { //TODO: Mudar para enum lá na frente
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.ATIVO)) {
             lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
@@ -126,7 +126,7 @@ public class UsuarioService {
 
     public List<UsuarioExibicaoDTO> exibirUsuariosInativos() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
-        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.INATIVO)) { //TODO: Mudar para enum lá na frente
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.INATIVO)) {
             lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
