@@ -1,5 +1,7 @@
 package culinart.domain.usuario;
 
+import culinart.utils.enums.PermissaoEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +18,11 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    @Column(name = "permissao_id")
-    private Integer permissao;
+    @Column(name = "permissao")
+    private PermissaoEnum permissao;
+    private String telefone;
 
     @Column(name = "is_ativo")
-    private Integer isAtivo;
+    private StatusAtivoEnum isAtivo;
 
 }

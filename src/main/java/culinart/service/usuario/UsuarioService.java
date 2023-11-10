@@ -8,6 +8,8 @@ import culinart.domain.usuario.dto.mapper.UsuarioMapper;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.utils.enums.PermissaoEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,10 +49,11 @@ public class UsuarioService {
             System.out.println("Entrou aqui");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Usuario já cadastrado");
         }
-        Usuario novoUsuario = UsuarioMapper.toDTO(usuario);
+        Usuario novoUsuario = UsuarioMapper.toEntity(usuario);
 
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
+        novoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
         return UsuarioMapper.toDTO(usuarioRepository.save(novoUsuario));
     }
 
@@ -78,7 +81,7 @@ public class UsuarioService {
 
     public void desativarUsuario(int id) {
         Usuario usuarioDesativado = usuarioRepository.findById(id).get();
-        usuarioDesativado.setIsAtivo(0);
+        usuarioDesativado.setIsAtivo(StatusAtivoEnum.INATIVO);
         usuarioRepository.save(usuarioDesativado);
     }
 
@@ -115,7 +118,7 @@ public class UsuarioService {
 
     public List<UsuarioExibicaoDTO> exibirUsuariosAtivos() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
-        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(1)) { //TODO: Mudar para enum lá na frente
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.ATIVO)) {
             lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
@@ -123,9 +126,56 @@ public class UsuarioService {
 
     public List<UsuarioExibicaoDTO> exibirUsuariosInativos() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
-        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(0)) { //TODO: Mudar para enum lá na frente
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.INATIVO)) {
             lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
+    }
+
+    public Usuario ativarUsuario(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+
+        usuario.setIsAtivo(StatusAtivoEnum.ATIVO);
+        return usuario;
+    }
+
+    public Usuario permissionarUsuarioAdministrador(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+        usuario.setPermissao(PermissaoEnum.ADMINISTRADOR);
+        return usuario;
+    }
+
+    public Usuario permissionarUsuarioCliente(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+        usuario.setPermissao(PermissaoEnum.CLIENTE);
+        return usuario;
+    }
+
+    public Usuario permissionarUsuarioFuncionario(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+        usuario.setPermissao(PermissaoEnum.FUNCIONARIO);
+        return usuario;
+    }
+
+    public Usuario atualizarSenhaUsuario(int idUsuario, String senha) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+
+        usuario.setSenha(senha);
+        return usuario;
     }
 }

@@ -4,16 +4,19 @@ import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.utils.enums.PermissaoEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 
 public class UsuarioMapper {
-    public static Usuario toDTO(UsuarioCriacaoDTO usuarioCriacaoDTO) {
+    public static Usuario toEntity(UsuarioCriacaoDTO usuarioCriacaoDTO) {
         Usuario usuario = new Usuario();
 
         usuario.setNome(usuarioCriacaoDTO.getNome());
         usuario.setEmail(usuarioCriacaoDTO.getEmail());
         usuario.setSenha(usuarioCriacaoDTO.getSenha());
-        usuario.setPermissao(1);
-        usuario.setIsAtivo(1);
+        usuario.setTelefone(usuarioCriacaoDTO.getTelefone());
+        usuario.setPermissao(PermissaoEnum.USUARIO);
+        usuario.setIsAtivo(StatusAtivoEnum.INATIVO);
 
         return usuario;
     }
@@ -24,6 +27,7 @@ public class UsuarioMapper {
         usuarioExibicaoDTO.setId(usuario.getId());
         usuarioExibicaoDTO.setEmail(usuario.getEmail());
         usuarioExibicaoDTO.setNome(usuario.getNome());
+        usuarioExibicaoDTO.setTelefone(usuario.getTelefone());
         usuarioExibicaoDTO.setIsAtivo(usuario.getIsAtivo());
 
         return usuarioExibicaoDTO;
