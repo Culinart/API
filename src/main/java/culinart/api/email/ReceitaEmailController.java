@@ -42,8 +42,7 @@ public class ReceitaEmailController {
     }
 
     @PostMapping("/publicar/receitas/{idReceita}")
-    public ResponseEntity<Void> publicarReceita(@PathVariable int idReceita){
-        this.receitaEmailService.publicarReceita(idReceita);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ReceitaEmail> publicarReceita(@PathVariable int idReceita){
+        return ResponseEntity.ok(this.receitaEmailService.publicarReceita(idReceita));
     }
 }
