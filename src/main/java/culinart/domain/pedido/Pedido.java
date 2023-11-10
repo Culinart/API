@@ -15,15 +15,15 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "data_criacao")
-    private LocalDate dataCriacao;
+    private LocalDate dataUltimaModificacao;
     private Double valor;
     @Enumerated(EnumType.STRING)
     private StatusPedidoEnum status;
     @Column(name = "data_entrega")
     private LocalDate dataEntrega;
     @ManyToOne
-    @JoinColumn(name = "plano_id") // ajuste o nome da coluna conforme necessário
-    private Plano planoId;
+    @JoinColumn(name = "plano_id")
+    private Plano plano;
     @ManyToMany
     @JoinTable(
             name = "pedido_receita",

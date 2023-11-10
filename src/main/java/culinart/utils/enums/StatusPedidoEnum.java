@@ -8,11 +8,14 @@ import lombok.NoArgsConstructor;
 
 
  @Getter
+ @AllArgsConstructor
+ @NoArgsConstructor
 public enum StatusPedidoEnum {
-    PROCESSAMENTO,
-    ENVIADO,
-    ENTREGUE,
-    CANCELADO,
-    NEXT;
+    PENDENTE ("PENDENTE"),
+    ATIVO ("ATIVO"),
+    ENTREGUE ("ENTREGUE"),
+    CANCELADO ("CANCELADO");
+
+    private String status;
 
 }

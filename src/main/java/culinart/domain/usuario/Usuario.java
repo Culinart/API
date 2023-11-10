@@ -16,6 +16,7 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
+    @Column(name = "permissao_id")
     private Integer permissao;
 
     @Column(name = "is_ativo")
