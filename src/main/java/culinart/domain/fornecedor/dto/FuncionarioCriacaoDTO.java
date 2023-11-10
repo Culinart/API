@@ -1,23 +1,21 @@
 package culinart.domain.fornecedor.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.time.LocalDate;
 
 
-@Getter
-@Setter
+@Data
 public class FuncionarioCriacaoDTO {
+    private Integer id;
     private String nome;
     private String email;
-    private String senha;
+    private LocalDate dataContratacao;
     private String cpf;
     private String tel;
-    private String area;
+    private LocalDate dataNascimento;
+    private String rg;
     private String cargo;
     private String turno;
-    private LocalDate dataNascimento;
     private Integer permissao;
-    private LocalDate dataCriacao;
+    private Integer isAtivo;
 }

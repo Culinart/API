@@ -53,6 +53,7 @@ public class UsuarioService {
 
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
+        novoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
         return UsuarioMapper.toDTO(usuarioRepository.save(novoUsuario));
     }
 
@@ -80,7 +81,7 @@ public class UsuarioService {
 
     public void desativarUsuario(int id) {
         Usuario usuarioDesativado = usuarioRepository.findById(id).get();
-        usuarioDesativado.setIsAtivo(0);
+        usuarioDesativado.setIsAtivo(StatusAtivoEnum.INATIVO);
         usuarioRepository.save(usuarioDesativado);
     }
 
@@ -117,7 +118,7 @@ public class UsuarioService {
 
     public List<UsuarioExibicaoDTO> exibirUsuariosAtivos() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
-        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(1)) { //TODO: Mudar para enum lá na frente
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.ATIVO)) {
             lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
@@ -125,7 +126,7 @@ public class UsuarioService {
 
     public List<UsuarioExibicaoDTO> exibirUsuariosInativos() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
-        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(0)) { //TODO: Mudar para enum lá na frente
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.INATIVO)) {
             lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
@@ -137,7 +138,7 @@ public class UsuarioService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
                 );
 
-        usuario.setIsAtivo(StatusAtivoEnum.ATIVO.getCodigo());
+        usuario.setIsAtivo(StatusAtivoEnum.ATIVO);
         return usuario;
     }
 

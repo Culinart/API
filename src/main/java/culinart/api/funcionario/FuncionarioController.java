@@ -15,6 +15,7 @@ import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import java.io.*;
 import java.nio.file.Files;
@@ -37,7 +38,7 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarios);
     }
 
-    @PostMapping("/cadastro")
+    @PostMapping
     public ResponseEntity<FuncionarioExibicaoDTO> cadastrarFuncionario(@RequestBody FuncionarioCriacaoDTO funcionarioCriacao) {
         try {
             return ResponseEntity.status(201).body(funcionarioService.cadastrarFuncionario(funcionarioCriacao));
@@ -90,6 +91,15 @@ public class FuncionarioController {
             e.printStackTrace();
             throw new ResponseStatusException(500, "Erro ao ler ou enviar o arquivo CSV", e);
         }
+    }
+
+    @PostMapping("/txt")
+    public ResponseEntity<List<FuncionarioExibicaoDTO>> cadastroTxt(@RequestParam("file") MultipartFile file){
+        List<FuncionarioExibicaoDTO> listaUsersCadastrados = funcionarioService.leArquivoTxt(file);
+        if (listaUsersCadastrados.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(201).body(listaUsersCadastrados);
     }
 
 }

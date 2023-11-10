@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PreferenciaExibicaoDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nome;

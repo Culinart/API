@@ -24,7 +24,7 @@ public class Usuario implements Assinante {
     private String telefone;
 
     @Column(name = "is_ativo")
-    private Integer isAtivo;
+    private StatusAtivoEnum isAtivo;
 
     @Override
     public void receberReceita(EnviadorEmailService enviadorEmailService, ReceitaEmail receitaEmail, String emailEmpresa) {

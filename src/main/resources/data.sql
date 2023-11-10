@@ -1,8 +1,7 @@
-
-INSERT INTO funcionario (id, nome, email, senha, permissao, cpf, tel, area, cargo, turno, data_nascimento, is_ativo)
+INSERT INTO funcionario (nome, email, data_contratacao, cpf, tel, data_nascimento, rg, cargo, turno, permissao, senha, is_ativo, data_criacao)
 VALUES
-(1, 'Primeira Pessoa', 'pessoa1@example.com', 'senha123', 1, '12345678901', '123-456-7890', 'Área 1', 'Cargo 1', 'Turno 1', '1990-01-15', 1),
-(2, 'Segunda Pessoa', 'pessoa2@example.com', 'senha456', 2, '23456789012', '234-567-8901', 'Área 2', 'Cargo 2', 'Turno 2', '1985-06-20', 0),
-(3, 'Terceira Pessoa', 'pessoa3@example.com', 'senha789', 1, '34567890123', '345-678-9012', 'Área 3', 'Cargo 3', 'Turno 3', '1980-03-10', 1),
-(4, 'Quarta Pessoa', 'pessoa4@example.com', 'senhaabc', 2, '45678901234', '456-789-0123', 'Área 4', 'Cargo 4', 'Turno 4', '1975-11-05', 0),
-(5, 'Quinta Pessoa', 'pessoa5@example.com', 'senhaxyz', 1, '56789012345', '567-890-1234', 'Área 5', 'Cargo 5', 'Turno 5', '1970-09-30', 1);
+('Primeira Pessoa', 'pessoa1@example.com', '2023-03-15', '12345678901', '123-456-7890', '1990-01-15', '539074962', 'Cargo 1', 'Turno 1', 1, 'senha123', 1, '2023-11-03'),
+('Segunda Pessoa', 'pessoa2@example.com', '2023-03-16', '12345678901', '123-456-7890', '1990-01-15', '539074962', 'Cargo 2', 'Turno 2', 1, 'senha456', 1, '2023-11-03'),
+('Terceira Pessoa', 'pessoa3@example.com', '2023-03-15', '12345678901', '123-456-7890', '1990-01-15', '539074962', 'Cargo 3', 'Turno 1', 1, 'senha456', 1, '2023-11-03'),
+('Quarta Pessoa', 'pessoa4@example.com', '2023-03-15', '12345678901', '123-456-7890', '1990-01-15', '539074962', 'Cargo 4', 'Turno 2', 2, 'senhaabc', 1, '2023-11-03'),
+('Quinta Pessoa', 'pessoa5@example.com', '2023-03-15', '12345678901', '123-456-7890', '1990-01-15', '539074962', 'Cargo 5', 'Turno 1', 2, 'senhaabc', 1, '2023-11-03');
