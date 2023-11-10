@@ -1,5 +1,10 @@
 package culinart.api.receita.receitaCategoria;
 
+import culinart.api.receita.categoria.CategoriaController;
+import culinart.api.receita.ingrediente.IngredienteController;
+import culinart.api.receita.modoPreparo.ModoPreparoController;
+import culinart.api.receita.preferencia.PreferenciaController;
+import culinart.domain.categoria.mapper.CategoriaMapper;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
 import culinart.domain.receitaCategoria.dto.ReceitaCategoriaExibicaoDTO;
 import culinart.domain.receitaCategoria.mapper.ReceitaCategoriaMapper;
@@ -9,6 +14,8 @@ import culinart.service.receita.modoPreparo.ModoPreparoService;
 import culinart.service.receita.preferencia.PreferenciaService;
 import culinart.service.receita.receitaCategoria.ReceitaCategoriaService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +28,6 @@ import java.util.List;
 public class ReceitaCategoriaController {
     //Services
     private final ReceitaCategoriaService receitaCategoriaService;
-    private final IngredienteService ingredienteService;
-    private final ModoPreparoService modoPreparoService;
-    private final PreferenciaService preferenciaService;
-    private final CategoriaService categoriaService;
 
 
     @GetMapping
@@ -43,7 +46,15 @@ public class ReceitaCategoriaController {
     }
 
     @PostMapping
-    public ReceitaCategoria cadastrarReceitaCategoria(@RequestBody ReceitaCategoria receitaCategoria){
-        return receitaCategoria;
+    public ResponseEntity<ReceitaCategoriaExibicaoDTO> cadastrarReceitaCategoria(@RequestBody ReceitaCategoria receitaCategoria){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ReceitaCategoriaMapper
+                        .toDTO(receitaCategoriaService.cadastrarReceitaCategoria(receitaCategoria)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void>deletarReceitaCategoria(@PathVariable int id){
+        receitaCategoriaService.deletarReceitaCategoria(id);
+        return ResponseEntity.noContent().build();
     }
 }
