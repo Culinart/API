@@ -20,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Plano {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -41,10 +40,13 @@ public class Plano {
 
     private LocalDateTime horaEntrega;
 
+    @Enumerated(EnumType.STRING)
     private DiaSemanaEnum diaSemana;
 
     private Integer isAtivo;
 
     @OneToOne
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 }
+
