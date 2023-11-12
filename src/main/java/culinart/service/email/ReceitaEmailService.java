@@ -24,7 +24,7 @@ public class ReceitaEmailService {
     private final EnviadorEmailService enviadorEmailService;
     private final UsuarioRepository usuarioRepository;
     private final ReceitaRepository receitaRepository;
-    private final String emailEmpresa = "culinart@gmail.com";
+    private final String emailEmpresa = "culinart.oficial@gmail.com";
 
     private List<ReceitaEmail> receitaEmails = new ArrayList<>();
 
