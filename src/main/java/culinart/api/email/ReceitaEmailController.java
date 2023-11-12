@@ -30,9 +30,9 @@ public class ReceitaEmailController {
         return ResponseEntity.status(200).body(conteudos);
     }
 
-    @GetMapping("/{idNewsletter}")
-    public ResponseEntity<ReceitaEmail> buscarPorId(@PathVariable UUID idNewsletter) {
-        return ResponseEntity.status(200).body(this.receitaEmailService.buscarPorId(idNewsletter));
+    @GetMapping("/{id}")
+    public ResponseEntity<ReceitaEmail> buscarPorId(@PathVariable UUID id) {
+        return ResponseEntity.status(200).body(this.receitaEmailService.buscarPorId(id));
     }
 
     @PostMapping
