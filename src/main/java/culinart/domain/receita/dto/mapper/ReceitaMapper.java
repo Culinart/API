@@ -1,23 +1,55 @@
 package culinart.domain.receita.dto.mapper;
 
+import culinart.domain.email.ReceitaEmail;
+import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
 import culinart.domain.ingrediente.dto.mapper.IngredienteMapper;
+import culinart.domain.modoPreparo.dto.ModoPreparoExibicaoDTO;
 import culinart.domain.modoPreparo.dto.mapper.ModoPreparoMapper;
 import culinart.domain.receita.Receita;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ReceitaMapper {
-    public static ReceitaExibicaoDTO toDTO(Receita receita){
+    public static ReceitaExibicaoDTO toDTO(Receita receita) {
+        if (receita == null) {
+            return null; // Trate o caso em que a entrada seja nula
+        }
+
+        List<IngredienteExibicaoDTO> ingredientesDTO = receita.getIngredientes() != null
+                ? receita.getIngredientes()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(IngredienteMapper::toDTO)
+                .collect(Collectors.toList())
+                : Collections.emptyList(); // Retorna uma lista vazia se a lista de ingredientes for nula
+
+        List<ModoPreparoExibicaoDTO> modoPreparosDTO = receita.getModoPreparos() != null
+                ? receita.getModoPreparos()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(ModoPreparoMapper::toDTO)
+                .collect(Collectors.toList())
+                : Collections.emptyList(); // Retorna uma lista vazia se a lista de modos de preparo for nula
+
         return ReceitaExibicaoDTO.builder()
                 .id(receita.getId())
                 .nome(receita.getNome())
                 .tempoPreparo(receita.getTempoPreparo())
                 .descricao(receita.getDescricao())
-                .ingredientes(receita.getIngredientes()
-                        .stream().map(IngredienteMapper::toDTO).collect(Collectors.toList()))
-                .modoPreparos(receita.getModoPreparos()
-                        .stream().map(ModoPreparoMapper::toDTO).collect(Collectors.toList()))
+                .ingredientes(ingredientesDTO)
+                .modoPreparos(modoPreparosDTO)
+                .build();
+    }
+
+    public static ReceitaEmail toEmailDTO (Receita receita){
+        return ReceitaEmail.builder()
+                .titulo("Nova Receita Adcionada no sistema: " + receita.getNome())
+                .conteudo(receita.getDescricao() + "\n Venha Conferir!!")
+                .receita(receita)
                 .build();
     }
 }
