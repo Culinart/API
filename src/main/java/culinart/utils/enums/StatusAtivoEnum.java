@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public enum StatusAtivoEnum {
-    ATIVO,
-    INATIVO
+    ATIVO("ATIVO"),
+    INATIVO("INATIVO")
     ;
-    private Integer codigo;
+    private String status;
 }

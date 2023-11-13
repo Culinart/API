@@ -1,5 +1,7 @@
 package culinart.domain.fornecedor.dto;
 
+import culinart.utils.enums.PermissaoEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -16,6 +18,6 @@ public class FuncionarioCriacaoDTO {
     private String rg;
     private String cargo;
     private String turno;
-    private Integer permissao;
-    private Integer isAtivo;
+    private PermissaoEnum permissao;
+    private StatusAtivoEnum isAtivo;
 }

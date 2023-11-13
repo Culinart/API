@@ -1,5 +1,6 @@
 package culinart.domain.receita;
 
+import jakarta.persistence.*;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.modoPreparo.ModoPreparo;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import java.util.List;
 public class Receita {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
 

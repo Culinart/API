@@ -12,7 +12,6 @@ public class PlanoMapper {
     public static PlanoExibicaoDTO toDTO(Plano plano) {
         return new PlanoExibicaoDTO(
                 plano.getId(),
-                plano.getPreferences(),
                 plano.getQtdPessoas(),
                 plano.getQtdRefeicoesDia(),
                 plano.getQtdDiasSemana(),
@@ -26,7 +25,6 @@ public class PlanoMapper {
     public static Plano toEntity(PlanoCadastroDTO planoDTO) {
         return new Plano(
                 planoDTO.getId(),
-                new ArrayList<>(),
                 planoDTO.getQtdPessoas(),
                 planoDTO.getQtdRefeicoesDia(),
                 planoDTO.getValorPlano(),

@@ -4,6 +4,7 @@ import culinart.domain.fornecedor.Funcionario;
 
 import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
+import culinart.utils.enums.StatusAtivoEnum;
 
 import java.time.LocalDate;
 
@@ -23,7 +24,7 @@ public class FuncionarioMapper {
         func.setTurno(funcionarioCriacaoDTO.getTurno());
         func.setPermissao(funcionarioCriacaoDTO.getPermissao());
         func.setSenha("sptech");
-        func.setIsAtivo(1);
+        func.setIsAtivo(StatusAtivoEnum.ATIVO);
         func.setDataCriacao(LocalDate.now());
 
         return func;

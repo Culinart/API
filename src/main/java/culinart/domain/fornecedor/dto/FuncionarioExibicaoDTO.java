@@ -1,5 +1,6 @@
 package culinart.domain.fornecedor.dto;
 
+import culinart.utils.enums.PermissaoEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,5 +16,5 @@ public class FuncionarioExibicaoDTO {
         private String tel;
         private String cargo;
         private String turno;
-        private Integer permissao;
+        private PermissaoEnum permissao;
 }
