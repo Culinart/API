@@ -10,6 +10,7 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -24,8 +25,8 @@ public class PedidoService {
         this.planoRepository = planoRepository;
     }
 
-    public Optional<Pedido> nextPedido(Integer idUser){
-        return pedidoRepository.acharProximoPedidoUser(idUser);
+    public Optional<Pedido> nextPedido(Integer idUser, LocalDate dataEntrega){
+        return pedidoRepository.acharProximoPedidoUser(idUser, dataEntrega);
 
     }
     @Transactional
@@ -50,8 +51,11 @@ public class PedidoService {
         }
     }
 
+    @Transactional
     public Pedido updatePedido(Pedido pedidoatt){
-        return pedidoRepository.save(pedidoatt);
+        planoRepository.save(pedidoatt.getPlano());
+
+        return  pedidoRepository.save(pedidoatt);
     }
 
 }

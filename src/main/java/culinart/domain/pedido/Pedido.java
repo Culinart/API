@@ -5,11 +5,13 @@ import culinart.domain.receita.Receita;
 import culinart.utils.enums.StatusPedidoEnum;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 import java.util.List;
 @Data
 @Entity
+@DynamicUpdate
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

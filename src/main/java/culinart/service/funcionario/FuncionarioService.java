@@ -7,6 +7,7 @@ import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.fornecedor.mapper.FuncionarioMapper;
 import culinart.domain.fornecedor.repository.FuncionarioRepository;
 import culinart.utils.ListaObj;
+import culinart.utils.enums.PermissaoEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -235,7 +236,7 @@ public class FuncionarioService {
         String registro, tipoRegistro;
         String email, nome, cpf, tel, rg, cargo, turno;
         LocalDate dataContratacao, dataNascimento;
-        Integer permissao;
+        PermissaoEnum permissao;
         int contaRegDadosLidos = 0;
         int qtdRegDadosGravados;
         List<FuncionarioExibicaoDTO> listaFuncsAdicionados = new ArrayList<>();
@@ -286,7 +287,7 @@ public class FuncionarioService {
                     System.out.println("Cargo: " + registro.substring(142, 162));
                     turno = registro.substring(162, 172).trim();
                     System.out.println("Turno: " + registro.substring(162, 172));
-                    permissao = Integer.valueOf(registro.substring(172, 173).trim());
+                    permissao = PermissaoEnum.valueOf(registro.substring(172, 173).trim());
                     System.out.println("Permissão: " + registro.substring(172, 173));
 
 

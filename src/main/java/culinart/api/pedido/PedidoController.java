@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,9 @@ public class PedidoController {
     }
 
     @GetMapping("/entrega/{idUser}")
-    public ResponseEntity<Pedido> proximoPedido(@PathVariable int idUser) {
-        Optional<Pedido> pedido = pedidoService.nextPedido(idUser);
+    public ResponseEntity<Pedido> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
+
+        Optional<Pedido> pedido = pedidoService.nextPedido(idUser, dataEntrega.getDataEntrega());
         if(pedido.isEmpty()){
              return ResponseEntity.noContent().build();
          }
