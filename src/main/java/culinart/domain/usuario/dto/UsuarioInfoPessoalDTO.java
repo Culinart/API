@@ -1,2 +1,11 @@
-package culinart.domain.usuario.dto;public class UsuarioInfoPessoalDTO {
+package culinart.domain.usuario.dto;
+
+import lombok.Data;
+
+@Data
+public class UsuarioInfoPessoalDTO {
+    private int id;
+    private String nome;
+    private String email;
+    private String telefone;
 }

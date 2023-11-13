@@ -2,7 +2,9 @@ package culinart.api.endereco;
 
 import culinart.domain.endereco.Endereco;
 import culinart.domain.endereco.dto.EnderecoExibicaoDTO;
+import culinart.domain.endereco.usuario.EnderecoUsuario;
 import culinart.domain.endereco.usuario.dto.EnderecoResponseToUsuarioDTO;
+import culinart.domain.endereco.usuario.dto.mapper.EnderecoUsuarioMapper;
 import culinart.integration.ViaCep.ViaCepIntegrationService;
 import culinart.integration.ViaCep.dto.ViaCepResponse;
 import culinart.service.endereco.EnderecoService;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,8 +50,15 @@ public class EnderecoController {
     }
 
     @GetMapping("/usuarios/{idUsuario}")
-    public ResponseEntity<EnderecoResponseToUsuarioDTO> getEnderecoUsuarioPorId(@PathVariable int idUsuario){
-        return ResponseEntity.ok(enderecoUsuarioService.mostrarEnderecoUsuarioPorIdUsuario(idUsuario));
+    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarioPorId(@PathVariable int idUsuario){
+        List<EnderecoResponseToUsuarioDTO> response = new ArrayList<>();
+        for (EnderecoUsuario enderecoUsuario : enderecoUsuarioService.mostrarEnderecoUsuarioPorIdUsuario(idUsuario)) {
+            response.add(EnderecoUsuarioMapper.toDTO(enderecoUsuario));
+        }
+        if(response.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/buscarCEP")

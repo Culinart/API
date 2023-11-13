@@ -23,11 +23,7 @@ public class EnderecoUsuarioService {
         return EnderecoUsuarioMapper.toDTOList(repository.findAll());
     }
 
-    public EnderecoResponseToUsuarioDTO mostrarEnderecoUsuarioPorIdUsuario(int idUsuario){
-        Optional<EnderecoUsuario> enderecoUsuarioByUsuarioIdOptional = repository.findEnderecoUsuarioByUsuario_Id(idUsuario);
-        if(enderecoUsuarioByUsuarioIdOptional.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario não possui endereço cadastrado!");
-        }
-        return EnderecoUsuarioMapper.toDTO(enderecoUsuarioByUsuarioIdOptional.get());
+    public List<EnderecoUsuario> mostrarEnderecoUsuarioPorIdUsuario(int idUsuario){
+        return repository.findEnderecoUsuarioByUsuario_Id(idUsuario);
     }
 }

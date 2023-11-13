@@ -26,7 +26,7 @@ public class PlanoCadastroDTO {
     private BigDecimal valorPlano;
     private BigDecimal valorAjuste;
     private Integer qtdDiasSemana;
-    private LocalDateTime horaEntrega;
+    private String horaEntrega;
     private String diaSemana;
     private Integer isAtivo;
     private Usuario usuario;

@@ -39,7 +39,7 @@ public class Plano {
 
     private Integer qtdDiasSemana;
 
-    private LocalDateTime horaEntrega;
+    private String horaEntrega;
 
     private DiaSemanaEnum diaSemana;
 

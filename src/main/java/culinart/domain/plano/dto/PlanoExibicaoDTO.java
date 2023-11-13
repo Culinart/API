@@ -26,7 +26,7 @@ public class PlanoExibicaoDTO {
     private Integer qtdPessoas;
     private Integer qtdRefeicoesDia;
     private Integer qtdDiasSemana;
-    private LocalDateTime horaEntrega;
+    private String horaEntrega;
     private DiaSemanaEnum diaSemana;
     private Integer isAtivo;
     private UsuarioExibicaoDTO usuario;

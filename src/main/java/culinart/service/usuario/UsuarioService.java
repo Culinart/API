@@ -4,6 +4,7 @@ import culinart.api.usuario.configuration.security.jwt.GerenciadorTokenJwt;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
+import culinart.domain.usuario.dto.UsuarioInfoPessoalDTO;
 import culinart.domain.usuario.dto.mapper.UsuarioMapper;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
@@ -70,13 +71,18 @@ public class UsuarioService {
     }
 
 
-    public UsuarioExibicaoDTO atualizarUsuario(int id, Usuario usuario) {
-        usuario.setId(id);
-        Optional<Usuario> usuarioAnterior = usuarioRepository.findById(id);
-        if(usuarioAnterior.isEmpty()){
-            throw new IllegalArgumentException("Usuario não existe");
-        }
-        return UsuarioMapper.toDTO(usuarioRepository.save(usuario));
+    public UsuarioExibicaoDTO atualizarUsuario(int id, UsuarioInfoPessoalDTO usuario) {
+        Usuario usuarioAnterior = usuarioRepository.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
+        Usuario entity = UsuarioMapper.toEntity(usuario);
+        entity.setSenha(usuarioAnterior.getSenha());
+        entity.setId(usuarioAnterior.getId());
+        entity.setPermissao(usuarioAnterior.getPermissao());
+        entity.setIsAtivo(usuarioAnterior.getIsAtivo());
+
+
+        return UsuarioMapper.toDTO(usuarioRepository.save(entity));
     }
 
     public void desativarUsuario(int id) {

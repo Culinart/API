@@ -2,6 +2,7 @@ package culinart.domain.endereco.usuario;
 
 import culinart.domain.endereco.Endereco;
 import culinart.domain.usuario.Usuario;
+import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class EnderecoUsuario {
     @ManyToOne
     private Usuario usuario;
 
-    private int isAtivo;
+    @Enumerated(EnumType.STRING)
+    private StatusAtivoEnum isAtivo;
 
 }

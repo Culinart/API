@@ -6,6 +6,7 @@ import culinart.domain.endereco.usuario.EnderecoUsuario;
 import culinart.domain.endereco.usuario.dto.EnderecoResponseToUsuarioDTO;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.mapper.UsuarioMapper;
+import culinart.utils.enums.StatusAtivoEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class EnderecoUsuarioMapper {
                 null,
                 endereco,
                 usuario,
-                1
+                StatusAtivoEnum.ATIVO
         );
     }
 

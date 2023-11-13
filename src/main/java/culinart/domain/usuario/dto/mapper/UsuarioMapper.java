@@ -3,6 +3,7 @@ package culinart.domain.usuario.dto.mapper;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
+import culinart.domain.usuario.dto.UsuarioInfoPessoalDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 import culinart.utils.enums.PermissaoEnum;
 import culinart.utils.enums.StatusAtivoEnum;
@@ -40,6 +41,14 @@ public class UsuarioMapper {
         usuarioTokenDTO.setNome(usuario.getNome());
         usuarioTokenDTO.setToken(token);
         return usuarioTokenDTO;
+    }
+
+    public static Usuario toEntity(UsuarioInfoPessoalDTO usuarioInfo) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(usuarioInfo.getNome());
+        usuario.setEmail(usuarioInfo.getEmail());
+        usuario.setTelefone(usuarioInfo.getTelefone());
+        return usuario;
     }
 
 }
