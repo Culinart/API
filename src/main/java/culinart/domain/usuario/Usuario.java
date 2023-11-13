@@ -21,9 +21,11 @@ public class Usuario implements Assinante {
     private String nome;
     private String email;
     private String senha;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "permissao")
     private PermissaoEnum permissao;
     private String telefone;
-
+    @Enumerated(EnumType.STRING)
     @Column(name = "is_ativo")
     private StatusAtivoEnum isAtivo;
 
