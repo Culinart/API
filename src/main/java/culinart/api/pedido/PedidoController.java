@@ -33,10 +33,7 @@ public class PedidoController {
     public ResponseEntity<Pedido> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
 
         Optional<Pedido> pedido = pedidoService.nextPedido(idUser, dataEntrega.getDataEntrega());
-        if(pedido.isEmpty()){
-             return ResponseEntity.noContent().build();
-         }
-        return ResponseEntity.ok(pedido.get());
+        return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 
     }
 
