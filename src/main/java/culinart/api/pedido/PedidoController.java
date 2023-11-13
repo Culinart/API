@@ -4,9 +4,14 @@ import culinart.domain.fornecedor.Funcionario;
 import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.pedido.Pedido;
+import culinart.domain.pedido.dto.DatasPedidosDto;
+import culinart.domain.pedido.mapper.PedidoMapper;
 import culinart.service.pedido.PedidoService;
+import culinart.utils.Mapper;
 import culinart.utils.enums.StatusPedidoEnum;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +20,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
+@Data
 @RequestMapping("/pedidos")
 public class PedidoController {
     private final PedidoService pedidoService;
 
-    public PedidoController(PedidoService pedidoService) {
-        this.pedidoService = pedidoService;
-    }
 
     @GetMapping("/entrega/{idUser}")
     public ResponseEntity<Pedido> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
@@ -34,6 +38,19 @@ public class PedidoController {
          }
         return ResponseEntity.ok(pedido.get());
 
+    }
+
+    @GetMapping("/datas/{idUser}")
+    public ResponseEntity<List<DatasPedidosDto>> datas(@PathVariable int idUser){
+        List <Pedido> listaPedidos = pedidoService.getDatas(idUser);
+        if (listaPedidos.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        PedidoMapper mapper = new PedidoMapper();
+        List <DatasPedidosDto> listaDatas = listaPedidos.stream()
+                                            .map(mapper::toDatasPedidosDto)
+                                            .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDatas);
     }
 
 

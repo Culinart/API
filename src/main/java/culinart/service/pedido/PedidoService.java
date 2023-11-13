@@ -2,15 +2,16 @@ package culinart.service.pedido;
 
 
 import culinart.domain.pedido.Pedido;
+import culinart.domain.pedido.dto.DatasPedidosDto;
 import culinart.domain.pedido.repository.PedidoRepository;
 import culinart.domain.plano.Plano;
 import culinart.domain.plano.repository.PlanoRepository;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -28,6 +29,11 @@ public class PedidoService {
     public Optional<Pedido> nextPedido(Integer idUser, LocalDate dataEntrega){
         return pedidoRepository.acharProximoPedidoUser(idUser, dataEntrega);
 
+    }
+
+
+    public List<Pedido> getDatas(Integer idUser){
+        return pedidoRepository.findAllByUsuarioId(idUser);
     }
     @Transactional
     public Optional<Pedido> pularEntrega(Integer idPedido){
