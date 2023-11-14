@@ -4,6 +4,7 @@ import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
 import culinart.domain.usuario.dto.UsuarioInfoPessoalDTO;
+import culinart.domain.usuario.dto.UsuarioSenhaDTO;
 import culinart.domain.usuario.dto.mapper.UsuarioMapper;
 import culinart.domain.usuarioPreferencia.dto.UsuarioPreferenciaExibicaoDTO;
 import culinart.domain.usuarioPreferencia.dto.mapper.UsuarioPreferenciaMapper;
@@ -87,8 +88,9 @@ public class UsuarioController {
     }
 
     @PatchMapping("/senhas/{idUsuario}")
-    public ResponseEntity<UsuarioExibicaoDTO> atualizarSenhaUsuario(@PathVariable int idUsuario, String senha){
-        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.atualizarSenhaUsuario(idUsuario,senha)));
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarSenhaUsuario(@PathVariable int idUsuario,@RequestBody UsuarioSenhaDTO usuarioSenhaDTO){
+        //TODO: ARRUMAR ERRO CONTA BLOQUEADA
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.atualizarSenhaUsuario(idUsuario,usuarioSenhaDTO)));
     }
 
     @PutMapping("/permissionar/administrador/{idUsuario}")

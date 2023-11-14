@@ -41,21 +41,21 @@ public class EnderecoController {
     }
 
     @GetMapping("/usuarios")
-    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarios(){
+    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarios() {
         List<EnderecoResponseToUsuarioDTO> enderecoResponseToUsuarioDTOS = enderecoUsuarioService.mostrarTodosEnderecosUsuarios();
-        if(enderecoResponseToUsuarioDTOS.isEmpty()){
+        if (enderecoResponseToUsuarioDTOS.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(enderecoResponseToUsuarioDTOS);
     }
 
     @GetMapping("/usuarios/{idUsuario}")
-    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarioPorId(@PathVariable int idUsuario){
+    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarioPorId(@PathVariable int idUsuario) {
         List<EnderecoResponseToUsuarioDTO> response = new ArrayList<>();
         for (EnderecoUsuario enderecoUsuario : enderecoUsuarioService.mostrarEnderecoUsuarioPorIdUsuario(idUsuario)) {
             response.add(EnderecoUsuarioMapper.toDTO(enderecoUsuario));
         }
-        if(response.isEmpty()){
+        if (response.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(response);
@@ -73,7 +73,8 @@ public class EnderecoController {
             @RequestParam int numero,
             @RequestParam String complemento
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoService.cadastrarEnderecoAoUsuarioPorId(cep, complemento ,idUsuario, numero));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(enderecoService.cadastrarEnderecoAoUsuarioPorId(cep, complemento, idUsuario, numero));
     }
 
     @PutMapping("/{idEndereco}")
@@ -90,6 +91,10 @@ public class EnderecoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("ativar/{idEnderecoUsuario}/{idUsuario}")
+    public ResponseEntity<EnderecoResponseToUsuarioDTO> ativarEnderecoUsuario(@PathVariable int idEnderecoUsuario, @PathVariable int idUsuario) {
+        return ResponseEntity.ok(EnderecoUsuarioMapper.toDTO(enderecoUsuarioService.ativarEnderecoUsuario(idEnderecoUsuario, idUsuario)));
+    }
 
 
 }

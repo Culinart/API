@@ -5,6 +5,7 @@ import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
 import culinart.domain.usuario.dto.UsuarioInfoPessoalDTO;
+import culinart.domain.usuario.dto.UsuarioSenhaDTO;
 import culinart.domain.usuario.dto.mapper.UsuarioMapper;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
@@ -175,13 +176,14 @@ public class UsuarioService {
         return usuario;
     }
 
-    public Usuario atualizarSenhaUsuario(int idUsuario, String senha) {
+    public Usuario atualizarSenhaUsuario(int idUsuario, UsuarioSenhaDTO usuarioSenhaDTO) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
                 );
 
-        usuario.setSenha(senha);
-        return usuario;
+        usuario.setSenha(usuarioSenhaDTO.getSenha());
+        passwordEncoder.encode(usuario.getSenha());
+        return usuarioRepository.save(usuario);
     }
 }
