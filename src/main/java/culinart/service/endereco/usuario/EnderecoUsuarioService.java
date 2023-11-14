@@ -4,6 +4,7 @@ import culinart.domain.endereco.usuario.EnderecoUsuario;
 import culinart.domain.endereco.usuario.dto.EnderecoResponseToUsuarioDTO;
 import culinart.domain.endereco.usuario.dto.mapper.EnderecoUsuarioMapper;
 import culinart.domain.endereco.usuario.repository.EnderecoUsuarioRepository;
+import culinart.utils.enums.StatusAtivoEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,11 +24,22 @@ public class EnderecoUsuarioService {
         return EnderecoUsuarioMapper.toDTOList(repository.findAll());
     }
 
-    public EnderecoResponseToUsuarioDTO mostrarEnderecoUsuarioPorIdUsuario(int idUsuario){
-        Optional<EnderecoUsuario> enderecoUsuarioByUsuarioIdOptional = repository.findEnderecoUsuarioByUsuario_Id(idUsuario);
-        if(enderecoUsuarioByUsuarioIdOptional.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario não possui endereço cadastrado!");
+    public List<EnderecoUsuario> mostrarEnderecoUsuarioPorIdUsuario(int idUsuario){
+        return repository.findEnderecoUsuarioByUsuario_Id(idUsuario);
+    }
+
+    public EnderecoUsuario ativarEnderecoUsuario(int idEnderecoUsuario, int idUsuario) {
+        List<EnderecoUsuario> enderecos =
+                repository.findEnderecoUsuarioByUsuario_Id(idUsuario);
+
+        for (EnderecoUsuario enderecoUsuario : enderecos) {
+            enderecoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
+            repository.save(enderecoUsuario);
         }
-        return EnderecoUsuarioMapper.toDTO(enderecoUsuarioByUsuarioIdOptional.get());
+
+        EnderecoUsuario enderecoUsuario = repository.findById(idEnderecoUsuario).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereco Usuario não encontrado para atualização"));
+        enderecoUsuario.setIsAtivo(StatusAtivoEnum.ATIVO);
+        return repository.save(enderecoUsuario);
     }
 }

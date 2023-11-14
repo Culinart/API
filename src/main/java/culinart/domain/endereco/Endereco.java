@@ -1,5 +1,6 @@
 package culinart.domain.endereco;
 
+import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

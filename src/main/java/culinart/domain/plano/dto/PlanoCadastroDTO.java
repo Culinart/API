@@ -25,7 +25,7 @@ public class PlanoCadastroDTO {
     private BigDecimal valorPlano;
     private BigDecimal valorAjuste;
     private Integer qtdDiasSemana;
-    private LocalTime horaEntrega;
+    private String horaEntrega;
     private String diaSemana;
     @Enumerated(EnumType.STRING)
     private StatusAtivoEnum isAtivo;

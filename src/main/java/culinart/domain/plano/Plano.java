@@ -38,7 +38,7 @@ public class Plano {
 
     private Integer qtdDiasSemana;
 
-    private LocalTime horaEntrega;
+    private String horaEntrega;
 
     @Enumerated(EnumType.STRING)
     private DiaSemanaEnum diaSemana;

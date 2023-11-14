@@ -12,6 +12,7 @@ import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.integration.ViaCep.client.ViaCepClient;
 import culinart.integration.ViaCep.dto.ViaCepResponse;
 import culinart.utils.StringUtils;
+import culinart.utils.enums.StatusAtivoEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,7 +39,7 @@ public class EnderecoService {
         return EnderecoMapper.toEnderecoDTO(this.enderecoRepository.findAll());
     }
 
-    public Endereco cadastrarEndereco(String cep, String complemento, int numero) {
+    public Endereco cadastrarEndereco(String cep, String complemento, int numero, int idUsuario) {
         Endereco endereco = getEnderecoPeloCep(cep);
         endereco.setNumero(numero);
         endereco.setComplemento(complemento);
@@ -49,7 +50,7 @@ public class EnderecoService {
     public EnderecoExibicaoDTO atualizarEnderecoDoUsuarioPorId(int idEndereco, Endereco enderecoNovo) {
         Optional<Endereco> enderecoOptional = enderecoRepository.findById(idEndereco);
         if (enderecoOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Endereço não encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado");
         }
         enderecoNovo.setId(idEndereco);
         enderecoRepository.save(enderecoNovo);
@@ -61,7 +62,7 @@ public class EnderecoService {
         Optional<EnderecoUsuario> enderecoUsuarioOptional = enderecosUsuarioRepository.findEnderecoUsuarioByEndereco_Id(idEndereco);
         Optional<Endereco> enderecoOptional = enderecoRepository.findById(idEndereco);
         if (enderecoOptional.isEmpty() && enderecoUsuarioOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Endereço não encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado");
         }
         enderecosUsuarioRepository.delete(enderecoUsuarioOptional.get());
         enderecoRepository.delete(enderecoOptional.get());
@@ -77,8 +78,15 @@ public class EnderecoService {
 
         verificaSeUsuarioExiste(idUsuario);
 
+        List<EnderecoUsuario> enderecos =
+                enderecosUsuarioRepository.findEnderecoUsuarioByUsuario_Id(idUsuario);
+
+        for (EnderecoUsuario enderecoUsuario : enderecos) {
+            enderecoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
+        }
+
         Usuario usuario = usuarioRepository.findById(idUsuario).get();
-        Endereco endereco = cadastrarEndereco(cep, complemento, numero);
+        Endereco endereco = cadastrarEndereco(cep, complemento, numero, idUsuario);
         enderecosUsuarioRepository.save(EnderecoUsuarioMapper.toEntity(endereco, usuario));
         return EnderecoMapper.toDTO(endereco);
     }

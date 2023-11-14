@@ -25,7 +25,7 @@ public class PlanoExibicaoDTO {
     private Integer qtdPessoas;
     private Integer qtdRefeicoesDia;
     private Integer qtdDiasSemana;
-    private LocalTime horaEntrega;
+    private String horaEntrega;
     private DiaSemanaEnum diaSemana;
     @Enumerated(EnumType.STRING)
     private StatusAtivoEnum isAtivo;
