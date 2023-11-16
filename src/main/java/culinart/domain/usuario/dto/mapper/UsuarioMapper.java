@@ -30,6 +30,7 @@ public class UsuarioMapper {
         usuarioExibicaoDTO.setNome(usuario.getNome());
         usuarioExibicaoDTO.setTelefone(usuario.getTelefone());
         usuarioExibicaoDTO.setIsAtivo(usuario.getIsAtivo());
+        usuarioExibicaoDTO.setPermissao(usuario.getPermissao());
 
         return usuarioExibicaoDTO;
     }
@@ -40,6 +41,8 @@ public class UsuarioMapper {
         usuarioTokenDTO.setEmail(usuario.getEmail());
         usuarioTokenDTO.setNome(usuario.getNome());
         usuarioTokenDTO.setToken(token);
+        usuarioTokenDTO.setIsAtivo(usuario.getIsAtivo());
+        usuarioTokenDTO.setPermissao(usuario.getPermissao());
         return usuarioTokenDTO;
     }
 

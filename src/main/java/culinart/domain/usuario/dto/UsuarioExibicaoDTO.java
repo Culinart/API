@@ -1,5 +1,6 @@
 package culinart.domain.usuario.dto;
 
+import culinart.utils.enums.PermissaoEnum;
 import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,5 +18,7 @@ public class UsuarioExibicaoDTO {
     private String telefone;
     @Enumerated(EnumType.STRING)
     private StatusAtivoEnum isAtivo;
+    @Enumerated(EnumType.STRING)
+    private PermissaoEnum permissao;
 
 }
