@@ -15,6 +15,7 @@ public class UsuarioMapper {
         usuario.setEmail(usuarioCriacaoDTO.getEmail());
         usuario.setSenha(usuarioCriacaoDTO.getSenha());
         usuario.setTelefone(usuarioCriacaoDTO.getTelefone());
+        usuario.setCpf(usuarioCriacaoDTO.getCpf());
         usuario.setPermissao(PermissaoEnum.USUARIO);
         usuario.setIsAtivo(StatusAtivoEnum.INATIVO);
 

@@ -22,6 +22,7 @@ public class Usuario implements Assinante {
     private String email;
     private String senha;
     private PermissaoEnum permissao;
+    private String cpf;
     private String telefone;
 
     @Column(name = "is_ativo")
