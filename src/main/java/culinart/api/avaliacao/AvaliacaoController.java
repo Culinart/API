@@ -5,6 +5,7 @@ import culinart.domain.avaliacao.dto.AvaliacaoCadastroDTO;
 import culinart.domain.avaliacao.dto.AvaliacaoResponseDTO;
 import culinart.domain.avaliacao.mapper.AvaliacaoMapper;
 import culinart.service.avaliacao.AvaliacaoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class AvaliacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<AvaliacaoResponseDTO> cadastrarAvaliacao(@RequestBody AvaliacaoCadastroDTO avaliacaoCadastroDTO){
+    public ResponseEntity<AvaliacaoResponseDTO> cadastrarAvaliacao(@Valid @RequestBody AvaliacaoCadastroDTO avaliacaoCadastroDTO){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AvaliacaoMapper.toDTO(avaliacaoService.cadastrarAvaliacao(avaliacaoCadastroDTO)));
     }
