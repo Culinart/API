@@ -55,7 +55,8 @@ public class UsuarioService {
 
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
-        novoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
+        novoUsuario.setIsAtivo(StatusAtivoEnum.ATIVO);
+        novoUsuario.setPermissao(PermissaoEnum.USUARIO);
         return UsuarioMapper.toDTO(usuarioRepository.save(novoUsuario));
     }
 
@@ -146,7 +147,7 @@ public class UsuarioService {
                 );
 
         usuario.setIsAtivo(StatusAtivoEnum.ATIVO);
-        return usuario;
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario permissionarUsuarioAdministrador(int idUsuario) {
@@ -155,7 +156,7 @@ public class UsuarioService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
                 );
         usuario.setPermissao(PermissaoEnum.ADMINISTRADOR);
-        return usuario;
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario permissionarUsuarioCliente(int idUsuario) {
@@ -164,7 +165,7 @@ public class UsuarioService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
                 );
         usuario.setPermissao(PermissaoEnum.CLIENTE);
-        return usuario;
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario permissionarUsuarioFuncionario(int idUsuario) {
@@ -173,7 +174,7 @@ public class UsuarioService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
                 );
         usuario.setPermissao(PermissaoEnum.FUNCIONARIO);
-        return usuario;
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario atualizarSenhaUsuario(int idUsuario, UsuarioSenhaDTO usuarioSenhaDTO) {

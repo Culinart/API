@@ -94,17 +94,17 @@ public class UsuarioController {
     }
 
     @PutMapping("/permissionar/administrador/{idUsuario}")
-    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioAdministrador(int idUsuario){
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioAdministrador(@PathVariable int idUsuario){
         return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioAdministrador(idUsuario)));
     }
 
     @PutMapping("/permissionar/cliente/{idUsuario}")
-    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioCliente(int idUsuario){
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioCliente(@PathVariable int idUsuario){
         return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioCliente(idUsuario)));
     }
 
     @PutMapping("/permissionar/funcionario/{idUsuario}")
-    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioFuncionario(int idUsuario){
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioFuncionario(@PathVariable int idUsuario){
         return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioFuncionario(idUsuario)));
     }
 
