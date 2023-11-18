@@ -12,8 +12,6 @@ public class AvaliacaoMapper {
     public static AvaliacaoResponseDTO toDTO(Avaliacao avaliacao){
         return AvaliacaoResponseDTO.builder()
                 .id(avaliacao.getId())
-                .usuario(UsuarioMapper.toDTO(avaliacao.getUsuario()))
-                .receita(ReceitaMapper.toDTO(avaliacao.getReceita()))
                 .nota(avaliacao.getNota())
                 .build();
     }
