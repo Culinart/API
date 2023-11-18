@@ -39,6 +39,10 @@ public class AvaliacaoService {
         Receita receita = receitaRepository.findById(avaliacaoCadastroDTO.getIdReceita())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
 
-        return avaliacaoRepository.save(AvaliacaoMapper.toEntity(avaliacaoCadastroDTO, usuario, receita));
+        Avaliacao entity = AvaliacaoMapper.toEntity(avaliacaoCadastroDTO, usuario, receita);
+        avaliacaoRepository.save(entity);
+        receita.getAvaliacoes().add(entity);
+        receitaRepository.save(receita);
+        return entity;
     }
 }

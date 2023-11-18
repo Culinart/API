@@ -1,5 +1,7 @@
 package culinart.domain.receita.dto.mapper;
 
+import culinart.domain.avaliacao.dto.AvaliacaoResponseDTO;
+import culinart.domain.avaliacao.mapper.AvaliacaoMapper;
 import culinart.domain.email.ReceitaEmail;
 import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
 import culinart.domain.ingrediente.dto.mapper.IngredienteMapper;
@@ -35,6 +37,14 @@ public class ReceitaMapper {
                 .collect(Collectors.toList())
                 : Collections.emptyList(); // Retorna uma lista vazia se a lista de modos de preparo for nula
 
+        List<AvaliacaoResponseDTO> avaliacaoDTO = receita.getAvaliacoes() != null
+                ? receita.getAvaliacoes()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(AvaliacaoMapper::toDTO)
+                .toList()
+                : Collections.emptyList();
+
         return ReceitaExibicaoDTO.builder()
                 .id(receita.getId())
                 .nome(receita.getNome())
@@ -42,6 +52,7 @@ public class ReceitaMapper {
                 .descricao(receita.getDescricao())
                 .ingredientes(ingredientesDTO)
                 .modoPreparos(modoPreparosDTO)
+                .avaliacoes(avaliacaoDTO)
                 .build();
     }
 

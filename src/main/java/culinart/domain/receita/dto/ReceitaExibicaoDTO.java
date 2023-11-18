@@ -1,5 +1,6 @@
 package culinart.domain.receita.dto;
 
+import culinart.domain.avaliacao.dto.AvaliacaoResponseDTO;
 import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
 import culinart.domain.modoPreparo.dto.ModoPreparoExibicaoDTO;
 import jakarta.persistence.GeneratedValue;
@@ -24,4 +25,5 @@ public class ReceitaExibicaoDTO {
     private String descricao;
     private List<IngredienteExibicaoDTO> ingredientes;
     private List<ModoPreparoExibicaoDTO> modoPreparos;
+    private List<AvaliacaoResponseDTO> avaliacoes;
 }
