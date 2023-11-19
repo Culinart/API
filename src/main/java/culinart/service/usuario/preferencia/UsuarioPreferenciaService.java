@@ -62,18 +62,14 @@ public class UsuarioPreferenciaService {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
-        Preferencia preferencia = preferenciaRepository.findById(idUsuarioPreferencia )
+
+        UsuarioPreferencia usuarioPreferencia = usuarioPreferenciaRepository.findByUsuario_Id(idUsuario)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia não encontrada no sistema"));
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencias de usuario não encontrada"));
 
-        Optional<UsuarioPreferencia> usuarioPreferenciaOptional = usuarioPreferenciaRepository.findByUsuario_Id(idUsuario);
+        usuarioPreferencia.getPreferencias().removeIf(preferencia -> preferencia.getId().equals(idUsuarioPreferencia));
 
-        if (usuarioPreferenciaOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia de usuario não encontrado para deleção");
-        }
-
-        UsuarioPreferencia usuarioPreferencia = usuarioPreferenciaOptional.get();
-        usuarioPreferencia.getPreferencias().add(preferencia);
-        usuarioPreferenciaRepository.delete((usuarioPreferencia));
+        usuarioPreferenciaRepository.save(usuarioPreferencia);
     }
+
 }
