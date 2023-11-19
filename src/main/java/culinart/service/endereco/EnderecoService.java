@@ -79,7 +79,7 @@ public class EnderecoService {
         verificaSeUsuarioExiste(idUsuario);
 
         List<EnderecoUsuario> enderecos =
-                enderecosUsuarioRepository.findEnderecoUsuarioByUsuario_Id(idUsuario);
+                enderecosUsuarioRepository.findEnderecoUsuarioByUsuario_IdOrderByIsAtivo(idUsuario);
 
         for (EnderecoUsuario enderecoUsuario : enderecos) {
             enderecoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface EnderecoUsuarioRepository extends JpaRepository<EnderecoUsuario, Integer> {
-        List<EnderecoUsuario> findEnderecoUsuarioByUsuario_Id(int id);
+        List<EnderecoUsuario> findEnderecoUsuarioByUsuario_IdOrderByIsAtivo(int id);
         Optional<EnderecoUsuario> findEnderecoUsuarioByEndereco_Id(int id);
         boolean existsByEnderecoCepAndEnderecoNumeroAndUsuarioId(String cep, int numero, int idUsuario);
 }
