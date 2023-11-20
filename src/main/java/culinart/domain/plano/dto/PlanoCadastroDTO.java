@@ -32,5 +32,4 @@ public class PlanoCadastroDTO {
     @Enumerated(EnumType.STRING)
     private StatusAtivoEnum isAtivo;
     private Usuario usuario;
-    private PlanoCategoriaExibicaoDTO planoCategorias;
 }
