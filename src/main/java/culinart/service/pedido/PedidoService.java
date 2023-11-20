@@ -2,8 +2,6 @@ package culinart.service.pedido;
 
 
 import culinart.domain.pedido.Pedido;
-import culinart.domain.pedido.dto.PedidoByDataDto;
-import culinart.domain.pedido.dto.ProximosPedidosDto;
 import culinart.domain.pedido.repository.PedidoRepository;
 import culinart.domain.plano.Plano;
 import culinart.domain.plano.repository.PlanoRepository;
@@ -33,6 +31,7 @@ public class PedidoService {
 
 
     public List<Pedido> getDatas(Integer idUser){
+
         return pedidoRepository.findAllByPlanoUsuarioId(idUser);
     }
     @Transactional

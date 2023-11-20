@@ -5,8 +5,6 @@ import culinart.domain.pedido.dto.DatasPedidosDto;
 import culinart.domain.pedido.dto.ProximosPedidosDto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-
 public class PedidoMapper {
     public DatasPedidosDto toDatasPedidosDto(Pedido pedido){
         return new DatasPedidosDto(pedido.getDataEntrega());
@@ -28,7 +26,4 @@ public class PedidoMapper {
         pedidoDto.setQtdPorcoes((Integer) longQtdPorcoes.intValue());
         return pedidoDto;
     }
-
-
-
 }
