@@ -5,6 +5,9 @@ import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.pedido.Pedido;
 import culinart.domain.pedido.dto.DatasPedidosDto;
+import culinart.domain.pedido.dto.PedidoByDataDto;
+import culinart.domain.pedido.dto.ProximosPedidosDto;
+import culinart.domain.pedido.mapper.PedidoByDataMapper;
 import culinart.domain.pedido.mapper.PedidoMapper;
 import culinart.service.pedido.PedidoService;
 import culinart.utils.Mapper;
@@ -30,10 +33,14 @@ public class PedidoController {
 
 
     @GetMapping("/entrega/{idUser}")
-    public ResponseEntity<Pedido> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
+    public ResponseEntity<PedidoByDataDto> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
 
-        Optional<Pedido> pedido = pedidoService.nextPedido(idUser, dataEntrega.getDataEntrega());
-        return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+        List<Object[]> pedido = pedidoService.nextPedido(idUser, dataEntrega.getDataEntrega());
+        if (pedido.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        PedidoByDataDto pedidoFormatado = PedidoByDataMapper.toPedidoByDataDto(pedido);
+        return ResponseEntity.ok().body(pedidoFormatado);
 
     }
 
@@ -72,5 +79,19 @@ public class PedidoController {
         }else{
             return ResponseEntity.status(400).build();
         }
+    }
+
+    @GetMapping("/proximas")
+    public ResponseEntity<List<ProximosPedidosDto>> proximoPedido() {
+
+        List<Object[]> pedidos = pedidoService.proximasEntregas();
+        if (pedidos.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        List<ProximosPedidosDto> listaProxPedidos = pedidos.stream()
+                                                    .map(PedidoMapper::toProximosPedidosDto)
+                                                    .collect(Collectors.toList());
+        return ResponseEntity.ok().body(listaProxPedidos);
+
     }
 }
