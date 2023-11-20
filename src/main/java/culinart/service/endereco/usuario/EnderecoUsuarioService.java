@@ -29,20 +29,20 @@ public class EnderecoUsuarioService {
     }
 
     public EnderecoUsuario ativarEnderecoUsuario(int idEnderecoUsuario, int idUsuario) {
+
         List<EnderecoUsuario> enderecos = repository.findEnderecoUsuarioByUsuario_IdOrderByIsAtivo(idUsuario);
 
         for (EnderecoUsuario enderecoUsuario : enderecos) {
-            if (enderecoUsuario.getId() != idEnderecoUsuario && enderecoUsuario.getIsAtivo() == StatusAtivoEnum.INATIVO) {
+            if (enderecoUsuario.getId() == idEnderecoUsuario) {
+                enderecoUsuario.setIsAtivo(StatusAtivoEnum.ATIVO);
+            } else {
                 enderecoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
-                repository.save(enderecoUsuario);
             }
+            repository.save(enderecoUsuario);
         }
 
-        EnderecoUsuario enderecoUsuario = repository.findById(idEnderecoUsuario).orElseThrow(() ->
+        return repository.findById(idEnderecoUsuario).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereco Usuario não encontrado para atualização"));
-
-        enderecoUsuario.setIsAtivo(StatusAtivoEnum.ATIVO);
-        return repository.save(enderecoUsuario);
     }
 
 }
