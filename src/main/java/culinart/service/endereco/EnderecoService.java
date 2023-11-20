@@ -94,6 +94,9 @@ public class EnderecoService {
 
     public Endereco getEnderecoPeloCep(String cep) {
         ViaCepResponse response = this.viaCepClient.getCEP(cep);
+        if(response.getCep()==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"CEP não encontrado");
+        }
         return EnderecoMapper.of(response);
     }
 

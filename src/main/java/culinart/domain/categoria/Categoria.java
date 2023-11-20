@@ -21,6 +21,6 @@ public class Categoria {
     private Integer id;
 
     private String nome;
-    private String descricao;
+    private String valor;
 
 }
