@@ -21,7 +21,8 @@ public class ReceitaExibicaoDTO {
     @GeneratedValue
     private Integer id;
     private String nome;
-    private Double tempoPreparo;
+    private Integer horas;
+    private Integer minutos;
     private String descricao;
     private List<IngredienteExibicaoDTO> ingredientes;
     private List<ModoPreparoExibicaoDTO> modoPreparos;

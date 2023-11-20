@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ReceitaMapper {
     public static ReceitaExibicaoDTO toDTO(Receita receita) {
         if (receita == null) {
-            return null; // Trate o caso em que a entrada seja nula
+            return null; 
         }
 
         List<IngredienteExibicaoDTO> ingredientesDTO = receita.getIngredientes() != null
@@ -27,7 +27,7 @@ public class ReceitaMapper {
                 .filter(Objects::nonNull)
                 .map(IngredienteMapper::toDTO)
                 .collect(Collectors.toList())
-                : Collections.emptyList(); // Retorna uma lista vazia se a lista de ingredientes for nula
+                : Collections.emptyList();
 
         List<ModoPreparoExibicaoDTO> modoPreparosDTO = receita.getModoPreparos() != null
                 ? receita.getModoPreparos()
@@ -35,7 +35,7 @@ public class ReceitaMapper {
                 .filter(Objects::nonNull)
                 .map(ModoPreparoMapper::toDTO)
                 .collect(Collectors.toList())
-                : Collections.emptyList(); // Retorna uma lista vazia se a lista de modos de preparo for nula
+                : Collections.emptyList();
 
         List<AvaliacaoResponseDTO> avaliacaoDTO = receita.getAvaliacoes() != null
                 ? receita.getAvaliacoes()
@@ -55,7 +55,8 @@ public class ReceitaMapper {
         return ReceitaExibicaoDTO.builder()
                 .id(receita.getId())
                 .nome(receita.getNome())
-                .tempoPreparo(receita.getTempoPreparo())
+                .horas(receita.getHoras())
+                .minutos(receita.getMinutos())
                 .descricao(receita.getDescricao())
                 .ingredientes(ingredientesDTO)
                 .modoPreparos(modoPreparosDTO)
