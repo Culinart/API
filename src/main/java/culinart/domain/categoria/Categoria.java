@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 
 @Entity
 @Getter
@@ -21,6 +23,6 @@ public class Categoria {
     private Integer id;
 
     private String nome;
-    private String valor;
+    private BigDecimal valor;
 
 }
