@@ -20,9 +20,9 @@ public class ReceitaCategoriaController {
     private final ReceitaCategoriaService receitaCategoriaService;
 
 
-    @GetMapping
-    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> exibirTodasReceitasCategorias(){
-        List<ReceitaCategoria> receitaCategorias = receitaCategoriaService.exibirTodasReceitasCategorias();
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> exibirTodasReceitasCategorias(@PathVariable int idUsuario){
+        List<ReceitaCategoria> receitaCategorias = receitaCategoriaService.exibirTodasReceitasCategorias(idUsuario);
         if (receitaCategorias.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

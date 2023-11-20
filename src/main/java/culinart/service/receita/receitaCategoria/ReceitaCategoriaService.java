@@ -30,8 +30,8 @@ public class ReceitaCategoriaService {
     private final CategoriaController categoriaController;
     private final ReceitaController receitaController;
 
-    public List<ReceitaCategoria> exibirTodasReceitasCategorias() {
-        return repository.findAll();
+    public List<ReceitaCategoria> exibirTodasReceitasCategorias(int idUsuario) {
+        return repository.findReceitaCategoriaOrderedByFavoritos(idUsuario);
     }
 
     public ReceitaCategoria cadastrarReceitaCategoria(ReceitaCategoria receitaCategoria) {

@@ -79,5 +79,4 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "JOIN Categoria categorias ON rc.categoria_id = categorias.id\n" +
             "GROUP BY pedidos_agrupados.pedido_id, pedidos_agrupados.data_entrega, pedidos_agrupados.nome_usuario, pedidos_agrupados.logradouro, pedidos_agrupados.numero, pedidos_agrupados.quantidade_porcoes;", nativeQuery = true)
     List<Object[]> findProximosPedidos(LocalDate dataLimite);
-    List<Pedido> findAllByUsuarioId(Integer usuarioId);
 }

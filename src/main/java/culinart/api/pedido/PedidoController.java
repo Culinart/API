@@ -5,12 +5,9 @@ import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.pedido.Pedido;
 import culinart.domain.pedido.dto.DatasPedidosDto;
-<<<<<<< HEAD
 import culinart.domain.pedido.dto.PedidoByDataDto;
 import culinart.domain.pedido.dto.ProximosPedidosDto;
 import culinart.domain.pedido.mapper.PedidoByDataMapper;
-=======
->>>>>>> c62dd17f98ecbf39f93bee1a222adf218049d039
 import culinart.domain.pedido.mapper.PedidoMapper;
 import culinart.service.pedido.PedidoService;
 import culinart.utils.Mapper;
