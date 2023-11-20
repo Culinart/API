@@ -10,12 +10,12 @@ import java.util.List;
 @Data
 public class ProximosPedidosDto {
     private Integer idPedido;
-    private String nomeUser;
-    private String lougradouro;
+    private String nomeUsuario;
+    private String logradouro;
     private Integer numero;
     private LocalDate dataEntrega;
     private Integer qtdReceitas;
     private Integer qtdPorcoes;
-    private List<Receita> receitas;
-    private List<Categoria> categorias;
+    private String receitas;
+    private String categorias;
 }

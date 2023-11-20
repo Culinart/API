@@ -6,11 +6,10 @@ import culinart.domain.pedido.repository.PedidoRepository;
 import culinart.domain.plano.Plano;
 import culinart.domain.plano.repository.PlanoRepository;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -25,9 +24,15 @@ public class PedidoService {
         this.planoRepository = planoRepository;
     }
 
-    public Optional<Pedido> nextPedido(Integer idUser, LocalDate dataEntrega){
+    public List<Object[]> nextPedido(Integer idUser, LocalDate dataEntrega){
         return pedidoRepository.acharProximoPedidoUser(idUser, dataEntrega);
 
+    }
+
+
+    public List<Pedido> getDatas(Integer idUser){
+
+        return pedidoRepository.findAllByPlanoUsuarioId(idUser);
     }
     @Transactional
     public Optional<Pedido> pularEntrega(Integer idPedido){
@@ -56,6 +61,12 @@ public class PedidoService {
         planoRepository.save(pedidoatt.getPlano());
 
         return  pedidoRepository.save(pedidoatt);
+    }
+
+    public  List<Object[]> proximasEntregas(){
+        LocalDate sevenDaysAfter = LocalDate.now().plusDays(7);
+        return pedidoRepository.findProximosPedidos(sevenDaysAfter);
+
     }
 
 }
