@@ -1,12 +1,11 @@
 package culinart.domain.receitaCategoria.dto;
 
-import culinart.domain.categoria.Categoria;
 import culinart.domain.categoria.dto.CategoriaExibicaoDTO;
-import culinart.domain.preferencia.Preferencia;
 import culinart.domain.preferencia.dto.PreferenciaExibicaoDTO;
-import culinart.domain.receita.Receita;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

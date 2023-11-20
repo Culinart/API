@@ -26,9 +26,8 @@ public class CategoriaService {
 
     public Categoria cadastrarCategoria(Categoria categoria) {
         if (categoriaRepository.existsByNome(categoria.getNome())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria já cadastrada");
+            categoria = categoriaRepository.findByNome(categoria.getNome()).get();
         }
-
         return categoriaRepository.save(categoria);
     }
 
