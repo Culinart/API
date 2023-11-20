@@ -22,8 +22,9 @@ public class Receita {
     private Integer id;
     private String nome;
 
-    @Column(name = "tempo_preparo")
-    private Double tempoPreparo;
+    private Integer horas;
+
+    private Integer minutos;
 
     private String descricao;
 

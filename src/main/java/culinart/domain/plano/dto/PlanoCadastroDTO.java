@@ -1,6 +1,8 @@
 package culinart.domain.plano.dto;
 
+import culinart.domain.planoCategoria.dto.PlanoCategoriaExibicaoDTO;
 import culinart.domain.usuario.Usuario;
+import culinart.utils.enums.DiaSemanaEnum;
 import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
