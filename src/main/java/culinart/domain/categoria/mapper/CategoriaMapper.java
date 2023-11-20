@@ -8,7 +8,7 @@ public class CategoriaMapper {
         return CategoriaExibicaoDTO.builder()
                 .id(categoria.getId())
                 .nome(categoria.getNome())
-                .descricao(categoria.getDescricao())
+                .valor(categoria.getValor())
                 .build();
     }
 }
