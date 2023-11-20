@@ -45,6 +45,13 @@ public class ReceitaMapper {
                 .toList()
                 : Collections.emptyList();
 
+        Integer qtdAvaliacoes = avaliacaoDTO.size();
+
+        Double mediaAvaliacoes = avaliacaoDTO.stream()
+                .mapToDouble(AvaliacaoResponseDTO::getNota)
+                .average()
+                .orElse(0.0);
+
         return ReceitaExibicaoDTO.builder()
                 .id(receita.getId())
                 .nome(receita.getNome())
@@ -53,12 +60,14 @@ public class ReceitaMapper {
                 .ingredientes(ingredientesDTO)
                 .modoPreparos(modoPreparosDTO)
                 .avaliacoes(avaliacaoDTO)
+                .qtdAvaliacoes(qtdAvaliacoes)
+                .mediaAvaliacoes(mediaAvaliacoes)
                 .build();
     }
 
     public static ReceitaEmail toEmailDTO (Receita receita){
         return ReceitaEmail.builder()
-                .titulo("Nova Receita Adcionada no sistema: " + receita.getNome())
+                .titulo("Nova Receita Adicionada no sistema: " + receita.getNome())
                 .conteudo(receita.getDescricao() + "\n Venha Conferir!!")
                 .receita(receita)
                 .build();

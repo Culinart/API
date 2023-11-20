@@ -26,4 +26,6 @@ public class ReceitaExibicaoDTO {
     private List<IngredienteExibicaoDTO> ingredientes;
     private List<ModoPreparoExibicaoDTO> modoPreparos;
     private List<AvaliacaoResponseDTO> avaliacoes;
+    private Double mediaAvaliacoes;
+    private Integer qtdAvaliacoes;
 }
