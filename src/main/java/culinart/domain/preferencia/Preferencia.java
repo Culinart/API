@@ -20,7 +20,9 @@ public class Preferencia {
     private Integer id;
 
     private String nome;
-    private TipoPreferenciaEnum tipoPreferenciaEnum;
+
+    @Enumerated(EnumType.STRING)
+    private TipoPreferenciaEnum tipo;
 
     @Column(name = "cor_fundo")
     private String corFundo;

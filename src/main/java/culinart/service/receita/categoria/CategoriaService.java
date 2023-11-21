@@ -1,6 +1,7 @@
 package culinart.service.receita.categoria;
 
 import culinart.domain.categoria.Categoria;
+import culinart.domain.categoria.dto.CategoriaCadastroDTO;
 import culinart.domain.categoria.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,9 @@ public class CategoriaService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
     }
 
-    public Categoria cadastrarCategoria(Categoria categoria) {
-        if (categoriaRepository.existsByNome(categoria.getNome())) {
-            categoria = categoriaRepository.findByNome(categoria.getNome()).get();
-        }
+    public Categoria cadastrarCategoria(CategoriaCadastroDTO cadastroDTO) {
+        Categoria categoria = categoriaRepository.findById(cadastroDTO.getId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
         return categoriaRepository.save(categoria);
     }
 
