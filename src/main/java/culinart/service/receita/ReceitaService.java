@@ -2,6 +2,7 @@ package culinart.service.receita;
 
 import culinart.domain.receita.Receita;
 import culinart.domain.receita.repository.ReceitaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

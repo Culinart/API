@@ -26,7 +26,7 @@ public class PreferenciaService {
 
     public Preferencia cadastrarPreferencia(Preferencia preferencia) {
         if (preferenciaRepository.existsByNome(preferencia.getNome())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita já cadastrada");
+            return preferenciaRepository.findByNome(preferencia.getNome()).get();
         }
 
         return preferenciaRepository.save(preferencia);
