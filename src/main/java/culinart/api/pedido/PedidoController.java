@@ -1,8 +1,5 @@
 package culinart.api.pedido;
 
-import culinart.domain.fornecedor.Funcionario;
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
-import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.pedido.Pedido;
 import culinart.domain.pedido.dto.DatasPedidosDto;
 import culinart.domain.pedido.dto.PedidoByDataDto;
@@ -10,17 +7,12 @@ import culinart.domain.pedido.dto.ProximosPedidosDto;
 import culinart.domain.pedido.mapper.PedidoByDataMapper;
 import culinart.domain.pedido.mapper.PedidoMapper;
 import culinart.service.pedido.PedidoService;
-import culinart.utils.Mapper;
 import culinart.utils.enums.StatusPedidoEnum;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

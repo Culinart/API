@@ -26,10 +26,6 @@ public class ModoPreparoService {
 
 
     public ModoPreparo cadastrarModoPreparo(ModoPreparo modoPreparo) {
-        if (modoPreparoRepository.findByPasso(modoPreparo.getPasso()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Passo já cadastrado");
-        }
-
         return modoPreparoRepository.save(modoPreparo);
     }
 

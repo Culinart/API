@@ -8,7 +8,7 @@ public class PreferenciaMapper {
         return PreferenciaExibicaoDTO.builder()
                 .id(preferencia.getId())
                 .nome(preferencia.getNome())
-                .tipoPreferenciaEnum(preferencia.getTipoPreferenciaEnum())
+                .tipoPreferenciaEnum(preferencia.getTipo())
                 .corTexto(preferencia.getCorTexto())
                 .corFundo(preferencia.getCorFundo())
                 .build();
