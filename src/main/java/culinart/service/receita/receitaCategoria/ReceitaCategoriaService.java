@@ -60,8 +60,9 @@ public class ReceitaCategoriaService {
 
         List<Preferencia> preferenciaList = new ArrayList<>();
         for (PreferenciaCadastroDTO preferenciaCadastroDTO : preferencias){
-            preferenciaRepository.findById(preferenciaCadastroDTO.getId()).orElseThrow(()->
+            Preferencia preferencia = preferenciaRepository.findById(preferenciaCadastroDTO.getId()).orElseThrow(() ->
                     new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia não encontrada!"));
+            preferenciaList.add(preferencia);
         }
 
         receitaController.cadastrarReceita(receita);
