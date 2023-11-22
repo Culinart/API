@@ -1,10 +1,8 @@
 package culinart.service.receita.receitaCategoria;
 
 import culinart.api.receita.ReceitaController;
-import culinart.api.receita.categoria.CategoriaController;
 import culinart.api.receita.ingrediente.IngredienteController;
 import culinart.api.receita.modoPreparo.ModoPreparoController;
-import culinart.api.receita.preferencia.PreferenciaController;
 import culinart.domain.categoria.Categoria;
 import culinart.domain.categoria.dto.CategoriaCadastroDTO;
 import culinart.domain.categoria.repository.CategoriaRepository;
@@ -14,15 +12,16 @@ import culinart.domain.preferencia.Preferencia;
 import culinart.domain.preferencia.dto.PreferenciaCadastroDTO;
 import culinart.domain.preferencia.repository.PreferenciaRepository;
 import culinart.domain.receita.Receita;
-import culinart.domain.receita.repository.ReceitaRepository;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
 import culinart.domain.receitaCategoria.dto.ReceitaCategoriaCadastroDTO;
 import culinart.domain.receitaCategoria.repository.ReceitaCategoriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class ReceitaCategoriaService {
         return repository.findAll();
     }
 
-    public ReceitaCategoria cadastrarReceitaCategoria(ReceitaCategoriaCadastroDTO receitaCategoria) {
+    public ReceitaCategoria cadastrarReceitaCategoria(ReceitaCategoriaCadastroDTO receitaCategoria, MultipartFile imagemReceita) throws IOException {
         List<Ingrediente> ingredientes = receitaCategoria.getReceita().getIngredientes();
         List<ModoPreparo> modoPreparos = receitaCategoria.getReceita().getModoPreparos();
         List<CategoriaCadastroDTO> categorias = receitaCategoria.getCategoria();
@@ -65,7 +64,7 @@ public class ReceitaCategoriaService {
             preferenciaList.add(preferencia);
         }
 
-        receitaController.cadastrarReceita(receita);
+        receitaController.cadastrarReceita(receita,imagemReceita);
 
         ReceitaCategoria entity = new ReceitaCategoria();
         entity.setReceita(receitaCategoria.getReceita());
@@ -83,4 +82,12 @@ public class ReceitaCategoriaService {
     public List<ReceitaCategoria> pesquisarReceitaCategoria(String parametro) {
         return repository.findByParametro(parametro);
     }
-}
+
+    public byte[] getImagem(int id) {
+            ReceitaCategoria receita = repository.findById(id).orElseThrow(() ->
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada"));
+
+            return receita.getReceita().getImagem();
+        }
+    }
+

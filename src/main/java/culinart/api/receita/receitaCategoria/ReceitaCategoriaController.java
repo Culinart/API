@@ -7,9 +7,12 @@ import culinart.domain.receitaCategoria.mapper.ReceitaCategoriaMapper;
 import culinart.service.receita.receitaCategoria.ReceitaCategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,10 +41,11 @@ public class ReceitaCategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReceitaCategoriaExibicaoDTO> cadastrarReceitaCategoria(@RequestBody ReceitaCategoriaCadastroDTO receitaCategoria){
+    public ResponseEntity<ReceitaCategoriaExibicaoDTO> cadastrarReceitaCategoria(
+            @RequestBody ReceitaCategoriaCadastroDTO receitaCategoria, @RequestParam MultipartFile imagemReceita) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ReceitaCategoriaMapper
-                        .toDTO(receitaCategoriaService.cadastrarReceitaCategoria(receitaCategoria)));
+                        .toDTO(receitaCategoriaService.cadastrarReceitaCategoria(receitaCategoria, imagemReceita)));
     }
 
     @DeleteMapping("/{id}")
@@ -60,5 +64,11 @@ public class ReceitaCategoriaController {
         }
 
         return ResponseEntity.ok(collect);
+    }
+
+    @GetMapping("/receitas/{id}/imagem")
+    public ResponseEntity<byte[]> getImagem(@PathVariable int id){
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+                .body(receitaCategoriaService.getImagem(id));
     }
 }

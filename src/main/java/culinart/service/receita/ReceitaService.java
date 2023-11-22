@@ -6,8 +6,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -24,11 +26,11 @@ public class ReceitaService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
     }
 
-    public Receita cadastrarReceita(Receita receita) {
+    public Receita cadastrarReceita(Receita receita, MultipartFile imagem) throws IOException {
         if (receitaRepository.existsByNome(receita.getNome())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita já cadastrada");
         }
-
+        receita.setImagem(imagem.getBytes());
         return receitaRepository.save(receita);
     }
 

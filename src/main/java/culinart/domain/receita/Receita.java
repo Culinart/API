@@ -28,6 +28,9 @@ public class Receita {
 
     private String descricao;
 
+    @Lob
+    private byte[] imagem;
+
     @OneToMany
     private List<Ingrediente> ingredientes;
 
