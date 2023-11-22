@@ -21,9 +21,9 @@ public class ReceitaCategoria {
     @ManyToOne
     private Receita receita;
 
-    @OneToMany
+    @ManyToMany
     private List<Categoria> categoria;
 
-    @OneToMany
+    @ManyToMany
     private List<Preferencia> preferencia;
 }

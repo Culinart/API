@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/receitas/categorias")
@@ -47,5 +48,17 @@ public class ReceitaCategoriaController {
     public ResponseEntity<Void>deletarReceitaCategoria(@PathVariable int id){
         receitaCategoriaService.deletarReceitaCategoria(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/pesquisar")
+    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> pesquisarReceitaCategoria(@RequestParam String parametro){
+        List<ReceitaCategoriaExibicaoDTO> collect = receitaCategoriaService.pesquisarReceitaCategoria(parametro)
+                .stream().map(ReceitaCategoriaMapper::toDTO).collect(Collectors.toList());
+
+        if(collect.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(collect);
     }
 }

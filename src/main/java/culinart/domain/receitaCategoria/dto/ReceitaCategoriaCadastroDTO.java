@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 public class ReceitaCategoriaCadastroDTO {
-    private Integer id;
     private Receita receita;
     private List<CategoriaCadastroDTO> categoria;
     private List<PreferenciaCadastroDTO> preferencia;

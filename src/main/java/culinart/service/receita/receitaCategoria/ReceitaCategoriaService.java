@@ -79,4 +79,8 @@ public class ReceitaCategoriaService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "ReceitaCategoria não encontrada"));
         repository.delete(receitaCategoria);
     }
+
+    public List<ReceitaCategoria> pesquisarReceitaCategoria(String parametro) {
+        return repository.findByParametro(parametro);
+    }
 }
