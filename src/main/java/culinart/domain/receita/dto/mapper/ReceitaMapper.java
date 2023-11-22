@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ReceitaMapper {
     public static ReceitaExibicaoDTO toDTO(Receita receita) {
         if (receita == null) {
-            return null; 
+            return null;
         }
 
         List<IngredienteExibicaoDTO> ingredientesDTO = receita.getIngredientes() != null
