@@ -37,4 +37,10 @@ public class AvaliacaoController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AvaliacaoMapper.toDTO(avaliacaoService.cadastrarAvaliacao(avaliacaoCadastroDTO)));
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> desfazerAvaliacao(){
+        avaliacaoService.desfazer();
+        return ResponseEntity.noContent().build();
+    }
 }
