@@ -13,4 +13,6 @@ public interface EnderecoUsuarioRepository extends JpaRepository<EnderecoUsuario
         List<EnderecoUsuario> findEnderecoUsuarioByUsuario_IdOrderByIsAtivo(int id);
         Optional<EnderecoUsuario> findEnderecoUsuarioByEndereco_Id(int id);
         boolean existsByEnderecoCepAndEnderecoNumeroAndUsuarioId(String cep, int numero, int idUsuario);
+        Optional<EnderecoUsuario> findEnderecoUsuarioAtivoByUsuario_Id(int id);
+
 }
