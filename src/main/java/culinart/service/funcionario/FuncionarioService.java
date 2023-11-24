@@ -49,12 +49,7 @@ public class FuncionarioService {
             Funcionario funcionarioExistente = func.get();
             funcionarioExistente.setNome(funcionario.getNome());
             funcionarioExistente.setEmail(funcionario.getEmail());
-            funcionarioExistente.setSenha(passwordEncoder.encode(funcionario.getSenha()));
             funcionarioExistente.setPermissao(funcionario.getPermissao());
-            funcionarioExistente.setTel(funcionario.getTel());
-            funcionarioExistente.setCargo(funcionario.getCargo());
-            funcionarioExistente.setTurno(funcionario.getTurno());
-            funcionarioExistente.setIsAtivo(funcionario.getIsAtivo());
             Funcionario funcionarioAtualizado = funcionarioRepository.save(funcionarioExistente);
 
             return FuncionarioMapper.of(funcionarioAtualizado);
