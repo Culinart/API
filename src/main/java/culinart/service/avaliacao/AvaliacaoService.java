@@ -23,7 +23,6 @@ public class AvaliacaoService {
     private final AvaliacaoRepository avaliacaoRepository;
     private final UsuarioRepository usuarioRepository;
     private final ReceitaRepository receitaRepository;
-    private final PilhaObj pilha = new PilhaObj();
     public List<Avaliacao> exibirTodasAvaliacoes() {
         return avaliacaoRepository.findAll();
     }
@@ -45,16 +44,7 @@ public class AvaliacaoService {
         avaliacaoRepository.save(entity);
         receita.getAvaliacoes().add(entity);
         receitaRepository.save(receita);
-        pilha.push(entity.getId());
         return entity;
     }
 
-    public void desfazer() {
-        int id = pilha.pop(); // Remove e obtém o ID da pilha
-        if (id != -1) {
-            avaliacaoRepository.deleteById(id); // Remove a avaliação do banco de dados
-        } else {
-            throw new IllegalArgumentException(String.valueOf(HttpStatus.BAD_REQUEST));
-        }
-    }
 }
