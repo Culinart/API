@@ -6,12 +6,17 @@ import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import culinart.domain.fornecedor.mapper.FuncionarioMapper;
 import culinart.domain.fornecedor.repository.FuncionarioRepository;
+import culinart.utils.FilaObj;
 import culinart.utils.ListaObj;
 import culinart.utils.enums.PermissaoEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -287,8 +292,8 @@ public class FuncionarioService {
                     System.out.println("Cargo: " + registro.substring(142, 162));
                     turno = registro.substring(162, 172).trim();
                     System.out.println("Turno: " + registro.substring(162, 172));
-                    permissao = PermissaoEnum.valueOf(registro.substring(172, 173).trim());
-                    System.out.println("Permissão: " + registro.substring(172, 173));
+                    permissao = PermissaoEnum.valueOf(registro.substring(172, 185).trim());
+                    System.out.println("Permissão: " + registro.substring(172, 185));
 
 
                     contaRegDadosLidos++;
@@ -314,6 +319,28 @@ public class FuncionarioService {
             System.out.println("Erro ao ler os registros" + err);
         }
         return listaFuncsAdicionados;
+    }
+
+
+    public List<FuncionarioExibicaoDTO> toFila(List<MultipartFile> files){
+        FilaObj<MultipartFile> filaDeArquivos = new FilaObj(files.size());
+        for (MultipartFile file : files) {
+            if (!filaDeArquivos.isFull()) {
+                filaDeArquivos.insert(file);
+            } else {
+               throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+        }
+        List<FuncionarioExibicaoDTO> funcionariosCadastrados = new ArrayList<>();
+
+        while (!filaDeArquivos.isEmpty()) {
+            MultipartFile arquivo = filaDeArquivos.poll();
+            List<FuncionarioExibicaoDTO> funcionariosDoArquivo = leArquivoTxt(arquivo);
+            funcionariosCadastrados.addAll(funcionariosDoArquivo); // Adiciona todos os funcionários do arquivo na lista consolidada
+        }
+
+        return funcionariosCadastrados;
+
     }
 }
 
