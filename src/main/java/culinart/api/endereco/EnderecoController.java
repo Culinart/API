@@ -62,7 +62,7 @@ public class EnderecoController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/usuarios/{idUsuario}/enderecoAtivo")
+    @GetMapping("/usuarios/enderecoAtivo/{idUsuario}")
     public ResponseEntity<EnderecoResponseToUsuarioDTO> getEnderecoAtivoDoUsuario(@PathVariable int idUsuario) {
         Optional<EnderecoUsuario> enderecoUsuarioAtivo = enderecoUsuarioService.findEnderecoAtivoByUsuarioId(idUsuario);
 
