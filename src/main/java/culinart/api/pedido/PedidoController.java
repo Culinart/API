@@ -52,7 +52,7 @@ public class PedidoController {
 
 
     @PutMapping("/pularEntrega/{idPedido}")
-    public ResponseEntity pularEntrega(@PathVariable int idPedido){
+    public ResponseEntity<Pedido> pularEntrega(@PathVariable int idPedido){
         Optional<Pedido> pedido = pedidoService.pularEntrega(idPedido);
         if(pedido.isEmpty()){
             return ResponseEntity.badRequest().build();
@@ -61,6 +61,12 @@ public class PedidoController {
             return ResponseEntity.ok(pedido.get());
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/entregue/{idPedido}")
+    public ResponseEntity<Pedido> pedidoEntregue(@PathVariable int idPedido){
+        Optional<Pedido> pedido = pedidoService.pedidoEntregue(idPedido);
+        return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
 

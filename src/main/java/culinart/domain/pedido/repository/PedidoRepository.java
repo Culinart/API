@@ -42,7 +42,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     @Query("UPDATE Pedido p SET p.status = 'CANCELADO' WHERE p.id = :pedido_id")
     void pularEntrega(Integer pedido_id);
 
-
+    @Modifying
+    @Query("UPDATE Pedido p SET p.status = 'ENTREGUE' WHERE p.id = :pedidoId")
+    void atualizarStatusParaEntregue(Integer pedidoId);
 
     @Query(value = "SELECT \n" +
             "    pedidos_agrupados.pedido_id,\n" +

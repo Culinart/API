@@ -17,7 +17,7 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "data_criacao")
-    private LocalDate dataUltimaModificacao;
+    private LocalDate dataCriacao;
     private Double valor;
     @Enumerated(EnumType.STRING)
     private StatusPedidoEnum status;
