@@ -130,7 +130,6 @@ public class PedidoService {
             }
             pedido.setDataEntrega(proximoDia);
         }
-        System.out.println(pedido);
         pedidoRepository.save(pedido);
     }
 
