@@ -2,6 +2,7 @@ package culinart.api.funcionario;
 
 import culinart.domain.fornecedor.dto.FuncionarioDTO;
 import culinart.service.funcionario.FuncionarioService;
+import culinart.utils.FilaObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -94,8 +95,8 @@ public class FuncionarioController {
     }
 
     @PostMapping("/txt")
-    public ResponseEntity<List<FuncionarioExibicaoDTO>> cadastroTxt(@RequestParam("file") MultipartFile file){
-        List<FuncionarioExibicaoDTO> listaUsersCadastrados = funcionarioService.leArquivoTxt(file);
+    public ResponseEntity<List<FuncionarioExibicaoDTO>> cadastroTxt(@RequestParam("files") List<MultipartFile> files){
+        List<FuncionarioExibicaoDTO> listaUsersCadastrados = funcionarioService.toFila(files);
         if (listaUsersCadastrados.isEmpty()){
             return ResponseEntity.badRequest().build();
         }
