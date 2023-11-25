@@ -8,7 +8,6 @@ import culinart.domain.receita.Receita;
 import culinart.domain.receita.repository.ReceitaRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.repository.UsuarioRepository;
-import culinart.utils.PilhaObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
