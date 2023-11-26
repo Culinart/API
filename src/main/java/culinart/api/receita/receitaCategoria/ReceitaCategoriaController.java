@@ -40,6 +40,21 @@ public class ReceitaCategoriaController {
         return ResponseEntity.ok(receitaCategoriaExibicaoDTOS);
     }
 
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> exibirTodasReceitasCategoriasComFavoritos(@PathVariable int idUsuario){
+        List<ReceitaCategoria> receitaCategorias = receitaCategoriaService.exibirTodasReceitasCategoriasComFavoritos(idUsuario);
+        if (receitaCategorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<ReceitaCategoriaExibicaoDTO> receitaCategoriaExibicaoDTOS = new ArrayList<>();
+        for (ReceitaCategoria receitaCategoria : receitaCategorias) {
+            receitaCategoriaExibicaoDTOS.add(ReceitaCategoriaMapper.toDTO(receitaCategoria));
+        }
+
+        return ResponseEntity.ok(receitaCategoriaExibicaoDTOS);
+    }
+
     @PostMapping
     public ResponseEntity<ReceitaCategoriaExibicaoDTO> cadastrarReceitaCategoria(
             @RequestBody ReceitaCategoriaCadastroDTO receitaCategoria, @RequestParam MultipartFile imagemReceita) throws IOException {

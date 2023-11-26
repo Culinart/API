@@ -40,6 +40,10 @@ public class ReceitaCategoriaService {
         return repository.findAll();
     }
 
+    public List<ReceitaCategoria> exibirTodasReceitasCategoriasComFavoritos(int idUsuario) {
+        return repository.findReceitaCategoriaOrderedByFavoritos(idUsuario);
+    }
+
     public ReceitaCategoria cadastrarReceitaCategoria(ReceitaCategoriaCadastroDTO receitaCategoria, MultipartFile imagemReceita) throws IOException {
         List<Ingrediente> ingredientes = receitaCategoria.getReceita().getIngredientes();
         List<ModoPreparo> modoPreparos = receitaCategoria.getReceita().getModoPreparos();
