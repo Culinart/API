@@ -8,6 +8,7 @@ import culinart.domain.planoCategoria.mapper.PlanoCategoriaMapper;
 import culinart.domain.receita.Receita;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
 import culinart.domain.receita.dto.mapper.ReceitaMapper;
+import culinart.service.pedido.PedidoService;
 import culinart.service.plano.categoria.PlanoCategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlanoCategoriaController {
     private final PlanoCategoriaService planoCategoriaService;
-
+    private final PedidoService pedidoService;
     @GetMapping
     public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> exibirPlanoCategorias(){
         List<PlanoCategoria> planoCategorias = planoCategoriaService.exibirPlanoCategorias();
@@ -58,8 +59,10 @@ public class PlanoCategoriaController {
 
     @PostMapping
     public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> cadastrarPlanoCategoria(@RequestBody PlanoCategoriaCadastro planoCategoriaCadastro){
+        List <PlanoCategoria> listaCategorias = planoCategoriaService.cadastrarPlanoCategoria(planoCategoriaCadastro);
+        pedidoService.criarPedido(listaCategorias.get(0).getPlano().getUsuario().getId(), listaCategorias.get(0).getPlano(), "Plano");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(planoCategoriaService.cadastrarPlanoCategoria(planoCategoriaCadastro).stream()
+                .body(listaCategorias.stream()
                         .map(PlanoCategoriaMapper::toDTO).toList());
     }
 

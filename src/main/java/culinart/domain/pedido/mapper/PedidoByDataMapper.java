@@ -31,8 +31,8 @@ public class PedidoByDataMapper {
         ReceitaExibicaoPedidoDto receita = new ReceitaExibicaoPedidoDto();
         receita.setId((Integer) row[3]);
         receita.setNome((String) row[4]);
-        receita.setHoras((int) (byte) row[5]);
-        receita.setMinutos((int) (byte) row[6]);
+        receita.setHoras((int) row[5]);
+        receita.setMinutos((int) row[6]);
         receita.setQtd_porcoes(((Number) row[7]).intValue());
 
         List<PreferenciaCardDto> preferencias = mapToPreferenciaDto(row);
