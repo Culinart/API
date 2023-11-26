@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,9 +26,13 @@ public class PlanoCategoriaService {
         return planoCategoriaRepository.findAll();
     }
 
-    public PlanoCategoria exibirPlanoCategoriaPorId(int id) {
-        return planoCategoriaRepository.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano Categoria não encontrado"));
+    // Update the PlanoCategoriaService class
+
+    public List<PlanoCategoria> exibirPlanoCategoriaPorUserId(int userId) {
+        Plano plano = planoRepository.findByUsuario_Id(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano não encontrado para o usuário"));
+
+        return planoCategoriaRepository.findByPlano_Id(plano.getId());
     }
 
     public List<PlanoCategoria> cadastrarPlanoCategoria(PlanoCategoriaCadastro planoCategoriaCadastro) {

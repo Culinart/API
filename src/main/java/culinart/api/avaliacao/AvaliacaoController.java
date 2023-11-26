@@ -7,10 +7,17 @@ import culinart.domain.avaliacao.mapper.AvaliacaoMapper;
 import culinart.service.avaliacao.AvaliacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,4 +44,23 @@ public class AvaliacaoController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AvaliacaoMapper.toDTO(avaliacaoService.cadastrarAvaliacao(avaliacaoCadastroDTO)));
     }
+
+    @GetMapping("/download/txt")
+    public ResponseEntity<FileSystemResource> downloadTxt() {
+        File txt = avaliacaoService.exportTxt();
+
+        Path arquivoPath = Paths.get(txt.getAbsolutePath());
+        FileSystemResource fileSystemResource = new FileSystemResource(arquivoPath.toFile());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=relatorio-avaliacoes.txt");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(txt.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(fileSystemResource);
+    }
+
 }

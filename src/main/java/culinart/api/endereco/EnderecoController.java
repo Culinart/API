@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/enderecos")
@@ -60,6 +61,19 @@ public class EnderecoController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/usuarios/enderecoAtivo/{idUsuario}")
+    public ResponseEntity<EnderecoResponseToUsuarioDTO> getEnderecoAtivoDoUsuario(@PathVariable int idUsuario) {
+        Optional<EnderecoUsuario> enderecoUsuarioAtivo = enderecoUsuarioService.findEnderecoAtivoByUsuarioId(idUsuario);
+
+        if (enderecoUsuarioAtivo.isPresent()) {
+            EnderecoResponseToUsuarioDTO enderecoResponseToUsuarioDTO = EnderecoUsuarioMapper.toDTO(enderecoUsuarioAtivo.get());
+            return ResponseEntity.ok(enderecoResponseToUsuarioDTO);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
 
     @GetMapping("/buscarCEP")
     public ResponseEntity<ViaCepResponse> getCEP(@RequestParam String cep) {

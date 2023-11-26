@@ -39,10 +39,22 @@ public class PlanoCategoriaController {
         return ResponseEntity.ok(planoCategoriaExibicaoDTOS);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PlanoCategoriaExibicaoDTO> exibirPlanoCategoriaPorId(@PathVariable int id){
-        return ResponseEntity.ok(PlanoCategoriaMapper.toDTO(planoCategoriaService.exibirPlanoCategoriaPorId(id)));
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> exibirPlanoCategoriaPorUserId(@PathVariable int userId) {
+        List<PlanoCategoria> planoCategorias = planoCategoriaService.exibirPlanoCategoriaPorUserId(userId);
+
+        if (planoCategorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<PlanoCategoriaExibicaoDTO> planoCategoriaExibicaoDTOS = new ArrayList<>();
+        for (PlanoCategoria planoCategoria : planoCategorias) {
+            planoCategoriaExibicaoDTOS.add(PlanoCategoriaMapper.toDTO(planoCategoria));
+        }
+
+        return ResponseEntity.ok(planoCategoriaExibicaoDTOS);
     }
+
 
     @PostMapping
     public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> cadastrarPlanoCategoria(@RequestBody PlanoCategoriaCadastro planoCategoriaCadastro){

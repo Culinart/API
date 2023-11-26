@@ -24,6 +24,7 @@ public class Usuario implements Assinante {
     @Enumerated(EnumType.STRING)
     @Column(name = "permissao")
     private PermissaoEnum permissao;
+    private String cpf;
     private String telefone;
     @Enumerated(EnumType.STRING)
     @Column(name = "is_ativo")

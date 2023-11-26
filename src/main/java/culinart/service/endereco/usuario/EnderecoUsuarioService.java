@@ -45,4 +45,8 @@ public class EnderecoUsuarioService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereco Usuario não encontrado para atualização"));
     }
 
+    public Optional<EnderecoUsuario> findEnderecoAtivoByUsuarioId(int idUsuario) {
+        return repository.findEnderecoUsuarioAtivoByUsuario_Id(idUsuario);
+    }
+
 }

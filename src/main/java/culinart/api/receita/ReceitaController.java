@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +41,9 @@ public class ReceitaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReceitaExibicaoDTO> cadastrarReceita(@RequestBody Receita receita){
+    public ResponseEntity<ReceitaExibicaoDTO> cadastrarReceita(@RequestBody Receita receita, @RequestParam MultipartFile imagem) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ReceitaMapper.toDTO(receitaService.cadastrarReceita(receita)));
+                .body(ReceitaMapper.toDTO(receitaService.cadastrarReceita(receita,imagem)));
     };
 
     @PutMapping("/{id}")
