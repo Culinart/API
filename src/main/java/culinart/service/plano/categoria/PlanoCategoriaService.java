@@ -7,6 +7,7 @@ import culinart.domain.plano.repository.PlanoRepository;
 import culinart.domain.planoCategoria.PlanoCategoria;
 import culinart.domain.planoCategoria.dto.PlanoCategoriaCadastro;
 import culinart.domain.planoCategoria.repository.PlanoCategoriaRepository;
+import culinart.service.pedido.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class PlanoCategoriaService {
     private final PlanoCategoriaRepository planoCategoriaRepository;
     private final PlanoRepository planoRepository;
     private final CategoriaRepository categoriaRepository;
+//    private final PedidoService pedidoService;
 
     public List<PlanoCategoria> exibirPlanoCategorias() {
         return planoCategoriaRepository.findAll();
@@ -36,8 +39,9 @@ public class PlanoCategoriaService {
     }
 
     public List<PlanoCategoria> cadastrarPlanoCategoria(PlanoCategoriaCadastro planoCategoriaCadastro) {
+        Plano plano = null;
         for (int i = 0; i < planoCategoriaCadastro.getCategoriaId().size(); i++){
-            Plano plano = planoRepository.findById(planoCategoriaCadastro.getPlanoId()).orElseThrow(() ->
+            plano = planoRepository.findById(planoCategoriaCadastro.getPlanoId()).orElseThrow(() ->
                     new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano não encontrado"));
 
             Categoria categoria = categoriaRepository.findById(
@@ -49,7 +53,8 @@ public class PlanoCategoriaService {
             novoPlanoCategoria.setCategoria(categoria);
             planoCategoriaRepository.save(novoPlanoCategoria);
         }
-        return planoCategoriaRepository.findByPlano_Id(planoCategoriaCadastro.getPlanoId());
+        List<PlanoCategoria> listaCategorias = planoCategoriaRepository.findByPlano_Id(planoCategoriaCadastro.getPlanoId());
+        return listaCategorias;
     }
 
     public void deletarPlanoCategoria(int id) {

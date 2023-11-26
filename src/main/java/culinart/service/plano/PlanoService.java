@@ -7,6 +7,7 @@ import culinart.domain.plano.mapper.PlanoMapper;
 import culinart.domain.plano.repository.PlanoRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.repository.UsuarioRepository;
+import culinart.service.pedido.PedidoService;
 import culinart.utils.enums.DiaSemanaEnum;
 import culinart.utils.enums.PreferenciaEnum;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class PlanoService {
 
     private final PlanoRepository planoRepository;
     private final UsuarioRepository usuarioRepository;
-
+    private final PedidoService pedidoService;
     public List<PlanoExibicaoDTO> listarTodosOsPlanos() {
         List<Plano> lista = this.planoRepository.findAll();
         List<PlanoExibicaoDTO> listaDTO = new ArrayList<>();
@@ -59,7 +60,8 @@ public class PlanoService {
         DiaSemanaEnum diaSemanaEnum = DiaSemanaEnum.valueOf(planoCadastroDTO.getDiaSemana().toUpperCase());
 
         plano.setDiaSemana(diaSemanaEnum);
-        return PlanoMapper.toDTO( this.planoRepository.save(plano));
+        PlanoExibicaoDTO planoDto = PlanoMapper.toDTO(planoRepository.save(plano));
+        return planoDto;
     }
 
     public PlanoExibicaoDTO atualizarPlano(PlanoCadastroDTO novoPlano, int idUsuario) {
