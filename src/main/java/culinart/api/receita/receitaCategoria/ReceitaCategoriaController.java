@@ -25,9 +25,24 @@ public class ReceitaCategoriaController {
     private final ReceitaCategoriaService receitaCategoriaService;
 
 
+    @GetMapping
+    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> exibirTodasReceitasCategorias(){
+        List<ReceitaCategoria> receitaCategorias = receitaCategoriaService.exibirTodasReceitasCategorias();
+        if (receitaCategorias.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<ReceitaCategoriaExibicaoDTO> receitaCategoriaExibicaoDTOS = new ArrayList<>();
+        for (ReceitaCategoria receitaCategoria : receitaCategorias) {
+            receitaCategoriaExibicaoDTOS.add(ReceitaCategoriaMapper.toDTO(receitaCategoria));
+        }
+
+        return ResponseEntity.ok(receitaCategoriaExibicaoDTOS);
+    }
+
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> exibirTodasReceitasCategorias(@PathVariable int idUsuario){
-        List<ReceitaCategoria> receitaCategorias = receitaCategoriaService.exibirTodasReceitasCategorias(idUsuario);
+    public ResponseEntity<List<ReceitaCategoriaExibicaoDTO>> exibirTodasReceitasCategoriasComFavoritos(@PathVariable int idUsuario){
+        List<ReceitaCategoria> receitaCategorias = receitaCategoriaService.exibirTodasReceitasCategoriasComFavoritos(idUsuario);
         if (receitaCategorias.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

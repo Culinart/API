@@ -36,7 +36,11 @@ public class ReceitaCategoriaService {
     private final CategoriaRepository categoriaRepository;
     private final ReceitaController receitaController;
 
-    public List<ReceitaCategoria> exibirTodasReceitasCategorias(int idUsuario) {
+    public List<ReceitaCategoria> exibirTodasReceitasCategorias() {
+        return repository.findAll();
+    }
+
+    public List<ReceitaCategoria> exibirTodasReceitasCategoriasComFavoritos(int idUsuario) {
         return repository.findReceitaCategoriaOrderedByFavoritos(idUsuario);
     }
 
