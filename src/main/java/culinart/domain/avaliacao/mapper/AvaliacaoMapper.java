@@ -17,6 +17,9 @@ public class AvaliacaoMapper {
     }
 
     public static Avaliacao toEntity(AvaliacaoCadastroDTO avaliacaoCadastroDTO, Usuario usuario, Receita receita) {
+        if(avaliacaoCadastroDTO == null){
+            return null;
+        }
         return Avaliacao.builder()
                 .usuario(usuario)
                 .receita(receita)

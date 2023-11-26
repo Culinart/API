@@ -40,9 +40,9 @@ public class AvaliacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<AvaliacaoResponseDTO> cadastrarAvaliacao(@Valid @RequestBody AvaliacaoCadastroDTO avaliacaoCadastroDTO){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(AvaliacaoMapper.toDTO(avaliacaoService.cadastrarAvaliacao(avaliacaoCadastroDTO)));
+    public ResponseEntity<Void> cadastrarAvaliacao(@Valid @RequestBody List<AvaliacaoCadastroDTO> listAvaliacaoCadastroDTO){
+        avaliacaoService.cadastrarAvaliacao(listAvaliacaoCadastroDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/download/txt")

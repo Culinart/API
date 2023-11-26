@@ -43,18 +43,19 @@ public class AvaliacaoService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada"));
     }
 
-    public Avaliacao cadastrarAvaliacao(AvaliacaoCadastroDTO avaliacaoCadastroDTO) {
-        Usuario usuario = usuarioRepository.findById(avaliacaoCadastroDTO.getIdUsuario())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+    public void cadastrarAvaliacao(List<AvaliacaoCadastroDTO> listAvaliacaoCadastroDTO) {
+        for (AvaliacaoCadastroDTO avaliacaoCadastroDTO : listAvaliacaoCadastroDTO) {
+            Usuario usuario = usuarioRepository.findById(avaliacaoCadastroDTO.getIdUsuario())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
 
-        Receita receita = receitaRepository.findById(avaliacaoCadastroDTO.getIdReceita())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
+            Receita receita = receitaRepository.findById(avaliacaoCadastroDTO.getIdReceita())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
 
-        Avaliacao entity = AvaliacaoMapper.toEntity(avaliacaoCadastroDTO, usuario, receita);
-        avaliacaoRepository.save(entity);
-        receita.getAvaliacoes().add(entity);
-        receitaRepository.save(receita);
-        return entity;
+            Avaliacao entity = AvaliacaoMapper.toEntity(avaliacaoCadastroDTO, usuario, receita);
+            avaliacaoRepository.save(entity);
+            receita.getAvaliacoes().add(entity);
+            receitaRepository.save(receita);
+        }
     }
 
     public File exportTxt() {

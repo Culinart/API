@@ -6,11 +6,13 @@ import culinart.domain.receitaCategoria.dto.ReceitaCategoriaExibicaoDTO;
 import culinart.domain.receitaCategoria.mapper.ReceitaCategoriaMapper;
 import culinart.service.receita.receitaCategoria.ReceitaCategoriaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/receitas/categorias")
 @RequiredArgsConstructor
+@Configuration
+@EnableWebMvc
 public class ReceitaCategoriaController {
     //Services
     private final ReceitaCategoriaService receitaCategoriaService;
@@ -57,10 +61,15 @@ public class ReceitaCategoriaController {
 
     @PostMapping
     public ResponseEntity<ReceitaCategoriaExibicaoDTO> cadastrarReceitaCategoria(
-            @RequestBody ReceitaCategoriaCadastroDTO receitaCategoria, @RequestParam MultipartFile imagemReceita) throws IOException {
+            @RequestBody ReceitaCategoriaCadastroDTO receitaCategoria
+//            @ModelAttribute @RequestPart MultipartFile imagem) throws IOException {
+    ) throws IOException {
+//        byte[] imageBytes = imagem.getBytes();
+//        receitaCategoria.getReceita().setImagem(imageBytes);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ReceitaCategoriaMapper
-                        .toDTO(receitaCategoriaService.cadastrarReceitaCategoria(receitaCategoria, imagemReceita)));
+                        .toDTO(receitaCategoriaService.cadastrarReceitaCategoria(receitaCategoria)));
     }
 
     @DeleteMapping("/{id}")
