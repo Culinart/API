@@ -26,11 +26,11 @@ public class ReceitaService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
     }
 
-    public Receita cadastrarReceita(Receita receita, MultipartFile imagem) throws IOException {
+    public Receita cadastrarReceita(Receita receita){
         if (receitaRepository.existsByNome(receita.getNome())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita já cadastrada");
         }
-        receita.setImagem(imagem.getBytes());
+
         return receitaRepository.save(receita);
     }
 

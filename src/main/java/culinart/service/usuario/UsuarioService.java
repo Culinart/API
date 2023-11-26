@@ -48,7 +48,6 @@ public class UsuarioService {
 
     public UsuarioExibicaoDTO cadastrarUsuario(UsuarioCriacaoDTO usuario) {
         if (this.usuarioRepository.existsByEmail(usuario.getEmail())) {
-            System.out.println("Entrou aqui");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Usuario já cadastrado");
         }
         Usuario novoUsuario = UsuarioMapper.toEntity(usuario);

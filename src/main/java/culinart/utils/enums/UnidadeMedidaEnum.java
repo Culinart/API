@@ -9,7 +9,8 @@ public enum UnidadeMedidaEnum {
     XICARA,
     SEM_UNIDADE,
     COLHER_SOPA,
-    COLHER_CHA
+    COLHER_CHA,
+    UNIDADE
     ;
     
 }
