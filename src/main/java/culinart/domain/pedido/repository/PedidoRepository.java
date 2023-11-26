@@ -16,6 +16,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "    p.id AS pedido_id,\n" +
             "    p.valor,\n" +
             "    p.data_entrega AS data_entrega,\n" +
+            "    p.status,\n" +
             "    r.id AS receita_id,\n" +
             "    r.nome AS nome_receita,\n" +
             "    r.horas,\n" +

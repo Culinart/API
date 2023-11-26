@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  @NoArgsConstructor
 public enum StatusPedidoEnum {
     PENDENTE ("PENDENTE"),
-    NEXT ("NEXT"),
+    ATIVO ("ATIVO"),
     ENTREGUE ("ENTREGUE"),
     CANCELADO ("CANCELADO");
 
