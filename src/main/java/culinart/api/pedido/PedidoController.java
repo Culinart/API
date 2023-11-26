@@ -24,7 +24,7 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
 
-    @GetMapping("/entrega/{idUser}")
+    @PostMapping("/entrega/{idUser}")
     public ResponseEntity<PedidoByDataDto> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
 
         List<Object[]> pedido = pedidoService.nextPedido(idUser, dataEntrega.getDataEntrega());

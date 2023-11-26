@@ -58,7 +58,7 @@ public class PedidoService {
         pedidoRepository.atualizarStatusParaEntregue(idPedido);
         Optional<Pedido> pedido = pedidoRepository.findById(idPedido);
         Optional<Plano> plano = planoRepository.findById(pedido.get().getPlano().getId());
-        criarPedido(plano.get().getUsuario().getId(), plano.get(), "Pedido");
+        criarPedido(plano.get().getUsuario().getId(), plano.get(), "Pedido", pedido.get().getDataEntrega());
         return pedido;
     }
 
@@ -91,7 +91,7 @@ public class PedidoService {
 
     }
 
-    public void criarPedido(int userId, Plano plano, String tipoCriacao){
+    public void criarPedido(int userId, Plano plano, String tipoCriacao, LocalDate dataUltimoPedido){
         List<PlanoCategoria> categorias = planoCategoriaService.exibirPlanoCategoriaPorUserId(userId);
         Set<Integer> receitasAdicionadas = new HashSet<>(); // Conjunto para armazenar IDs das receitas adicionadas
         List<Receita> listaReceitasBanco = new ArrayList<>();
@@ -111,13 +111,13 @@ public class PedidoService {
 
         List<Receita> tresReceitasAleatorias = listaReceitasBanco.subList(0, Math.min(listaReceitasBanco.size(), 3));
         Pedido pedido = new Pedido();
-        pedido.setStatus(StatusPedidoEnum.NEXT);
+        pedido.setStatus(StatusPedidoEnum.ATIVO);
         pedido.setPlano(plano);
-        pedido.setValor(150.00);
+        pedido.setValor(plano.getValorPlano().doubleValue() / 4.0);
         pedido.setDataCriacao(LocalDate.now());
         pedido.setListaReceitas(tresReceitasAleatorias);
         if (tipoCriacao.equalsIgnoreCase("Pedido")){
-            pedido.setDataEntrega(LocalDate.now().plusDays(7));
+            pedido.setDataEntrega(dataUltimoPedido.plusDays(7));
         }else if (tipoCriacao.equalsIgnoreCase("Plano")){
             String diaSemanaPlano = String.valueOf(plano.getDiaSemana());
             DiaSemanaIngles diaSemanaIngles = new DiaSemanaIngles();

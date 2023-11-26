@@ -14,6 +14,7 @@ public class PedidoByDataDto {
 
     private Integer id;
     private Double valor;
+    private StatusPedidoEnum status;
     private LocalDate dataEntrega;
     private List<ReceitaExibicaoPedidoDto> listaReceitas;
 }

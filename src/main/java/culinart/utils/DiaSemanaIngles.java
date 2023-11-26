@@ -7,7 +7,7 @@ public class DiaSemanaIngles {
         switch (diaSemana.toLowerCase()) {
             case "segunda":
                 return DayOfWeek.MONDAY;
-            case "terça":
+            case "terca":
                 return DayOfWeek.TUESDAY;
             case "quarta":
                 return DayOfWeek.WEDNESDAY;
@@ -15,7 +15,7 @@ public class DiaSemanaIngles {
                 return DayOfWeek.THURSDAY;
             case "sexta":
                 return DayOfWeek.FRIDAY;
-            case "sábado":
+            case "sabado":
                 return DayOfWeek.SATURDAY;
             case "domingo":
                 return DayOfWeek.SUNDAY;
