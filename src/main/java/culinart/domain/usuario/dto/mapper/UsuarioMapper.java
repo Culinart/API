@@ -30,6 +30,7 @@ public class UsuarioMapper {
         usuarioExibicaoDTO.setEmail(usuario.getEmail());
         usuarioExibicaoDTO.setNome(usuario.getNome());
         usuarioExibicaoDTO.setTelefone(usuario.getTelefone());
+        usuarioExibicaoDTO.setCpf(usuario.getCpf());
         usuarioExibicaoDTO.setIsAtivo(usuario.getIsAtivo());
         usuarioExibicaoDTO.setPermissao(usuario.getPermissao());
 
