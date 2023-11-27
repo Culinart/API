@@ -51,7 +51,6 @@ public class UsuarioMapper {
     public static Usuario toEntity(UsuarioInfoPessoalDTO usuarioInfo) {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioInfo.getNome());
-        usuario.setEmail(usuarioInfo.getEmail());
         usuario.setTelefone(usuarioInfo.getTelefone());
         return usuario;
     }
