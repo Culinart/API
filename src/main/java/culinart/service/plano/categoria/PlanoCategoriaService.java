@@ -5,6 +5,7 @@ import culinart.domain.categoria.repository.CategoriaRepository;
 import culinart.domain.plano.Plano;
 import culinart.domain.plano.repository.PlanoRepository;
 import culinart.domain.planoCategoria.PlanoCategoria;
+import culinart.domain.planoCategoria.dto.CategoriaId;
 import culinart.domain.planoCategoria.dto.PlanoCategoriaCadastro;
 import culinart.domain.planoCategoria.repository.PlanoCategoriaRepository;
 import culinart.service.pedido.PedidoService;
@@ -44,8 +45,8 @@ public class PlanoCategoriaService {
             plano = planoRepository.findById(planoCategoriaCadastro.getPlanoId()).orElseThrow(() ->
                     new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano não encontrado"));
 
-            Categoria categoria = categoriaRepository.findById(
-                    planoCategoriaCadastro.getCategoriaId().get(i).getIdCategoria()).orElseThrow(() ->
+            Integer categoriaId = planoCategoriaCadastro.getCategoriaId().get(i);
+            Categoria categoria = categoriaRepository.findById(categoriaId).orElseThrow(() ->
                     new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
 
             PlanoCategoria novoPlanoCategoria = new PlanoCategoria();

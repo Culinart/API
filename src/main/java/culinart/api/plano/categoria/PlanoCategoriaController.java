@@ -57,8 +57,17 @@ public class PlanoCategoriaController {
     }
 
 
+    @PutMapping
+    public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> atualizarPlanoCategoria(@RequestBody PlanoCategoriaCadastro planoCategoriaCadastro){
+        List <PlanoCategoria> listaCategorias = planoCategoriaService.cadastrarPlanoCategoria(planoCategoriaCadastro);
+        pedidoService.criarPedido(listaCategorias.get(0).getPlano().getUsuario().getId(), listaCategorias.get(0).getPlano(), "Plano", null);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(listaCategorias.stream()
+                        .map(PlanoCategoriaMapper::toDTO).toList());
+    }
+
     @PostMapping
-    public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> cadastrarPlanoCategoria(@RequestBody PlanoCategoriaCadastro planoCategoriaCadastro){
+    public ResponseEntity<List<PlanoCategoriaExibicaoDTO>> cadastrarPlanoCategoriaCadastro(@RequestBody PlanoCategoriaCadastro planoCategoriaCadastro){
         List <PlanoCategoria> listaCategorias = planoCategoriaService.cadastrarPlanoCategoria(planoCategoriaCadastro);
         pedidoService.criarPedido(listaCategorias.get(0).getPlano().getUsuario().getId(), listaCategorias.get(0).getPlano(), "Plano", null);
         return ResponseEntity.status(HttpStatus.CREATED)
