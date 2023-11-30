@@ -60,7 +60,7 @@ public class PagamentoService {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
 
-        Pagamento pagamento = pagamentoRepository.findByUsuarioOrderByDataExpiracaoDesc(usuario).orElseThrow(() ->
+        Pagamento pagamento = pagamentoRepository.findTop1ByUsuarioOrderByDataExpiracaoDesc(usuario).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
 
         return PagamentoMapper.toDTO(pagamento);
