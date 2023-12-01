@@ -80,6 +80,8 @@ public class UsuarioService {
         entity.setSenha(usuarioAnterior.getSenha());
         entity.setId(usuarioAnterior.getId());
         entity.setPermissao(usuarioAnterior.getPermissao());
+        entity.setEmail(usuarioAnterior.getEmail());
+        entity.setCpf(usuarioAnterior.getCpf());
         entity.setIsAtivo(usuarioAnterior.getIsAtivo());
 
 

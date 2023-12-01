@@ -1,6 +1,7 @@
 package culinart.api.pagamento;
 
 import culinart.integration.gerencianet.PagamentoService;
+import culinart.integration.gerencianet.mapper.PagamentoMapper;
 import culinart.integration.gerencianet.subscription.dto.PagamentoDTO;
 import culinart.integration.gerencianet.subscription.dto.PlanoDataDTO;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,10 @@ public class PagamentoController {
     public ResponseEntity<Void> cancelarPlano(@PathVariable int idPlano){
         pagamentoService.cancelarPlano(idPlano);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<PagamentoDTO> solicitarVisualizacaoUltimoPagamentoUsuario(@PathVariable int idUsuario){
+        return ResponseEntity.ok(pagamentoService.solicitarVisualizacaoUltimoPagamentoUsuario(idUsuario));
     }
 }

@@ -15,6 +15,8 @@ public class PlanoMapper {
                 plano.getQtdPessoas(),
                 plano.getQtdRefeicoesDia(),
                 plano.getQtdDiasSemana(),
+                plano.getValorPlano(),
+                plano.getValorAjuste(),
                 plano.getHoraEntrega(),
                 plano.getDiaSemana(),
                 plano.getIsAtivo(),

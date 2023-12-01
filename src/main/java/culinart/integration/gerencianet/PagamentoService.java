@@ -1,5 +1,6 @@
 package culinart.integration.gerencianet;
 
+import culinart.domain.pagamento.Pagamento;
 import culinart.domain.plano.Plano;
 import culinart.domain.plano.repository.PlanoRepository;
 import culinart.domain.usuario.Usuario;
@@ -52,5 +53,16 @@ public class PagamentoService {
     public void cancelarPlano(int idPlano) {
         DeletePlan deletePlan = new DeletePlan();
         deletePlan.cancelarPlano(idPlano);
+    }
+
+    public PagamentoDTO solicitarVisualizacaoUltimoPagamentoUsuario(int idUsuario) {
+
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
+        Pagamento pagamento = pagamentoRepository.findTop1ByUsuarioOrderByDataExpiracaoDesc(usuario).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
+        return PagamentoMapper.toDTO(pagamento);
     }
 }

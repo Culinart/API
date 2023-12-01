@@ -30,6 +30,7 @@ public class UsuarioMapper {
         usuarioExibicaoDTO.setEmail(usuario.getEmail());
         usuarioExibicaoDTO.setNome(usuario.getNome());
         usuarioExibicaoDTO.setTelefone(usuario.getTelefone());
+        usuarioExibicaoDTO.setCpf(usuario.getCpf());
         usuarioExibicaoDTO.setIsAtivo(usuario.getIsAtivo());
         usuarioExibicaoDTO.setPermissao(usuario.getPermissao());
 
@@ -50,7 +51,6 @@ public class UsuarioMapper {
     public static Usuario toEntity(UsuarioInfoPessoalDTO usuarioInfo) {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioInfo.getNome());
-        usuario.setEmail(usuarioInfo.getEmail());
         usuario.setTelefone(usuarioInfo.getTelefone());
         return usuario;
     }

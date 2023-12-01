@@ -16,6 +16,7 @@ public class UsuarioExibicaoDTO {
     private String nome;
     private String email;
     private String telefone;
+    private String cpf;
     @Enumerated(EnumType.STRING)
     private StatusAtivoEnum isAtivo;
     @Enumerated(EnumType.STRING)

@@ -1,19 +1,14 @@
 package culinart.domain.plano.dto;
 
-import culinart.domain.planoCategoria.dto.PlanoCategoriaExibicaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
 import culinart.utils.enums.DiaSemanaEnum;
-import culinart.utils.enums.PreferenciaEnum;
 import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -26,6 +21,8 @@ public class PlanoExibicaoDTO {
     private Integer qtdPessoas;
     private Integer qtdRefeicoesDia;
     private Integer qtdDiasSemana;
+    private BigDecimal valorPlano;
+    private BigDecimal valorAjuste;
     private String horaEntrega;
     private DiaSemanaEnum diaSemana;
     @Enumerated(EnumType.STRING)
