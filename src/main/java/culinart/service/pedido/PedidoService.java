@@ -68,10 +68,12 @@ public class PedidoService {
 
         if (optionalPlano.isPresent()) {
             Plano plano = optionalPlano.get();
-
-            BigDecimal valorReajuste = plano.getValorAjuste().add(BigDecimal.valueOf(valorDesconto));
+            BigDecimal valorReajuste = plano.getValorAjuste();
+            if(valorReajuste == null){
+                valorReajuste = BigDecimal.valueOf(0);
+            }
+            valorReajuste = valorReajuste.add(BigDecimal.valueOf(valorDesconto));
             plano.setValorAjuste(valorReajuste);
-
             planoRepository.save(plano);
         } else {
             throw new NoSuchElementException("Plano não encontrado para o ID: " + planoId);
@@ -113,7 +115,8 @@ public class PedidoService {
         Pedido pedido = new Pedido();
         pedido.setStatus(StatusPedidoEnum.ATIVO);
         pedido.setPlano(plano);
-        pedido.setValor(plano.getValorPlano().doubleValue() / 4.0);
+        pedido.setValor(400.00);
+//      pedido.setValor(plano.getValorPlano().doubleValue() / 4.0);
         pedido.setDataCriacao(LocalDate.now());
         pedido.setListaReceitas(tresReceitasAleatorias);
         if (tipoCriacao.equalsIgnoreCase("Pedido")){
