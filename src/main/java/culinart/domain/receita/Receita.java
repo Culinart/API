@@ -32,11 +32,14 @@ public class Receita {
     private byte[] imagem;
 
     @OneToMany
+    @JoinColumn(name = "ingrediente_id")
     private List<Ingrediente> ingredientes;
 
     @OneToMany
+    @JoinColumn(name = "modo_preparo_id")
     private List<ModoPreparo> modoPreparos;
 
     @OneToMany
+    @JoinColumn(name = "avaliacao_id")
     private List<Avaliacao> avaliacoes = new ArrayList<>();
 }

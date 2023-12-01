@@ -1,9 +1,7 @@
 package culinart.domain.modoPreparo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import culinart.domain.receita.Receita;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -18,4 +16,6 @@ public class ModoPreparo {
     private Integer id;
     private String passo;
 
+    @ManyToOne
+    private Receita receita;
 }

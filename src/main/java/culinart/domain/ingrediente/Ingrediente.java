@@ -1,11 +1,9 @@
 package culinart.domain.ingrediente;
 
 
+import culinart.domain.receita.Receita;
 import culinart.utils.enums.UnidadeMedidaEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +21,9 @@ public class Ingrediente {
     private String nome;
     private Double quantidade;
     private UnidadeMedidaEnum unidadeMedidaEnum;
+
+    @ManyToOne
+    private Receita receita;
 
 
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ReceitaCategoriaRepository extends JpaRepository<ReceitaCategoria, Integer> {
     Optional<ReceitaCategoria> findByReceita(Receita Receita);
 
-    @Query("SELECT rc FROM receita_categoria rc " +
+    @Query("SELECT rc FROM ReceitaCategoria rc " +
             "JOIN rc.receita r " +
             "LEFT JOIN rc.categoria c " +
             "LEFT JOIN rc.preferencia p " +
@@ -22,7 +22,7 @@ public interface ReceitaCategoriaRepository extends JpaRepository<ReceitaCategor
             "   OR LOWER(p.nome) LIKE %:parametro%")
     List<ReceitaCategoria> findByParametro(@Param("parametro") String parametro);
 
-    @Query("SELECT rc FROM receita_categoria rc " +
+    @Query("SELECT rc FROM ReceitaCategoria rc " +
             "JOIN rc.receita r " +
             "LEFT JOIN Favorito f ON r.id = f.receita.id AND f.usuario.id = :usuarioId " +
             "ORDER BY f.id DESC NULLS LAST")

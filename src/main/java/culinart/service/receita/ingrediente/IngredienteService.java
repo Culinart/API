@@ -30,7 +30,7 @@ public class IngredienteService {
     }
 
     public Ingrediente atualizarIngrediente(int id, Ingrediente ingrediente) {
-        if(ingredienteRepository.findById(id).isEmpty()){
+        if (ingredienteRepository.findById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingrediente não encontrado");
         }
 
@@ -39,10 +39,14 @@ public class IngredienteService {
     }
 
     public void deletarIngrediete(int id) {
-        if(ingredienteRepository.findById(id).isEmpty()){
+        if (ingredienteRepository.findById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingrediente não encontrado");
         }
 
         ingredienteRepository.delete(ingredienteRepository.findById(id).get());
+    }
+
+    public List<Ingrediente> saveAll(List<Ingrediente> ingredientes) {
+        return ingredienteRepository.saveAll(ingredientes);
     }
 }

@@ -45,5 +45,9 @@ public class ModoPreparoService {
 
         modoPreparoRepository.delete(modoPreparoOptional.get());
     }
+
+    public List<ModoPreparo> saveAll(List<ModoPreparo> modoPreparos) {
+        return modoPreparoRepository.saveAll(modoPreparos);
+    }
 }
 

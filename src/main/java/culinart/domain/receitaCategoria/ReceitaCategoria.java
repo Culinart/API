@@ -8,7 +8,7 @@ import lombok.*;
 
 import java.util.List;
 
-@Entity(name = "receita_categoria")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,9 +21,9 @@ public class ReceitaCategoria {
     @ManyToOne
     private Receita receita;
 
-    @ManyToMany
+    @OneToMany
     private List<Categoria> categoria;
 
-    @ManyToMany
+    @OneToMany
     private List<Preferencia> preferencia;
 }

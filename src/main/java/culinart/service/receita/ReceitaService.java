@@ -31,7 +31,7 @@ public class ReceitaService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita já cadastrada");
         }
 
-        return receitaRepository.save(receita);
+        return receitaRepository.saveAndFlush(receita);
     }
 
     public Receita atualizarReceita(int id, Receita receita) {

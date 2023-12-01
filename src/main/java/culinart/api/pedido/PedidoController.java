@@ -85,7 +85,7 @@ public class PedidoController {
 
         List<Object[]> pedidos = pedidoService.proximasEntregas();
         if (pedidos.isEmpty()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.noContent().build();
         }
         List<ProximosPedidosDto> listaProxPedidos = pedidos.stream()
                                                     .map(PedidoMapper::toProximosPedidosDto)
