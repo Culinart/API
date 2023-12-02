@@ -10,6 +10,7 @@ import culinart.domain.modoPreparo.dto.mapper.ModoPreparoMapper;
 import culinart.domain.receita.Receita;
 import culinart.domain.receita.dto.ReceitaCadastroDTO;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
+import culinart.domain.receitaCategoria.dto.ReceitaCategoriaExibicaoDTO;
 import culinart.domain.receitaCategoria.mapper.ReceitaCategoriaMapper;
 
 import java.util.ArrayList;
@@ -19,38 +20,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ReceitaMapper {
+
     public static ReceitaExibicaoDTO toDTO(Receita receita) {
         if (receita == null) {
             return null;
         }
 
-        List<IngredienteExibicaoDTO> ingredientesDTO = receita.getIngredientes() != null
-                ? receita.getIngredientes()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(IngredienteMapper::toDTO)
-                .collect(Collectors.toList())
-                : Collections.emptyList();
-
-        List<ModoPreparoExibicaoDTO> modoPreparosDTO = receita.getModoPreparos() != null
-                ? receita.getModoPreparos()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(ModoPreparoMapper::toDTO)
-                .collect(Collectors.toList())
-                : Collections.emptyList();
-
-        List<AvaliacaoResponseDTO> avaliacaoDTO = receita.getAvaliacoes() != null
-                ? receita.getAvaliacoes()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(AvaliacaoMapper::toDTO)
-                .toList()
-                : Collections.emptyList();
+        List<IngredienteExibicaoDTO> ingredientesDTO = getIngredientesDTO(receita);
+        List<ModoPreparoExibicaoDTO> modoPreparosDTO = getModoPreparosDTO(receita);
+        List<AvaliacaoResponseDTO> avaliacaoDTO = getAvaliacaoDTO(receita);
 
         Integer qtdAvaliacoes = avaliacaoDTO.size();
-
-        Double mediaAvaliacoes = avaliacaoDTO.stream()
+        Double mediaAvaliacoes = avaliacaoDTO.isEmpty() ? 0.0 : avaliacaoDTO.stream()
                 .mapToDouble(AvaliacaoResponseDTO::getNota)
                 .average()
                 .orElse(0.0);
@@ -62,12 +43,71 @@ public class ReceitaMapper {
                 .minutos(receita.getMinutos())
                 .descricao(receita.getDescricao())
                 .ingredientes(ingredientesDTO)
-                .categorias(receita.getReceitaCategorias()
-                        .stream().map(ReceitaCategoriaMapper::toDTO).collect(Collectors.toList()))
+                .categorias(getCategoriasDTO(receita))
                 .modoPreparos(modoPreparosDTO)
                 .avaliacoes(avaliacaoDTO)
                 .qtdAvaliacoes(qtdAvaliacoes)
                 .mediaAvaliacoes(mediaAvaliacoes)
+                .build();
+    }
+
+    private static List<IngredienteExibicaoDTO> getIngredientesDTO(Receita receita) {
+        return receita.getIngredientes() != null
+                ? receita.getIngredientes()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(IngredienteMapper::toDTO)
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+    }
+
+    private static List<ModoPreparoExibicaoDTO> getModoPreparosDTO(Receita receita) {
+        return receita.getModoPreparos() != null
+                ? receita.getModoPreparos()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(ModoPreparoMapper::toDTO)
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+    }
+
+    private static List<AvaliacaoResponseDTO> getAvaliacaoDTO(Receita receita) {
+        return receita.getAvaliacoes() != null
+                ? receita.getAvaliacoes()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(AvaliacaoMapper::toDTO)
+                .toList()
+                : Collections.emptyList();
+    }
+
+    private static List<ReceitaCategoriaExibicaoDTO> getCategoriasDTO(Receita receita) {
+        return receita.getReceitaCategorias() != null
+                ? receita.getReceitaCategorias()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(ReceitaCategoriaMapper::toDTO)
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+    }
+
+    public static Receita toEntity(ReceitaCadastroDTO receitaCadastroDTO) {
+        if (receitaCadastroDTO == null) {
+            return null;
+        }
+
+        return Receita.builder()
+                .nome(receitaCadastroDTO.getNome())
+                .horas(receitaCadastroDTO.getHoras())
+                .minutos(receitaCadastroDTO.getMinutos())
+                .descricao(receitaCadastroDTO.getDescricao())
+                .qtdPorcoes(receitaCadastroDTO.getQtdPorcoes())
+                .imagem(receitaCadastroDTO.getImagem())
+                .ingredientes(receitaCadastroDTO.getIngredientes())
+                .modoPreparos(receitaCadastroDTO.getModoPreparos())
+                .receitaCategorias(new ArrayList<>())
+                .avaliacoes(new ArrayList<>())
+                .receitaPreferencias(new ArrayList<>())
                 .build();
     }
 
@@ -76,21 +116,6 @@ public class ReceitaMapper {
                 .titulo("Nova Receita Adicionada no sistema: " + receita.getNome())
                 .conteudo(receita.getDescricao() + "\n Venha Conferir!!")
                 .receita(receita)
-                .build();
-    }
-
-    public static Receita toEntity(ReceitaCadastroDTO receitaCadastroDTO) {
-        return Receita.builder()
-                .nome(receitaCadastroDTO.getNome())
-                .horas(receitaCadastroDTO.getHoras())
-                .minutos(receitaCadastroDTO.getMinutos())
-                .descricao(receitaCadastroDTO.getDescricao())
-                .imagem(receitaCadastroDTO.getImagem())
-                .qtdPorcoes(receitaCadastroDTO.getQtdPorcoes())
-                .ingredientes(receitaCadastroDTO.getIngredientes())
-                .modoPreparos(receitaCadastroDTO.getModoPreparos())
-                .avaliacoes(new ArrayList<>())
-                .receitaCategorias(new ArrayList<>())
                 .build();
     }
 }

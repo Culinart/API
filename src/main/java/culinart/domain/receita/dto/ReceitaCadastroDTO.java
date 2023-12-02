@@ -4,6 +4,7 @@ import culinart.domain.avaliacao.Avaliacao;
 import culinart.domain.categoria.Categoria;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.modoPreparo.ModoPreparo;
+import culinart.domain.preferencia.Preferencia;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
 import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,5 @@ public class ReceitaCadastroDTO {
     private List<Ingrediente> ingredientes;
     private List<ModoPreparo> modoPreparos;
     private List<Categoria> categorias;
+    private List<Preferencia> preferencias;
 }

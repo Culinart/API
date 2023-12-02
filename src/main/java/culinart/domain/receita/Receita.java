@@ -2,6 +2,7 @@ package culinart.domain.receita;
 
 import culinart.domain.avaliacao.Avaliacao;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
+import culinart.domain.receitaPreferencia.ReceitaPreferencia;
 import jakarta.persistence.*;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.modoPreparo.ModoPreparo;
@@ -50,4 +51,8 @@ public class Receita {
     @OneToMany
     @JoinColumn(name = "receita_id")
     private List<ReceitaCategoria> receitaCategorias;
+
+    @OneToMany
+    @JoinColumn(name = "receita_id")
+    private List<ReceitaPreferencia> receitaPreferencias;
 }
