@@ -13,4 +13,18 @@ public class PreferenciaMapper {
                 .corFundo(preferencia.getCorFundo())
                 .build();
     }
+
+    public static Preferencia toEntity(PreferenciaExibicaoDTO preferenciaDTO) {
+        if (preferenciaDTO == null) {
+            return null;
+        }
+
+        return Preferencia.builder()
+                .id(preferenciaDTO.getId())
+                .nome(preferenciaDTO.getNome())
+                .tipo(preferenciaDTO.getTipoPreferenciaEnum())
+                .corFundo(preferenciaDTO.getCorFundo())
+                .corTexto(preferenciaDTO.getCorTexto())
+                .build();
+    }
 }

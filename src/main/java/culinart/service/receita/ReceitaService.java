@@ -59,8 +59,8 @@ public class ReceitaService {
 
         Receita receita = receitaRepository.saveAndFlush(ReceitaMapper.toEntity(receitaCadastroDTO));
 
-        List<Ingrediente> ingredientes = receitaCadastroDTO.getIngredientes();
-        List<ModoPreparo> modoPreparos = receitaCadastroDTO.getModoPreparos();
+        List<Ingrediente> ingredientes = ReceitaMapper.toIngredienteEntity(receitaCadastroDTO.getIngredientes());
+        List<ModoPreparo> modoPreparos = ReceitaMapper.toEntity(receitaCadastroDTO.getModoPreparos());
         List<Categoria> categorias = receitaCadastroDTO.getCategorias();
         List<Preferencia> preferencias = receitaCadastroDTO.getPreferencias();
 
@@ -179,13 +179,13 @@ public class ReceitaService {
         novaReceita.setReceitaCategorias(receitaCategoriaRepository.findByReceita_Id(receitaAntiga.getId()));
 
         if (receitaCadastroDTO.getIngredientes() != null) {
-            novaReceita.setIngredientes(receitaCadastroDTO.getIngredientes());
+            novaReceita.setIngredientes(ReceitaMapper.toIngredienteEntity(receitaCadastroDTO.getIngredientes()));
         } else {
             novaReceita.setIngredientes(receitaAntiga.getIngredientes());
         }
 
         if (receitaCadastroDTO.getModoPreparos() != null) {
-            novaReceita.setModoPreparos(receitaCadastroDTO.getModoPreparos());
+            novaReceita.setModoPreparos(ReceitaMapper.toEntity(receitaCadastroDTO.getModoPreparos()));
         } else {
             novaReceita.setModoPreparos(receitaAntiga.getModoPreparos());
         }

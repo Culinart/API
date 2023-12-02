@@ -2,16 +2,14 @@ package culinart.domain.preferencia;
 
 import culinart.utils.enums.TipoPreferenciaEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Preferencia {
 
     @Id
