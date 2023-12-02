@@ -2,6 +2,7 @@ package culinart.service.receita;
 
 import culinart.domain.avaliacao.Avaliacao;
 import culinart.domain.avaliacao.repository.AvaliacaoRepository;
+import culinart.domain.categoria.Categoria;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.ingrediente.repository.IngredienteRepository;
 import culinart.domain.modoPreparo.ModoPreparo;
@@ -37,23 +38,7 @@ public class ReceitaService {
     private final ModoPreparoService modoPreparoService;
 
     public List<Receita> exibirTodasReceitas() {
-        List<Receita> listReceita = new ArrayList<>();
-        for (Receita receita : receitaRepository.findAll()) {
-            List<Ingrediente> allIngredientes = ingredienteRepository.findByReceita_Id(receita.getId());
-            List<ModoPreparo> allModosPreparos = modoPreparoRepository.findByReceita_Id(receita.getId());
-            List<Avaliacao> allAvaliacoes = avaliacaoRepository.findByReceita_Id(receita.getId());
-            List<ReceitaCategoria> allReceitaCategoria = receitaCategoriaRepository.findByReceita_Id(receita.getId());
-            if (allIngredientes.isEmpty()) {
-                break;
-            }
-            receita.setIngredientes(allIngredientes);
-            receita.setModoPreparos(allModosPreparos);
-            receita.setAvaliacoes(allAvaliacoes);
-            receita.setReceitaCategorias(allReceitaCategoria);
-            listReceita.add(receita);
-        }
-
-        return listReceita;
+        return receitaRepository.findAll();
     }
 
     public Receita exibirReceitaPorId(int id) {
@@ -66,59 +51,82 @@ public class ReceitaService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita já cadastrada");
         }
 
-        if (receitaCadastroDTO.getAvaliacoes() == null) {
-            receitaCadastroDTO.setAvaliacoes(new ArrayList<>());
-        }
-
         Receita receita = receitaRepository.saveAndFlush(ReceitaMapper.toEntity(receitaCadastroDTO));
 
         List<Ingrediente> ingredientes = receitaCadastroDTO.getIngredientes();
         List<ModoPreparo> modoPreparos = receitaCadastroDTO.getModoPreparos();
+        List<Categoria> categorias = receitaCadastroDTO.getCategorias();
 
+        List<ReceitaCategoria> receitaCategorias = new ArrayList<>();
+        for (Categoria categoria : categorias) {
+            ReceitaCategoria receitaCategoria = new ReceitaCategoria();
+            receitaCategoria.setCategoria(categoria);
+            receitaCategoria.setReceita(receita);
+            receitaCategorias.add(receitaCategoria);
+        }
 
         for (Ingrediente ingrediente : ingredientes) {
             ingrediente.setReceita(receita);
+
         }
 
         for (ModoPreparo modoPreparo : modoPreparos) {
             modoPreparo.setReceita(receita);
         }
 
+        receitaCategoriaService.saveAll(receitaCategorias);
         this.ingredienteService.saveAll(ingredientes);
         this.modoPreparoService.saveAll(modoPreparos);
 
-        List<ReceitaCategoria> receitasCategorias = new ArrayList<>();
-        for (ReceitaCategoria receitaCategoria : receitaCadastroDTO.getReceitaCategorias()) {
-            receitaCategoria.setReceita(receita);
-            receitaCategoria.setCategoria(receitaCategoria.getCategoria());
-            receitasCategorias.add(receitaCategoria);
-        }
+        Receita receitaSalva = receitaRepository.findById(receita.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
 
-        receitaCategoriaService.saveAll(receitasCategorias);
-
-        return receita;
+        return receitaSalva;
     }
 
     public Receita atualizarReceita(int id, ReceitaCadastroDTO receitaCadastroDTO) {
-        if (receitaRepository.findById(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada");
-        }
         Receita receitaAntiga = receitaRepository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
 
         List<ReceitaCategoria> receitasCategoriasAntigas = receitaCategoriaRepository.findByReceita_Id(receitaAntiga.getId());
 
-        List<ReceitaCategoria> listCategoria = new ArrayList<>();
-        for (ReceitaCategoria categoriasAntigas : receitasCategoriasAntigas) {
-            for (ReceitaCategoria dtoReceitaCategoria : receitaCadastroDTO.getReceitaCategorias()) {
-                categoriasAntigas.setCategoria(dtoReceitaCategoria.getCategoria());
-                listCategoria.add(categoriasAntigas);
+        List<ReceitaCategoria> listCategoriasNovas = new ArrayList<>();
+        List<ReceitaCategoria> listCategoriasRemover = new ArrayList<>();
+
+        for (ReceitaCategoria categoriaAntigas : receitasCategoriasAntigas) {
+            Boolean existe = false;
+            for (Categoria categoria : receitaCadastroDTO.getCategorias()) {
+                if (categoriaAntigas.getCategoria().getId() == categoria.getId()) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                listCategoriasRemover.add(categoriaAntigas);
             }
         }
-        receitaCategoriaRepository.saveAll(listCategoria);
+
+        for (Categoria categoria : receitaCadastroDTO.getCategorias()) {
+            Boolean existe = false;
+            for (ReceitaCategoria categoriaAntigas : receitasCategoriasAntigas) {
+                if (categoriaAntigas.getCategoria().getId() == categoria.getId()) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                ReceitaCategoria receitaCategoria = new ReceitaCategoria();
+                receitaCategoria.setCategoria(categoria);
+                receitaCategoria.setReceita(receitaAntiga);
+                listCategoriasNovas.add(receitaCategoria);
+            }
+        }
+
+        receitaCategoriaRepository.saveAll(listCategoriasNovas);
+        receitaCategoriaRepository.deleteAll(listCategoriasRemover);
+
 
         Receita novaReceita = ReceitaMapper.toEntity(receitaCadastroDTO);
         novaReceita.setId(receitaAntiga.getId());
+        novaReceita.setReceitaCategorias(receitaCategoriaRepository.findByReceita_Id(receitaAntiga.getId()));
 
         if (receitaCadastroDTO.getIngredientes() != null) {
             novaReceita.setIngredientes(receitaCadastroDTO.getIngredientes());
@@ -132,14 +140,6 @@ public class ReceitaService {
             novaReceita.setModoPreparos(receitaAntiga.getModoPreparos());
         }
 
-        List<ReceitaCategoria> receitasCategorias = new ArrayList<>();
-        for (ReceitaCategoria receitaCategoria : receitaCadastroDTO.getReceitaCategorias()) {
-            receitaCategoria.setReceita(novaReceita);
-            receitaCategoria.setCategoria(receitaCategoria.getCategoria());
-            receitasCategorias.add(receitaCategoria);
-        }
-        receitaCategoriaService.saveAll(receitasCategorias);
-
         return receitaRepository.save(novaReceita);
     }
 
@@ -148,6 +148,17 @@ public class ReceitaService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada");
         }
 
-        receitaRepository.delete(receitaRepository.findById(id).get());
+        List<ReceitaCategoria> receitaCategorias = receitaCategoriaRepository.findByReceita_Id(id);
+        List<Ingrediente> ingredientes = ingredienteRepository.findByReceita_Id(id);
+        List<ModoPreparo> modoPreparos = modoPreparoRepository.findByReceita_Id(id);
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findByReceita_Id(id);
+
+
+        receitaCategoriaRepository.deleteAll(receitaCategorias);
+        ingredienteRepository.deleteAll(ingredientes);
+        modoPreparoRepository.deleteAll(modoPreparos);
+        avaliacaoRepository.deleteAll(avaliacoes);
+
+        receitaRepository.deleteById(id);
     }
 }

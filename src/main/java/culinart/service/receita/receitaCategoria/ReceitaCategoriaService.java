@@ -3,9 +3,12 @@ package culinart.service.receita.receitaCategoria;
 import culinart.api.receita.ReceitaController;
 import culinart.api.receita.ingrediente.IngredienteController;
 import culinart.api.receita.modoPreparo.ModoPreparoController;
+import culinart.domain.categoria.Categoria;
 import culinart.domain.categoria.repository.CategoriaRepository;
 import culinart.domain.ingrediente.repository.IngredienteRepository;
 import culinart.domain.preferencia.repository.PreferenciaRepository;
+import culinart.domain.receita.Receita;
+import culinart.domain.receita.repository.ReceitaRepository;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
 import culinart.domain.receitaCategoria.dto.ReceitaCategoriaExibicaoDTO;
 import culinart.domain.receitaCategoria.repository.ReceitaCategoriaRepository;
@@ -15,6 +18,7 @@ import culinart.service.receita.modoPreparo.ModoPreparoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +26,7 @@ import java.util.List;
 public class ReceitaCategoriaService {
 
     private final ReceitaCategoriaRepository repository;
+    private final ReceitaRepository receitaRepository;
 
 //    public List<ReceitaCategoria> exibirTodasReceitasCategorias() {
 //        return repository.findAll();
@@ -94,5 +99,25 @@ public class ReceitaCategoriaService {
     public List<ReceitaCategoria> saveAll(List<ReceitaCategoria> receitaCategorias) {
         return repository.saveAll(receitaCategorias);
     }
+
+    public List<ReceitaCategoria> salvarReceitaCategorias(Integer idReceita, List<Categoria> categorias) {
+
+        Receita receita = receitaRepository.findById(idReceita)
+                .orElseThrow(() -> new RuntimeException("Receita não encontrada"));
+
+        List<ReceitaCategoria> receitaCategorias = new ArrayList<>();
+
+        for (Categoria categoria : categorias) {
+            ReceitaCategoria receitaCategoria = new ReceitaCategoria();
+            receitaCategoria.setReceita(receita);
+            receitaCategoria.setCategoria(categoria);
+            ReceitaCategoria receitaCategoriaSalva = repository.save(receitaCategoria);
+            receitaCategorias.add(receitaCategoriaSalva);
+        }
+
+        return receitaCategorias;
+
+    }
+
 }
 

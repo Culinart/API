@@ -1,6 +1,7 @@
 package culinart.domain.receita.dto;
 
 import culinart.domain.avaliacao.Avaliacao;
+import culinart.domain.categoria.Categoria;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.modoPreparo.ModoPreparo;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
@@ -27,6 +28,5 @@ public class ReceitaCadastroDTO {
     private byte[] imagem;
     private List<Ingrediente> ingredientes;
     private List<ModoPreparo> modoPreparos;
-    private List<Avaliacao> avaliacoes;
-    private List<ReceitaCategoria> receitaCategorias;
+    private List<Categoria> categorias;
 }

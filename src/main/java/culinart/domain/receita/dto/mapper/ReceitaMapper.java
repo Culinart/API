@@ -12,6 +12,7 @@ import culinart.domain.receita.dto.ReceitaCadastroDTO;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
 import culinart.domain.receitaCategoria.mapper.ReceitaCategoriaMapper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -88,8 +89,8 @@ public class ReceitaMapper {
                 .qtdPorcoes(receitaCadastroDTO.getQtdPorcoes())
                 .ingredientes(receitaCadastroDTO.getIngredientes())
                 .modoPreparos(receitaCadastroDTO.getModoPreparos())
-                .avaliacoes(receitaCadastroDTO.getAvaliacoes())
-                .receitaCategorias(receitaCadastroDTO.getReceitaCategorias())
+                .avaliacoes(new ArrayList<>())
+                .receitaCategorias(new ArrayList<>())
                 .build();
     }
 }
