@@ -21,6 +21,6 @@ public class UsuarioPreferencia {
     @ManyToOne
     private Usuario usuario;
 
-    @OneToMany
-    private List<Preferencia> preferencias;
+    @ManyToOne
+    private Preferencia preferencia;
 }
