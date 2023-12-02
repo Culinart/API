@@ -1,6 +1,7 @@
 package culinart.api.receita;
 
 import culinart.domain.receita.Receita;
+import culinart.domain.receita.dto.ReceitaCadastroDTO;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
 import culinart.domain.receita.dto.mapper.ReceitaMapper;
 import culinart.service.receita.ReceitaService;
@@ -39,13 +40,13 @@ public class ReceitaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReceitaExibicaoDTO> cadastrarReceita(@RequestBody Receita receita){
+    public ResponseEntity<ReceitaExibicaoDTO> cadastrarReceita(@RequestBody ReceitaCadastroDTO receita){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ReceitaMapper.toDTO(receitaService.cadastrarReceita(receita)));
     };
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReceitaExibicaoDTO> atualizarReceita(@PathVariable int id,@RequestBody Receita receita){
+    public ResponseEntity<ReceitaExibicaoDTO> atualizarReceita(@PathVariable int id,@RequestBody ReceitaCadastroDTO receita){
         return ResponseEntity.ok(ReceitaMapper.toDTO(receitaService.atualizarReceita(id,receita)));
     };
 

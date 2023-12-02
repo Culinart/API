@@ -20,10 +20,10 @@ public class Ingrediente {
     private Integer id;
     private String nome;
     private Double quantidade;
+    @Enumerated(EnumType.STRING)
     private UnidadeMedidaEnum unidadeMedidaEnum;
 
     @ManyToOne
+    @JoinColumn(name = "receita_id")
     private Receita receita;
-
-
 }

@@ -20,6 +20,7 @@ public class Avaliacao {
     private Usuario usuario;
 
     @ManyToOne
+    @JoinColumn(name = "receita_id")
     private Receita receita;
 
     private Integer nota;

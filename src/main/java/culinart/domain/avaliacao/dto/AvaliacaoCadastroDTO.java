@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AvaliacaoCadastroDTO {
     private int idUsuario;
     private int idReceita;
-    @Min(value = 0, message = "Valor de mota negativo")
+    @Min(value = 0, message = "Valor de nota negativo")
     @Max(value = 5, message = "Valor de nota excedida")
     private Integer nota;
 }

@@ -8,7 +8,9 @@ import culinart.domain.ingrediente.dto.mapper.IngredienteMapper;
 import culinart.domain.modoPreparo.dto.ModoPreparoExibicaoDTO;
 import culinart.domain.modoPreparo.dto.mapper.ModoPreparoMapper;
 import culinart.domain.receita.Receita;
+import culinart.domain.receita.dto.ReceitaCadastroDTO;
 import culinart.domain.receita.dto.ReceitaExibicaoDTO;
+import culinart.domain.receitaCategoria.mapper.ReceitaCategoriaMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +61,8 @@ public class ReceitaMapper {
                 .minutos(receita.getMinutos())
                 .descricao(receita.getDescricao())
                 .ingredientes(ingredientesDTO)
+                .categorias(receita.getReceitaCategorias()
+                        .stream().map(ReceitaCategoriaMapper::toDTO).collect(Collectors.toList()))
                 .modoPreparos(modoPreparosDTO)
                 .avaliacoes(avaliacaoDTO)
                 .qtdAvaliacoes(qtdAvaliacoes)
@@ -71,6 +75,21 @@ public class ReceitaMapper {
                 .titulo("Nova Receita Adicionada no sistema: " + receita.getNome())
                 .conteudo(receita.getDescricao() + "\n Venha Conferir!!")
                 .receita(receita)
+                .build();
+    }
+
+    public static Receita toEntity(ReceitaCadastroDTO receitaCadastroDTO) {
+        return Receita.builder()
+                .nome(receitaCadastroDTO.getNome())
+                .horas(receitaCadastroDTO.getHoras())
+                .minutos(receitaCadastroDTO.getMinutos())
+                .descricao(receitaCadastroDTO.getDescricao())
+                .imagem(receitaCadastroDTO.getImagem())
+                .qtdPorcoes(receitaCadastroDTO.getQtdPorcoes())
+                .ingredientes(receitaCadastroDTO.getIngredientes())
+                .modoPreparos(receitaCadastroDTO.getModoPreparos())
+                .avaliacoes(receitaCadastroDTO.getAvaliacoes())
+                .receitaCategorias(receitaCadastroDTO.getReceitaCategorias())
                 .build();
     }
 }
