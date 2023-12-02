@@ -11,4 +11,16 @@ public class CategoriaMapper {
                 .valor(categoria.getValor())
                 .build();
     }
+
+    public static Categoria toEntity(CategoriaExibicaoDTO categoriaDTO) {
+        if (categoriaDTO == null) {
+            return null;
+        }
+
+        return Categoria.builder()
+                .id(categoriaDTO.getId())
+                .nome(categoriaDTO.getNome())
+                .valor(categoriaDTO.getValor())
+                .build();
+    }
 }

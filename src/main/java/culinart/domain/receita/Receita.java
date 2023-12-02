@@ -2,6 +2,7 @@ package culinart.domain.receita;
 
 import culinart.domain.avaliacao.Avaliacao;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
+import culinart.domain.receitaPreferencia.ReceitaPreferencia;
 import jakarta.persistence.*;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.modoPreparo.ModoPreparo;
@@ -36,18 +37,22 @@ public class Receita {
     private byte[] imagem;
 
     @OneToMany
-    @JoinColumn(name = "ingrediente_id")
+    @JoinColumn(name = "receita_id")
     private List<Ingrediente> ingredientes;
 
     @OneToMany
-    @JoinColumn(name = "modo_preparo_id")
+    @JoinColumn(name = "receita_id")
     private List<ModoPreparo> modoPreparos;
 
     @OneToMany
-    @JoinColumn(name = "avaliacao_id")
-    private List<Avaliacao> avaliacoes = new ArrayList<>();
+    @JoinColumn(name = "receita_id")
+    private List<Avaliacao> avaliacoes;
 
     @OneToMany
     @JoinColumn(name = "receita_id")
     private List<ReceitaCategoria> receitaCategorias;
+
+    @OneToMany
+    @JoinColumn(name = "receita_id")
+    private List<ReceitaPreferencia> receitaPreferencias;
 }
