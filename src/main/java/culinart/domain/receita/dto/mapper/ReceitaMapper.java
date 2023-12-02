@@ -75,7 +75,7 @@ public class ReceitaMapper {
                 .stream()
                 .filter(Objects::nonNull)
                 .map(ModoPreparoMapper::toDTO)
-                .collect(Collectors.toList())
+                .toList()
                 : Collections.emptyList();
     }
 

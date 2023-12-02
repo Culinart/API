@@ -4,6 +4,7 @@ import culinart.domain.avaliacao.Avaliacao;
 import culinart.domain.avaliacao.repository.AvaliacaoRepository;
 import culinart.domain.categoria.Categoria;
 import culinart.domain.ingrediente.Ingrediente;
+import culinart.domain.ingrediente.dto.IngredienteExibicaoDTO;
 import culinart.domain.ingrediente.repository.IngredienteRepository;
 import culinart.domain.modoPreparo.ModoPreparo;
 import culinart.domain.modoPreparo.repository.ModoPreparoRepository;
@@ -174,21 +175,78 @@ public class ReceitaService {
         receitaPreferenciaRepository.saveAll(listPreferenciasNovas);
         receitaPreferenciaRepository.deleteAll(listPreferenciasRemover);
 
+        List<Ingrediente> ingredientesAntigos = ingredienteRepository.findByReceita_Id(id);
+        List<Ingrediente> ingredientesNovos = new ArrayList<>();
+        List<Ingrediente> ingredientesRemover = new ArrayList<>();
+
+        for (Ingrediente ingredienteAntigo : ingredientesAntigos) {
+            Boolean existe = false;
+            for (Ingrediente ingrediente : ReceitaMapper.toIngredienteEntity(receitaCadastroDTO.getIngredientes())) {
+                if (ingredienteAntigo.getId() == ingrediente.getId()) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                ingredientesRemover.add(ingredienteAntigo);
+            }
+        }
+
+        for (Ingrediente ingrediente : ReceitaMapper.toIngredienteEntity(receitaCadastroDTO.getIngredientes())) {
+            Boolean existe = false;
+            for (Ingrediente ingredienteAntigo : ingredientesAntigos) {
+                if (ingredienteAntigo.getId() == ingrediente.getId()) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                ingrediente.setReceita(receitaAntiga);
+                ingredientesNovos.add(ingrediente);
+            }
+        }
+
+        ingredienteRepository.saveAll(ingredientesNovos);
+        ingredienteRepository.deleteAll(ingredientesRemover);
+
+
+        List<ModoPreparo> modoPreparosAntigos = modoPreparoRepository.findByReceita_Id(id);
+
+List<ModoPreparo> modoPreparosNovos = new ArrayList<>();
+        List<ModoPreparo> modoPreparosRemover = new ArrayList<>();
+
+        for (ModoPreparo modoPreparoAntigo : modoPreparosAntigos) {
+            Boolean existe = false;
+            for (ModoPreparo modoPreparo : ReceitaMapper.toEntity(receitaCadastroDTO.getModoPreparos())) {
+                if (modoPreparoAntigo.getId() == modoPreparo.getId()) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                modoPreparosRemover.add(modoPreparoAntigo);
+            }
+        }
+
+        for (ModoPreparo modoPreparo : ReceitaMapper.toEntity(receitaCadastroDTO.getModoPreparos())) {
+            Boolean existe = false;
+            for (ModoPreparo modoPreparoAntigo : modoPreparosAntigos) {
+                if (modoPreparoAntigo.getId() == modoPreparo.getId()) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                modoPreparo.setReceita(receitaAntiga);
+                modoPreparosNovos.add(modoPreparo);
+            }
+        }
+
+        List<Avaliacao> avaliacoesAntigos = avaliacaoRepository.findByReceita_Id(id);
+
         Receita novaReceita = ReceitaMapper.toEntity(receitaCadastroDTO);
         novaReceita.setId(receitaAntiga.getId());
         novaReceita.setReceitaCategorias(receitaCategoriaRepository.findByReceita_Id(receitaAntiga.getId()));
-
-        if (receitaCadastroDTO.getIngredientes() != null) {
-            novaReceita.setIngredientes(ReceitaMapper.toIngredienteEntity(receitaCadastroDTO.getIngredientes()));
-        } else {
-            novaReceita.setIngredientes(receitaAntiga.getIngredientes());
-        }
-
-        if (receitaCadastroDTO.getModoPreparos() != null) {
-            novaReceita.setModoPreparos(ReceitaMapper.toEntity(receitaCadastroDTO.getModoPreparos()));
-        } else {
-            novaReceita.setModoPreparos(receitaAntiga.getModoPreparos());
-        }
+        novaReceita.setReceitaPreferencias(receitaPreferenciaRepository.findByReceita_Id(receitaAntiga.getId()));
+        novaReceita.setIngredientes(ingredienteRepository.findByReceita_Id(receitaAntiga.getId()));
+        novaReceita.setModoPreparos(modoPreparoRepository.findByReceita_Id(receitaAntiga.getId()));
+        novaReceita.setAvaliacoes(avaliacaoRepository.findByReceita_Id(receitaAntiga.getId()));
 
         return receitaRepository.save(novaReceita);
     }
