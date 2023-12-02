@@ -12,4 +12,5 @@ public interface ReceitaRepository extends JpaRepository<Receita, Integer> {
             "INNER JOIN receita_categoria rc ON r.id = rc.receita_id " +
             "WHERE rc.categoria_id = :categoriaId", nativeQuery = true)
     List<Receita> receitasPorCategoria(Integer categoriaId);
+
 }

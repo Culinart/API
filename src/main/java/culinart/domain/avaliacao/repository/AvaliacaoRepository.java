@@ -17,4 +17,6 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Integer> {
             "JOIN receita r ON a.receita_id = r.id\n" +
             "GROUP BY r.nome;", nativeQuery = true)
     List<Object[]> avaliacoesTxt();
+
+    List<Avaliacao> findByReceita_Id(Integer id);
 }

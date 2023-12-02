@@ -17,5 +17,6 @@ public class ModoPreparo {
     private String passo;
 
     @ManyToOne
+    @JoinColumn(name = "receita_id")
     private Receita receita;
 }

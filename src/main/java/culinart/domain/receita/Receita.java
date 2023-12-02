@@ -1,6 +1,7 @@
 package culinart.domain.receita;
 
 import culinart.domain.avaliacao.Avaliacao;
+import culinart.domain.receitaCategoria.ReceitaCategoria;
 import jakarta.persistence.*;
 import culinart.domain.ingrediente.Ingrediente;
 import culinart.domain.modoPreparo.ModoPreparo;
@@ -15,6 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Receita {
 
     @Id
@@ -27,6 +29,8 @@ public class Receita {
     private Integer minutos;
 
     private String descricao;
+
+    private Integer qtdPorcoes;
 
     @Lob
     private byte[] imagem;
@@ -42,4 +46,8 @@ public class Receita {
     @OneToMany
     @JoinColumn(name = "avaliacao_id")
     private List<Avaliacao> avaliacoes = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "receita_id")
+    private List<ReceitaCategoria> receitaCategorias;
 }
