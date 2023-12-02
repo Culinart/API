@@ -11,9 +11,7 @@ public class UsuarioPreferenciaMapper {
     public static UsuarioPreferenciaExibicaoDTO toDTO(UsuarioPreferencia usuarioPreferencia){
         return UsuarioPreferenciaExibicaoDTO.builder()
                 .id(usuarioPreferencia.getId())
-                .usuario(UsuarioMapper.toDTO(usuarioPreferencia.getUsuario()))
-                .preferencia(usuarioPreferencia.getPreferencias()
-                        .stream().map(PreferenciaMapper::toDTO).collect(Collectors.toList()))
+                .preferencia(PreferenciaMapper.toDTO(usuarioPreferencia.getPreferencia()))
                 .build();
     }
 

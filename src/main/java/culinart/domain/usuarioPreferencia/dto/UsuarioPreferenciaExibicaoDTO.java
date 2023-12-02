@@ -12,6 +12,5 @@ import java.util.List;
 public class UsuarioPreferenciaExibicaoDTO {
 
     private Integer id;
-    private UsuarioExibicaoDTO usuario;
-    private List<PreferenciaExibicaoDTO> preferencia;
+    private PreferenciaExibicaoDTO preferencia;
 }

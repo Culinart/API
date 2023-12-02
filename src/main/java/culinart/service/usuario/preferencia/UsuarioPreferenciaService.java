@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,53 +24,37 @@ public class UsuarioPreferenciaService {
     private final PreferenciaRepository preferenciaRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public UsuarioPreferencia exibirTodasPreferenciasDeUsuario(int idUsuario) {
-        return usuarioPreferenciaRepository.findByUsuario_Id(idUsuario).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencias de usuario não encontrada")
-        );
+    public List<UsuarioPreferencia> exibirTodasPreferenciasDeUsuario(int idUsuario) {
+        List<UsuarioPreferencia> usuarioPreferencias = usuarioPreferenciaRepository.findByUsuario_Id(idUsuario);
+        if (usuarioPreferencias.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não possui preferencias");
+        }
+        return usuarioPreferencias;
     }
 
-    public UsuarioPreferencia cadastrarPreferenciasDoUsuario(int idUsuario, int idUsuarioPreferencia) {
+    public UsuarioPreferencia cadastrarPreferenciasDoUsuario(int idUsuario, int idPreferencia) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
-        Preferencia preferencia = preferenciaRepository.findById(idUsuarioPreferencia)
+        Preferencia preferencia = preferenciaRepository.findById(idPreferencia)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia não encontrada no sistema"));
 
-        Optional<UsuarioPreferencia> usuarioPreferenciaOptional = usuarioPreferenciaRepository.findByUsuario_Id(idUsuario);
-
-        if (usuarioPreferenciaOptional.isEmpty()) {
-            UsuarioPreferencia usuarioPreferencia = new UsuarioPreferencia();
-            usuarioPreferencia.setPreferencias(new ArrayList<>());
-            usuarioPreferencia.getPreferencias().add(preferencia);
-            usuarioPreferencia.setUsuario(usuario);
-            return usuarioPreferenciaRepository.save((usuarioPreferencia));
-        }
-
-        for (Preferencia preferenciaDaVez : usuarioPreferenciaOptional.get().getPreferencias()) {
-            if (preferenciaDaVez.getNome().equals(preferencia.getNome())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Preferencia já está associada ao usuario");
-            }
-        }
-
-        UsuarioPreferencia usuarioPreferencia = usuarioPreferenciaOptional.get();
-        usuarioPreferencia.getPreferencias().add(preferencia);
-        return usuarioPreferenciaRepository.save((usuarioPreferencia));
+        UsuarioPreferencia usuarioPreferencia = new UsuarioPreferencia();
+        usuarioPreferencia.setPreferencia(preferencia);
+        usuarioPreferencia.setUsuario(usuario);
+        return usuarioPreferenciaRepository.save(usuarioPreferencia);
     }
 
-    public void deletarPreferenciasDoUsuario(int idUsuario, int idUsuarioPreferencia) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+    public void deletarPreferenciasDoUsuario(int idUsuarioPreferencia) {
+        Optional<UsuarioPreferencia> usuarioPreferencia = usuarioPreferenciaRepository.findById(idUsuarioPreferencia);
 
-        UsuarioPreferencia usuarioPreferencia = usuarioPreferenciaRepository.findByUsuario_Id(idUsuario)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencias de usuario não encontrada"));
+        if (usuarioPreferencia.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Preferencia não encontrada no sistema");
+        }
 
-        usuarioPreferencia.getPreferencias().removeIf(preferencia -> preferencia.getId().equals(idUsuarioPreferencia));
+        usuarioPreferenciaRepository.deleteById(idUsuarioPreferencia);
 
-        usuarioPreferenciaRepository.save(usuarioPreferencia);
     }
 
 }
