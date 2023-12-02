@@ -12,31 +12,32 @@ import java.util.Optional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
-    @Query(value = "SELECT \n" +
-            "    p.id AS pedido_id,\n" +
-            "    p.valor,\n" +
-            "    p.data_entrega AS data_entrega,\n" +
-            "    p.status,\n" +
-            "    r.id AS receita_id,\n" +
-            "    r.nome AS nome_receita,\n" +
-            "    r.horas,\n" +
-            "    r.minutos,\n" +
-            "    r.qtd_porcoes,\n" +
-            "    GROUP_CONCAT(preferencia.nome) AS preferencias_nome,\n" +
-            "    GROUP_CONCAT(preferencia.cor_fundo) AS cor_fundo,\n" +
-            "    GROUP_CONCAT(preferencia.cor_texto) AS cor_texto,\n" +
-            "    GROUP_CONCAT(c.nome) as categorias\n" +
-            "FROM pedido p\n" +
-            "JOIN pedido_receita pr ON p.id = pr.pedido_id\n" +
-            "JOIN receita r ON pr.receita_id = r.id\n" +
-            "JOIN receita_categoria rc ON r.id = rc.receita_id\n" +
-            "JOIN preferencia ON rc.preferencia_id = preferencia.id\n" +
-            "JOIN categoria c ON rc.categoria_id = c.id\n" +
-            "JOIN plano pl ON p.plano_id = pl.id \n" +
-            "WHERE \n" +
-            "    p.data_entrega = :dataEntrega AND pl.usuario_id = :userId\n" +
-            "GROUP BY\n" +
-            "    pedido_id, receita_id;", nativeQuery = true)
+    @Query(value = "SELECT\n" +
+            "            p.id AS pedido_id,\n" +
+            "            p.valor,\n" +
+            "            p.data_entrega AS data_entrega,\n" +
+            "            p.status,\n" +
+            "            r.id AS receita_id,\n" +
+            "            r.nome AS nome_receita,\n" +
+            "            r.horas,\n" +
+            "            r.minutos,\n" +
+            "            r.qtd_porcoes,\n" +
+            "            GROUP_CONCAT(pref.nome) AS preferencias_nome,\n" +
+            "            GROUP_CONCAT(pref.cor_fundo) AS cor_fundo,\n" +
+            "            GROUP_CONCAT(pref.cor_texto) AS cor_texto,\n" +
+            "            GROUP_CONCAT(c.nome) as categorias\n" +
+            "            FROM pedido p\n" +
+            "            JOIN pedido_receita pr ON p.id = pr.pedido_id\n" +
+            "            JOIN receita r ON pr.receita_id = r.id\n" +
+            "            JOIN receita_categoria rc ON r.id = rc.receita_id\n" +
+            "            JOIN categoria c ON rc.categoria_id = c.id\n" +
+            "            JOIN receita_preferencia rp ON r.id = rp.preferencia_id\n" +
+            "            JOIN preferencia pref on rp.preferencia_id = pref.id\n" +
+            "            JOIN plano pl ON p.plano_id = pl.id\n" +
+            "            WHERE\n" +
+            "            p.data_entrega = :dataEntrega AND pl.usuario_id = :userId" +
+            "            GROUP BY\n" +
+            "            pedido_id, receita_id;", nativeQuery = true)
     List<Object[]> acharProximoPedidoUser(Integer userId, LocalDate dataEntrega);
     List<Pedido> findAllByPlanoUsuarioId(Integer usuarioId);
     @Modifying

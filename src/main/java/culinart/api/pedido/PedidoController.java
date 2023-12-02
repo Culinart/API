@@ -66,7 +66,7 @@ public class PedidoController {
     @PutMapping("/entregue/{idPedido}")
     public ResponseEntity<Pedido> pedidoEntregue(@PathVariable int idPedido){
         Optional<Pedido> pedido = pedidoService.pedidoEntregue(idPedido);
-        return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+        return ResponseEntity.ok().body(pedido.get());
     }
 
 
