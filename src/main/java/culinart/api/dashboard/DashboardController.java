@@ -1,6 +1,7 @@
 package culinart.api.dashboard;
 
 import culinart.domain.avaliacao.dto.AvaliacaoTxtDto;
+import culinart.domain.avaliacao.mapper.AvaliacaoTxtMapper;
 import culinart.domain.dashboard.DashCategoria;
 import culinart.domain.dashboard.DashPreferencia;
 import culinart.domain.dashboard.mapper.DashMapper;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,7 +37,10 @@ public class DashboardController {
     @GetMapping("/receitas")
     public ResponseEntity<List<AvaliacaoTxtDto>> listarReceitas(){
         List<Object[]> resultPreferencia = service.getReceitas();
-        List<AvaliacaoTxtDto> listaPreferencias = DashMapper.mapToDashPreferenciaList(resultPreferencia);
+        List<AvaliacaoTxtDto> listaPreferencias = new ArrayList<>();
+        for (Object[] row: resultPreferencia) {
+            listaPreferencias.add(AvaliacaoTxtMapper.toTxtDto(row));
+        }
         return ResponseEntity.ok().body(listaPreferencias);
     }
 }
