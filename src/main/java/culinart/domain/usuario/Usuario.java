@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -21,6 +23,8 @@ public class Usuario implements Assinante {
     private String nome;
     private String email;
     private String senha;
+    @Column(name = "data_criacao")
+    private LocalDate dataCriacao;
     @Enumerated(EnumType.STRING)
     @Column(name = "permissao")
     private PermissaoEnum permissao;
