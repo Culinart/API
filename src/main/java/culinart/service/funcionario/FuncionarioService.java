@@ -1,18 +1,26 @@
 package culinart.service.funcionario;
 
+import culinart.api.usuario.configuration.security.jwt.GerenciadorTokenJwt;
 import culinart.domain.fornecedor.Funcionario;
-import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
-import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
+import culinart.domain.fornecedor.dto.*;
 import culinart.domain.fornecedor.mapper.FuncionarioMapper;
 import culinart.domain.fornecedor.repository.FuncionarioRepository;
+import culinart.domain.usuario.Usuario;
+import culinart.domain.usuario.dto.mapper.UsuarioMapper;
+import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
+import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 import culinart.utils.FilaObj;
 import culinart.utils.ListaObj;
 import culinart.utils.enums.PermissaoEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +37,10 @@ import java.util.stream.Collectors;
 public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final PasswordEncoder passwordEncoder;
-
-
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private GerenciadorTokenJwt gerenciadorTokenJwt;
     public List<FuncionarioExibicaoDTO> listarFunc() {
         List<Funcionario> funcionarios = this.funcionarioRepository.findAll();
         return funcionarios.stream()
@@ -336,6 +346,26 @@ public class FuncionarioService {
 
         return funcionariosCadastrados;
 
+    }
+
+    public FuncionarioTokenDto autenticar(FuncionarioLoginDto funcionarioLoginDto){
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                funcionarioLoginDto.getEmail(),funcionarioLoginDto.getSenha()
+        );
+
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        Funcionario usuarioAutenticado =
+                funcionarioRepository.findByEmail(funcionarioLoginDto.getEmail())
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não cadastrado")
+                        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final String token = gerenciadorTokenJwt.generateToken(authentication);
+
+        return FuncionarioMapper.toFuncionarioTokenDto(usuarioAutenticado,token);
     }
 }
 

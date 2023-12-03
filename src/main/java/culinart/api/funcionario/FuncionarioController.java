@@ -1,7 +1,9 @@
 package culinart.api.funcionario;
 
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
+import culinart.domain.fornecedor.dto.*;
 import culinart.service.funcionario.FuncionarioService;
+import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
+import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 import culinart.utils.FilaObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import culinart.domain.fornecedor.Funcionario;
-import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
-import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -101,6 +101,12 @@ public class FuncionarioController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.status(201).body(listaUsersCadastrados);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<FuncionarioTokenDto> login(@RequestBody FuncionarioLoginDto funcionarioLoginDto) {
+        FuncionarioTokenDto funcionarioTokenDto = this.funcionarioService.autenticar(funcionarioLoginDto);
+        return ResponseEntity.ok(funcionarioTokenDto);
     }
 
 }
