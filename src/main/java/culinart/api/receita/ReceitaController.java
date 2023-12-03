@@ -8,11 +8,15 @@ import culinart.service.receita.ReceitaService;
 import culinart.service.receita.receitaCategoria.ReceitaCategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 @RestController
 @RequestMapping("/receitas")
@@ -37,34 +41,55 @@ public class ReceitaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReceitaExibicaoDTO> exibirReceitaPorId(@PathVariable int id){
+    public ResponseEntity<ReceitaExibicaoDTO> exibirReceitaPorId(@PathVariable int id) {
         return ResponseEntity.ok(ReceitaMapper.toDTO(receitaService.exibirReceitaPorId(id)));
     }
 
     @PostMapping
-    public ResponseEntity<ReceitaExibicaoDTO> cadastrarReceita(@RequestBody ReceitaCadastroDTO receita){
+    public ResponseEntity<ReceitaExibicaoDTO> cadastrarReceita(@RequestBody ReceitaCadastroDTO receita) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ReceitaMapper.toDTO(receitaService.cadastrarReceita(receita)));
-    };
+    }
+
+    ;
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReceitaExibicaoDTO> atualizarReceita(@PathVariable int id,@RequestBody ReceitaCadastroDTO receita){
-        return ResponseEntity.ok(ReceitaMapper.toDTO(receitaService.atualizarReceita(id,receita)));
-    };
+    public ResponseEntity<ReceitaExibicaoDTO> atualizarReceita(@PathVariable int id, @RequestBody ReceitaCadastroDTO receita) {
+        return ResponseEntity.ok(ReceitaMapper.toDTO(receitaService.atualizarReceita(id, receita)));
+    }
+
+    ;
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarReceita(@PathVariable int id){
+    public ResponseEntity<Void> deletarReceita(@PathVariable int id) {
         receitaService.deletarReceita(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<ReceitaExibicaoDTO>> buscarPorTermo(@RequestParam String termo){
+    public ResponseEntity<List<ReceitaExibicaoDTO>> buscarPorTermo(@RequestParam String termo) {
         List<Receita> receitas = receitaService.pesquisarReceitas(termo);
-        if (receitas.isEmpty()){
+        if (receitas.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(receitas.stream().map(ReceitaMapper::toDTO).toList());
+    }
+
+    @PostMapping("/salvar-imagem/{idReceita}")
+    public ResponseEntity<?> upload(@RequestParam ("imagem") MultipartFile imagem, @PathVariable Integer idReceita) throws IOException{
+        receitaService.adcionarImagemReceita(imagem,idReceita);
+        return ResponseEntity.ok("Imagem recebida com sucesso!");
+    }
+
+    @GetMapping("/imagem/{idReceita}")
+    public ResponseEntity<byte[]> dowload(@PathVariable Integer idReceita) throws DataFormatException {
+
+        byte[] imagem = receitaService.visualizarImagemReceita(idReceita);
+
+        if(imagem == null){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem); //TODO: colocar para jpg dps
     }
 }

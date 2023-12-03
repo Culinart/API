@@ -1,5 +1,6 @@
 package culinart.domain.receita;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import culinart.domain.avaliacao.Avaliacao;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
 import culinart.domain.receitaPreferencia.ReceitaPreferencia;
@@ -33,6 +34,8 @@ public class Receita {
 
     private Integer qtdPorcoes;
 
+    @JsonIgnore // ignoramos no JSON pois não faz sentido retornar um vetor de bytes num JSON!
+    @Column(length = 50 * 1024 * 1024) // 50 Mega Bytes
     @Lob
     private byte[] imagem;
 
