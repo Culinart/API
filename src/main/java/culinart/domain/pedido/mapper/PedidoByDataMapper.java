@@ -56,7 +56,11 @@ public class PedidoByDataMapper {
             PreferenciaCardDto preferencia = new PreferenciaCardDto();
             preferencia.setNome(preferenciasNome[i]);
             preferencia.setCorFundo(coresFundo[i]);
-            preferencia.setCorTexto(coresTexto[i]);
+            if (i < coresTexto.length) {
+                preferencia.setCorTexto(coresTexto[i]);
+            } else {
+                preferencia.setCorTexto(coresTexto[0]);
+            }
             preferencias.add(preferencia);
         }
         return preferencias;

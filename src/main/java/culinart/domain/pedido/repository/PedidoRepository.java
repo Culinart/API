@@ -22,16 +22,16 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "            r.horas,\n" +
             "            r.minutos,\n" +
             "            r.qtd_porcoes,\n" +
-            "            GROUP_CONCAT(pref.nome) AS preferencias_nome,\n" +
-            "            GROUP_CONCAT(pref.cor_fundo) AS cor_fundo,\n" +
-            "            GROUP_CONCAT(pref.cor_texto) AS cor_texto,\n" +
-            "            GROUP_CONCAT(c.nome) as categorias\n" +
+            "            GROUP_CONCAT(DISTINCT pref.nome) AS preferencias_nome,\n" +
+            "            GROUP_CONCAT(DISTINCT pref.cor_fundo) AS cor_fundo,\n" +
+            "            GROUP_CONCAT(DISTINCT pref.cor_texto) AS cor_texto,\n" +
+            "            GROUP_CONCAT(DISTINCT c.nome) as categorias\n" +
             "            FROM pedido p\n" +
             "            JOIN pedido_receita pr ON p.id = pr.pedido_id\n" +
             "            JOIN receita r ON pr.receita_id = r.id\n" +
             "            JOIN receita_categoria rc ON r.id = rc.receita_id\n" +
             "            JOIN categoria c ON rc.categoria_id = c.id\n" +
-            "            JOIN receita_preferencia rp ON r.id = rp.preferencia_id\n" +
+            "            JOIN receita_preferencia rp ON r.id = rp.receita_id\n" +
             "            JOIN preferencia pref on rp.preferencia_id = pref.id\n" +
             "            JOIN plano pl ON p.plano_id = pl.id\n" +
             "            WHERE\n" +
