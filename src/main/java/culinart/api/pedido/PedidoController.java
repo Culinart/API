@@ -78,8 +78,8 @@ public class PedidoController {
 
 
     @DeleteMapping("/deletar/{receitaId}/{pedidoId}")
-    public ResponseEntity<Pedido> alterPedidoDeletar(@PathVariable int receitaid, @PathVariable int pedidoId){
-        DeletarReceitaPedidoDto receita = new DeletarReceitaPedidoDto(receitaid, pedidoId);
+    public ResponseEntity<Pedido> alterPedidoDeletar(@PathVariable int receitaId, @PathVariable int pedidoId){
+        DeletarReceitaPedidoDto receita = new DeletarReceitaPedidoDto(receitaId, pedidoId);
         pedidoService.deletarReceitaPedido(receita);
         return ResponseEntity.noContent().build();
     }
