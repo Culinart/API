@@ -1,5 +1,6 @@
 package culinart.service.dashboard;
 
+import culinart.domain.avaliacao.repository.AvaliacaoRepository;
 import culinart.domain.plano.repository.PlanoRepository;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 public class DashBoardService {
     private final PlanoRepository planoRepository;
     private final UsuarioRepository usuarioRepository;
-
+    private final AvaliacaoRepository avaliacaoRepository;
     public List<Object[]> getCategorias(){
         List<Object[]> result = planoRepository.findCategoriasMaisPresentes();
         if (result.isEmpty()){
@@ -25,6 +26,14 @@ public class DashBoardService {
         List<Object[]> result = usuarioRepository.findPreferenciasMaisPresentes();
         if (result.isEmpty()){
             throw new IllegalArgumentException("PREFERENCIAS VAZIAS");
+        }
+        return result;
+    }
+
+    public List<Object[]> getReceitas(){
+        List<Object[]> result = avaliacaoRepository.avaliacoesTxt();
+        if (result.isEmpty()){
+            throw new IllegalArgumentException("AVALIAÇÕES VAZIAS");
         }
         return result;
     }
