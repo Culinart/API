@@ -1,5 +1,6 @@
 package culinart.service.usuario.autenticacao.dto;
 
+import culinart.domain.fornecedor.Funcionario;
 import culinart.domain.usuario.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,12 @@ public class UsuarioDetalhesDto implements UserDetails {
     private String senha;
 
     public UsuarioDetalhesDto(Usuario usuario) {
+        this.nome = usuario.getNome();
+        this.email = usuario.getEmail();
+        this.senha = usuario.getSenha();
+    }
+
+    public UsuarioDetalhesDto(Funcionario usuario) {
         this.nome = usuario.getNome();
         this.email = usuario.getEmail();
         this.senha = usuario.getSenha();

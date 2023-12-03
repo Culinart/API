@@ -4,6 +4,7 @@ import culinart.domain.fornecedor.Funcionario;
 
 import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
+import culinart.domain.fornecedor.dto.FuncionarioTokenDto;
 import culinart.utils.enums.StatusAtivoEnum;
 
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class FuncionarioMapper {
         func.setCargo(funcionarioCriacaoDTO.getCargo());
         func.setTurno(funcionarioCriacaoDTO.getTurno());
         func.setPermissao(funcionarioCriacaoDTO.getPermissao());
-        func.setSenha("sptech");
+        func.setSenha("sptech123");
         func.setIsAtivo(StatusAtivoEnum.ATIVO);
         func.setDataCriacao(LocalDate.now());
 
@@ -42,5 +43,15 @@ public class FuncionarioMapper {
         FuncionarioExibicaoDTO.setPermissao(funcionario.getPermissao());
 
         return FuncionarioExibicaoDTO;
+    }
+
+    public static FuncionarioTokenDto toFuncionarioTokenDto(Funcionario func, String token){
+        FuncionarioTokenDto funcToken = new FuncionarioTokenDto();
+        funcToken.setFuncId(func.getId());
+        funcToken.setNome(func.getNome());
+        funcToken.setPermissao(func.getPermissao());
+        funcToken.setEmail(func.getEmail());
+        funcToken.setToken(token);
+        return funcToken;
     }
 }
