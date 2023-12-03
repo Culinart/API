@@ -45,9 +45,9 @@ public class CategoriaController {
                 .body(CategoriaMapper.toDTO(categoriaService.cadastrarCategoria(categoria)));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoriaExibicaoDTO> atualizarCategoria(@PathVariable int id, @RequestBody Categoria categoria){
-        return ResponseEntity.ok(CategoriaMapper.toDTO(categoriaService.atualizarCategoria(id,categoria)));
+    @PutMapping
+    public ResponseEntity<List<Categoria>> atualizarCategoria(@RequestBody List<Categoria> categorias){
+        return ResponseEntity.ok(categoriaService.atualizarCategoria(categorias));
     }
 
     @DeleteMapping("/{id}")

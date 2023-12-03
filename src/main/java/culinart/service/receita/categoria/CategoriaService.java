@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,12 +32,13 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
-    public Categoria atualizarCategoria(int id, Categoria categoria) {
-        if (categoriaRepository.findById(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada");
+    public List<Categoria> atualizarCategoria(List<Categoria> categorias) {
+        List<Categoria>listaCategoriasAtt = new ArrayList<>();
+        for (Categoria categoriaDaVez:categorias) {
+            categoriaRepository.save(categoriaDaVez);
+            listaCategoriasAtt.add(categoriaDaVez);
         }
-        categoria.setId(id);
-        return categoriaRepository.save(categoria);
+        return listaCategoriasAtt;
     }
 
     public void deletarCategoria(int id) {
