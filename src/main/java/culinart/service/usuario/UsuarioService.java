@@ -185,7 +185,8 @@ public class UsuarioService {
                 );
 
         usuario.setSenha(usuarioSenhaDTO.getSenha());
-        passwordEncoder.encode(usuario.getSenha());
+        String encode = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(encode);
         return usuarioRepository.save(usuario);
     }
 }
