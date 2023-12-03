@@ -15,7 +15,7 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Integer> {
             "    ROUND(AVG(a.nota), 1) AS media_notas\n" +
             "FROM avaliacao a\n" +
             "JOIN receita r ON a.receita_id = r.id\n" +
-            "GROUP BY r.nome;", nativeQuery = true)
+            "GROUP BY r.nome order by media_notas asc;", nativeQuery = true)
     List<Object[]> avaliacoesTxt();
 
     List<Avaliacao> findByReceita_Id(Integer id);
