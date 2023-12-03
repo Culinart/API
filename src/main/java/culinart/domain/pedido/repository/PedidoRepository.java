@@ -4,6 +4,7 @@ import culinart.domain.pedido.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -69,7 +70,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "    FROM Pedido p\n" +
             "    JOIN Plano pl ON p.plano_id = pl.id\n" +
             "    JOIN Usuario u ON pl.usuario_id = u.id\n" +
-            "    JOIN enderecos_usuario eu ON u.id = eu.usuario_id\n" +
+            "    JOIN endereco_usuario eu ON u.id = eu.usuario_id\n" +
             "    JOIN endereco e ON e.id = eu.endereco_id \n" +
             "    JOIN Pedido_Receita pr ON pr.pedido_id = p.id\n" +
             "    JOIN Receita r ON r.id = pr.receita_id\n" +
@@ -83,4 +84,17 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "JOIN Categoria categorias ON rc.categoria_id = categorias.id\n" +
             "GROUP BY pedidos_agrupados.pedido_id, pedidos_agrupados.data_entrega, pedidos_agrupados.nome_usuario, pedidos_agrupados.logradouro, pedidos_agrupados.numero, pedidos_agrupados.quantidade_porcoes;", nativeQuery = true)
     List<Object[]> findProximosPedidos(LocalDate dataLimite);
+
+    @Modifying
+    @Query(value = "DELETE FROM pedido_receita pr WHERE pr.receita_id = :idReceita AND pr.pedido_id = :idPedido", nativeQuery = true)
+    void deleteReceitaPedido(@Param("idPedido") Integer idPedido, @Param("idReceita") Integer idReceita);
+
+
+
+
+
+    @Modifying
+    @Query(value = "INSERT INTO pedido_receita(pedido_id, receita_id) VALUES (:idPedido, :idReceita)", nativeQuery = true)
+    void addReceitaPedido(@Param("idPedido") int idPedido, @Param("idReceita") int idReceita);
+
 }
