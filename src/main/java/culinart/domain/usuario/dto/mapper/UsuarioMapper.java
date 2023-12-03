@@ -8,6 +8,8 @@ import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
 import culinart.utils.enums.PermissaoEnum;
 import culinart.utils.enums.StatusAtivoEnum;
 
+import java.time.LocalDate;
+
 public class UsuarioMapper {
     public static Usuario toEntity(UsuarioCriacaoDTO usuarioCriacaoDTO) {
         Usuario usuario = new Usuario();
@@ -15,6 +17,7 @@ public class UsuarioMapper {
         usuario.setNome(usuarioCriacaoDTO.getNome());
         usuario.setEmail(usuarioCriacaoDTO.getEmail());
         usuario.setSenha(usuarioCriacaoDTO.getSenha());
+        usuario.setDataCriacao(LocalDate.now());
         usuario.setTelefone(usuarioCriacaoDTO.getTelefone());
         usuario.setCpf(usuarioCriacaoDTO.getCpf());
         usuario.setPermissao(PermissaoEnum.USUARIO);

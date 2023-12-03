@@ -4,6 +4,7 @@ import culinart.domain.avaliacao.dto.AvaliacaoTxtDto;
 import culinart.domain.avaliacao.mapper.AvaliacaoTxtMapper;
 import culinart.domain.dashboard.DashCategoria;
 import culinart.domain.dashboard.DashPreferencia;
+import culinart.domain.dashboard.DashboardDados;
 import culinart.domain.dashboard.mapper.DashMapper;
 import culinart.service.dashboard.DashBoardService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,5 +44,12 @@ public class DashboardController {
             listaPreferencias.add(AvaliacaoTxtMapper.toTxtDto(row));
         }
         return ResponseEntity.ok().body(listaPreferencias);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DashboardDados>> dash(){
+        List<Map<String, Object>> result= service.getDashDados();
+        List<DashboardDados> dashDados = DashMapper.toDashDados(result);
+        return ResponseEntity.ok().body(dashDados);
     }
 }

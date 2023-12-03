@@ -6,10 +6,14 @@ import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.utils.PilhaObj;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.grammars.hql.HqlParser;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +51,13 @@ public class DashBoardService {
             resultOredenado.add(result.get(pilha.pop()));
         }
         return resultOredenado;
+    }
+
+    public List<Map<String, Object>> getDashDados(){
+        List<Map<String, Object>> resultadoConsulta = usuarioRepository.countNewUserByMonth(LocalDate.now().getYear());
+        if (resultadoConsulta.isEmpty()){
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada");
+        }
+        return resultadoConsulta;
     }
 }
