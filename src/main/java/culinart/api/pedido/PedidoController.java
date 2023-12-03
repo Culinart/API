@@ -6,6 +6,7 @@ import culinart.domain.pedido.dto.PedidoByDataDto;
 import culinart.domain.pedido.dto.ProximosPedidosDto;
 import culinart.domain.pedido.mapper.PedidoByDataMapper;
 import culinart.domain.pedido.mapper.PedidoMapper;
+import culinart.domain.plano.Plano;
 import culinart.service.pedido.PedidoService;
 import culinart.utils.enums.StatusPedidoEnum;
 import lombok.Data;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,8 +47,8 @@ public class PedidoController {
         }
         PedidoMapper mapper = new PedidoMapper();
         List <DatasPedidosDto> listaDatas = listaPedidos.stream()
-                                            .map(mapper::toDatasPedidosDto)
-                                            .collect(Collectors.toList());
+                .map(mapper::toDatasPedidosDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(listaDatas);
     }
 
@@ -58,6 +60,10 @@ public class PedidoController {
             return ResponseEntity.badRequest().build();
         }else if (pedido.get().getStatus() == StatusPedidoEnum.CANCELADO){
             pedidoService.setDescontoPlano(pedido.get().getValor(), pedido.get().getPlano().getId());
+            int userId = pedido.get().getPlano().getUsuario().getId();
+            Plano plano = pedido.get().getPlano();
+            LocalDate dataUltimoPedido = pedido.get().getDataEntrega();
+            pedidoService.criarPedido(userId, plano, "Pedido", dataUltimoPedido);
             return ResponseEntity.ok(pedido.get());
         }
         return ResponseEntity.badRequest().build();
@@ -66,7 +72,7 @@ public class PedidoController {
     @PutMapping("/entregue/{idPedido}")
     public ResponseEntity<Pedido> pedidoEntregue(@PathVariable int idPedido){
         Optional<Pedido> pedido = pedidoService.pedidoEntregue(idPedido);
-        return ResponseEntity.ok().body(pedido.get());
+        return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
 
@@ -85,11 +91,11 @@ public class PedidoController {
 
         List<Object[]> pedidos = pedidoService.proximasEntregas();
         if (pedidos.isEmpty()){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.badRequest().build();
         }
         List<ProximosPedidosDto> listaProxPedidos = pedidos.stream()
-                                                    .map(PedidoMapper::toProximosPedidosDto)
-                                                    .collect(Collectors.toList());
+                .map(PedidoMapper::toProximosPedidosDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(listaProxPedidos);
 
     }
