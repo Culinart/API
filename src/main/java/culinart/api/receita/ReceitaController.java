@@ -57,4 +57,14 @@ public class ReceitaController {
         receitaService.deletarReceita(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ReceitaExibicaoDTO>> buscarPorTermo(@RequestParam String termo){
+        List<Receita> receitas = receitaService.pesquisarReceitas(termo);
+        if (receitas.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(receitas.stream().map(ReceitaMapper::toDTO).toList());
+    }
 }

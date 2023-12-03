@@ -21,6 +21,7 @@ import culinart.service.receita.ingrediente.IngredienteService;
 import culinart.service.receita.modoPreparo.ModoPreparoService;
 import culinart.service.receita.receitaCategoria.ReceitaCategoriaService;
 import culinart.service.receita.receitaPreferencia.ReceitaPreferenciaService;
+import culinart.utils.ReceitaSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -270,5 +271,9 @@ List<ModoPreparo> modoPreparosNovos = new ArrayList<>();
         receitaPreferenciaRepository.deleteAll(receitaPreferencias);
 
         receitaRepository.deleteById(id);
+    }
+
+    public List<Receita> pesquisarReceitas(String termo) {
+        return receitaRepository.findAll(ReceitaSpecifications.porNomeOuIngredienteOuCategoria(termo));
     }
 }
