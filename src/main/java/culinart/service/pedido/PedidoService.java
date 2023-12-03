@@ -2,6 +2,7 @@ package culinart.service.pedido;
 
 
 import culinart.domain.pedido.Pedido;
+import culinart.domain.pedido.dto.DeletarReceitaPedidoDto;
 import culinart.domain.pedido.repository.PedidoRepository;
 import culinart.domain.plano.Plano;
 import culinart.domain.plano.repository.PlanoRepository;
@@ -79,10 +80,13 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido updatePedido(Pedido pedidoatt){
-        planoRepository.save(pedidoatt.getPlano());
+    public void deletarReceitaPedido(DeletarReceitaPedidoDto receitaPedidoDto){
+        pedidoRepository.deleteReceitaPedido(receitaPedidoDto.getPedido_id(), receitaPedidoDto.getReceita_id());
+    }
 
-        return  pedidoRepository.save(pedidoatt);
+    @Transactional
+    public void addReceitaPedido(DeletarReceitaPedidoDto receitaPedidoDto){
+        pedidoRepository.addReceitaPedido(receitaPedidoDto.getPedido_id(), receitaPedidoDto.getReceita_id());
     }
 
     public  List<Object[]> proximasEntregas(){

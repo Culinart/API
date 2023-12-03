@@ -46,7 +46,7 @@ public class EnderecoUsuarioService {
     }
 
     public Optional<EnderecoUsuario> findEnderecoAtivoByUsuarioId(int idUsuario) {
-        return repository.findEnderecoUsuarioAtivoByUsuario_Id(idUsuario);
+        return repository.findEnderecoUsuarioAtivo(StatusAtivoEnum.ATIVO, idUsuario);
     }
 
 }

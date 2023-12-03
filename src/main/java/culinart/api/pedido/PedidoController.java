@@ -2,6 +2,7 @@ package culinart.api.pedido;
 
 import culinart.domain.pedido.Pedido;
 import culinart.domain.pedido.dto.DatasPedidosDto;
+import culinart.domain.pedido.dto.DeletarReceitaPedidoDto;
 import culinart.domain.pedido.dto.PedidoByDataDto;
 import culinart.domain.pedido.dto.ProximosPedidosDto;
 import culinart.domain.pedido.mapper.PedidoByDataMapper;
@@ -76,14 +77,16 @@ public class PedidoController {
     }
 
 
-    @PutMapping
-    public ResponseEntity<Pedido> alterPedido(@RequestBody Pedido pedido){
-        Pedido pedidoAtt = pedidoService.updatePedido(pedido);
-        if (pedidoAtt != null){
-            return ResponseEntity.status(200).body(pedidoAtt);
-        }else{
-            return ResponseEntity.status(400).build();
-        }
+    @DeleteMapping("/deletar")
+    public ResponseEntity<Pedido> alterPedidoDeletar(@RequestBody DeletarReceitaPedidoDto receita){
+        pedidoService.deletarReceitaPedido(receita);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/adicionar")
+    public ResponseEntity<Pedido> alterPedidoAdicionar(@RequestBody DeletarReceitaPedidoDto receita){
+        pedidoService.addReceitaPedido(receita);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/proximas")
