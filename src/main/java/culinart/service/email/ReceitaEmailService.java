@@ -49,13 +49,13 @@ public class ReceitaEmailService {
                 );
     }
 
-    public ReceitaEmail publicarReceita(int idReceita) {
+    public String publicarReceita(int idReceita) {
         Receita receita = receitaRepository.findById(idReceita).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada para envio de email"));
 
         List<Usuario> usuariosAtivos = usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.ATIVO);
 
         usuariosAtivos.forEach(usuario -> usuario.receberReceita(enviadorEmailService, ReceitaMapper.toEmailDTO(receita), emailEmpresa));
-        return ReceitaMapper.toEmailDTO(receita);
+        return "Receita enviada no email com sucesso";
     }
 }

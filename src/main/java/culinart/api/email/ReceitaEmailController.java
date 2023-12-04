@@ -42,7 +42,7 @@ public class ReceitaEmailController {
     }
 
     @PostMapping("/publicar/receitas/{idReceita}")
-    public ResponseEntity<ReceitaEmail> publicarReceita(@PathVariable int idReceita){
+    public ResponseEntity<String> publicarReceita(@PathVariable int idReceita){
         return ResponseEntity.ok(this.receitaEmailService.publicarReceita(idReceita));
     }
 }
