@@ -25,6 +25,7 @@ import culinart.service.receita.receitaPreferencia.ReceitaPreferenciaService;
 import culinart.utils.ImageCompressionUtil;
 import culinart.utils.ReceitaSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.DataFormatException;
 
 @Service
@@ -287,10 +289,16 @@ List<ModoPreparo> modoPreparosNovos = new ArrayList<>();
         Receita receita = receitaRepository.findById(idReceita).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrado"));
 
-         imagemReceitaRepository.save(ImagemReceita
+        Optional<ImagemReceita> imagemOPT = imagemReceitaRepository.findByReceita_Id(idReceita);
+
+        if(imagemOPT.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receita já possui imagem cadastrada");
+        }
+
+        imagemReceitaRepository.save(ImagemReceita
                 .builder()
                 .nome(imagem.getOriginalFilename())
-                .foto(ImageCompressionUtil.compress(imagem.getBytes()))
+                .foto(imagem.getBytes())
                 .receita(receita)
                 .build());
 
@@ -300,11 +308,17 @@ List<ModoPreparo> modoPreparosNovos = new ArrayList<>();
        return null;
     }
 
-    public byte[] visualizarImagemReceita(Integer idReceita) throws DataFormatException {
+    public String visualizarImagemReceita(Integer idReceita) throws DataFormatException {
 
-        ImagemReceita foto = imagemReceitaRepository.findByReceita_Id(idReceita).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada"));
+        ImagemReceita foto = imagemReceitaRepository.findByReceita_Id(idReceita).orElse(null);
 
-        return ImageCompressionUtil.decompress(foto.getFoto());
+        if (foto != null) {
+            byte[] imagemBytes = foto.getFoto();
+            String imagemBase64 = Base64.encodeBase64String(imagemBytes);
+            return imagemBase64;
+        } else {
+            // Se a imagem não existir, retorne uma imagem padrão ou outra resposta apropriada
+            return null;
+        }
     }
 }

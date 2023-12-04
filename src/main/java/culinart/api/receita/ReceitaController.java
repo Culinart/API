@@ -83,9 +83,9 @@ public class ReceitaController {
     }
 
     @GetMapping("/imagem/{idReceita}")
-    public ResponseEntity<byte[]> dowload(@PathVariable Integer idReceita) throws DataFormatException {
+    public ResponseEntity<String> dowload(@PathVariable Integer idReceita) throws DataFormatException {
 
-        byte[] imagem = receitaService.visualizarImagemReceita(idReceita);
+        String imagem = receitaService.visualizarImagemReceita(idReceita);
 
         if(imagem == null){
             return ResponseEntity.noContent().build();
