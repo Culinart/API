@@ -58,6 +58,12 @@ public class FuncionarioController {
         }
     }
 
+    @PutMapping("/senha/{id}")
+    public ResponseEntity atualizarSenha(@PathVariable Integer id, @RequestBody String senha){
+        funcionarioService.atualizarSenha(id, senha);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> DesativarFuncionario(@PathVariable Integer id){
         return ResponseEntity.status(200).body(funcionarioService.deletarFuncionario(id));
