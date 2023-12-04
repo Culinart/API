@@ -74,6 +74,16 @@ public class FuncionarioService {
         }
     }
 
+    public void atualizarSenha(int id, String senhaNova){
+        Optional<Funcionario> func = funcionarioRepository.findById(id);
+        if (func.isEmpty()){
+            throw new IllegalStateException("FUNCIONARIO NÃO EXISTENTE");
+        }
+        String novaSenha = passwordEncoder.encode(senhaNova);
+        func.get().setSenha(novaSenha);
+        funcionarioRepository.save(func.get());
+    }
+
     public String deletarFuncionario(Integer id) {
         this.funcionarioRepository.deleteById(id);
         return "Deletado com sucesso";

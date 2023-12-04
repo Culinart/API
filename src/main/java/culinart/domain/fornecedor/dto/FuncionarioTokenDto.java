@@ -12,6 +12,7 @@ public class FuncionarioTokenDto {
     private String nome;
     private String email;
     private String token;
+    private String telefone;
     @Enumerated(EnumType.STRING)
     private PermissaoEnum permissao;
 }

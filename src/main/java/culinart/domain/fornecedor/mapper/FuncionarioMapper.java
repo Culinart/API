@@ -49,6 +49,7 @@ public class FuncionarioMapper {
         FuncionarioTokenDto funcToken = new FuncionarioTokenDto();
         funcToken.setFuncId(func.getId());
         funcToken.setNome(func.getNome());
+        funcToken.setTelefone(func.getTel());
         funcToken.setPermissao(func.getPermissao());
         funcToken.setEmail(func.getEmail());
         funcToken.setToken(token);
