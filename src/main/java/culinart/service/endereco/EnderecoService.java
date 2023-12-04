@@ -1,105 +1,110 @@
 package culinart.service.endereco;
 
 import culinart.domain.endereco.Endereco;
-import culinart.domain.endereco.EnderecoMapper;
 import culinart.domain.endereco.dto.EnderecoExibicaoDTO;
+import culinart.domain.endereco.dto.mapper.EnderecoMapper;
 import culinart.domain.endereco.repository.EnderecoRepository;
+import culinart.domain.endereco.usuario.EnderecoUsuario;
+import culinart.domain.endereco.usuario.dto.mapper.EnderecoUsuarioMapper;
+import culinart.domain.endereco.usuario.repository.EnderecoUsuarioRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.integration.ViaCep.client.ViaCepClient;
 import culinart.integration.ViaCep.dto.ViaCepResponse;
+import culinart.utils.StringUtils;
+import culinart.utils.enums.StatusAtivoEnum;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EnderecoService {
 
-    private EnderecoRepository enderecoRepository;
+    private final EnderecoRepository enderecoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final EnderecoUsuarioRepository enderecosUsuarioRepository;
     private final ViaCepClient viaCepClient;
 
-    public EnderecoService(EnderecoRepository enderecoRepository, UsuarioRepository usuarioRepository, ViaCepClient viaCepClient) {
+    public EnderecoService(EnderecoRepository enderecoRepository, UsuarioRepository usuarioRepository, EnderecoUsuarioRepository enderecosUsuarioRepository, ViaCepClient viaCepClient) {
         this.enderecoRepository = enderecoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.enderecosUsuarioRepository = enderecosUsuarioRepository;
         this.viaCepClient = viaCepClient;
     }
 
     public List<EnderecoExibicaoDTO> listarTodosOsEnderecos() {
-        List<EnderecoExibicaoDTO> lista = new ArrayList<>();
-        for (Endereco endereco : enderecoRepository.findAll()) {
-            lista.add(EnderecoMapper.of(endereco));
-        }
-        return lista;
+        return EnderecoMapper.toEnderecoDTO(this.enderecoRepository.findAll());
     }
 
-    public EnderecoExibicaoDTO cadastrarEnderecoAoUsuarioPorId(String cep, int idUsuario, int numero) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(idUsuario);
-
-        if (usuarioOptional.isEmpty()) {
-            throw new IllegalArgumentException("Usuario não encontrado");
-        }
-
-        Usuario usuario = usuarioOptional.get();
+    public Endereco cadastrarEndereco(String cep, String complemento, int numero, int idUsuario) {
         Endereco endereco = getEnderecoPeloCep(cep);
-
-        if (verificaSeUsuarioJaTemEnderecoCadastrado(idUsuario, cep, numero)) {
-            throw new IllegalArgumentException("Usuario já possui endereço cadastrado");
-        } else {
-            endereco.setNumero(numero);
-            enderecoRepository.save(endereco);
-
-            usuario.getEndereco().add(endereco);
-            usuarioRepository.save(usuario);
-        }
-        return EnderecoMapper.of(endereco);
+        endereco.setNumero(numero);
+        endereco.setComplemento(complemento);
+        enderecoRepository.save(endereco);
+        return endereco;
     }
 
-    private Boolean verificaSeUsuarioJaTemEnderecoCadastrado(int id, String cep, int numero) {
-        int tamanho = cep.length();
-
-        String parte1 = cep.substring(0, tamanho - 3);
-        String parte2 = cep.substring(tamanho - 3);
-
-        String cepFormatado = parte1 + "-" + parte2;
-
-        List<Endereco> listaEndereco = enderecoRepository.findByCepAndNumero(cepFormatado, numero);
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-
-        if (usuarioOptional.isPresent() && !listaEndereco.isEmpty()) {
-            Usuario usuario = usuarioOptional.get();
-            for (Endereco endereco : listaEndereco) {
-                if (usuario.getEndereco().contains(endereco)) {
-                    return Boolean.TRUE;
-                }
-            }
-        }
-        return Boolean.FALSE;
-    }
-
-    public Endereco getEnderecoPeloCep(String cep) {
-        ViaCepResponse response = this.viaCepClient.getCEP(cep);
-        return EnderecoMapper.of(response);
-    }
-
-    public EnderecoExibicaoDTO atualizarEnderecoDoUsuarioPorId(int idEndereco, Endereco endereco) {
+    public EnderecoExibicaoDTO atualizarEnderecoDoUsuarioPorId(int idEndereco, Endereco enderecoNovo) {
         Optional<Endereco> enderecoOptional = enderecoRepository.findById(idEndereco);
         if (enderecoOptional.isEmpty()) {
-            throw new IllegalArgumentException("Endereço não encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado");
         }
-        endereco.setId(idEndereco);
-        enderecoRepository.save(endereco);
-        return EnderecoMapper.of(endereco);
+        enderecoNovo.setId(idEndereco);
+        enderecoRepository.save(enderecoNovo);
+        return EnderecoMapper.toDTO(enderecoNovo);
     }
 
 
     public void deletarEnderecoDoUsuarioPorId(int idEndereco) {
+        Optional<EnderecoUsuario> enderecoUsuarioOptional = enderecosUsuarioRepository.findEnderecoUsuarioByEndereco_Id(idEndereco);
         Optional<Endereco> enderecoOptional = enderecoRepository.findById(idEndereco);
-        if (enderecoOptional.isEmpty()) {
-            throw new IllegalArgumentException("Endereço não encontrado");
+        if (enderecoOptional.isEmpty() && enderecoUsuarioOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado");
         }
+        enderecosUsuarioRepository.delete(enderecoUsuarioOptional.get());
         enderecoRepository.delete(enderecoOptional.get());
+    }
+
+    public EnderecoExibicaoDTO cadastrarEnderecoAoUsuarioPorId(String cep, String complemento, int idUsuario, int numero) {
+        verificaSeUsuarioExiste(idUsuario);
+
+        if (enderecosUsuarioRepository
+                .existsByEnderecoCepAndEnderecoNumeroAndUsuarioId(StringUtils.formataCep(cep), numero, idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario já possui esse endereço cadastrado");
+        }
+
+        verificaSeUsuarioExiste(idUsuario);
+
+        List<EnderecoUsuario> enderecos =
+                enderecosUsuarioRepository.findEnderecoUsuarioByUsuario_IdOrderByIsAtivo(idUsuario);
+
+        for (EnderecoUsuario enderecoUsuario : enderecos) {
+            enderecoUsuario.setIsAtivo(StatusAtivoEnum.INATIVO);
+        }
+
+        Usuario usuario = usuarioRepository.findById(idUsuario).get();
+        Endereco endereco = cadastrarEndereco(cep, complemento, numero, idUsuario);
+        enderecosUsuarioRepository.save(EnderecoUsuarioMapper.toEntity(endereco, usuario));
+        return EnderecoMapper.toDTO(endereco);
+    }
+
+
+    public Endereco getEnderecoPeloCep(String cep) {
+        ViaCepResponse response = this.viaCepClient.getCEP(cep);
+        if(response.getCep()==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"CEP não encontrado");
+        }
+        return EnderecoMapper.of(response);
+    }
+
+    private void verificaSeUsuarioExiste(int idUsuario) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(idUsuario);
+
+        if (usuarioOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado");
+        }
     }
 }

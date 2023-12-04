@@ -1,7 +1,10 @@
 package culinart.api.funcionario;
 
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
+import culinart.domain.fornecedor.dto.*;
 import culinart.service.funcionario.FuncionarioService;
+import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
+import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.utils.FilaObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,10 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import culinart.domain.fornecedor.Funcionario;
-import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
-import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import java.io.*;
 import java.nio.file.Files;
@@ -37,7 +39,7 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarios);
     }
 
-    @PostMapping("/cadastro")
+    @PostMapping
     public ResponseEntity<FuncionarioExibicaoDTO> cadastrarFuncionario(@RequestBody FuncionarioCriacaoDTO funcionarioCriacao) {
         try {
             return ResponseEntity.status(201).body(funcionarioService.cadastrarFuncionario(funcionarioCriacao));
@@ -54,6 +56,12 @@ public class FuncionarioController {
         }else{
             return ResponseEntity.status(400).build();
         }
+    }
+
+    @PutMapping("/senha/{id}")
+    public ResponseEntity atualizarSenha(@PathVariable Integer id, @RequestBody String senha){
+        funcionarioService.atualizarSenha(id, senha);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
@@ -90,6 +98,21 @@ public class FuncionarioController {
             e.printStackTrace();
             throw new ResponseStatusException(500, "Erro ao ler ou enviar o arquivo CSV", e);
         }
+    }
+
+    @PostMapping("/txt")
+    public ResponseEntity<List<FuncionarioExibicaoDTO>> cadastroTxt(@RequestParam("files") List<MultipartFile> files){
+        List<FuncionarioExibicaoDTO> listaUsersCadastrados = funcionarioService.toFila(files);
+        if (listaUsersCadastrados.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(201).body(listaUsersCadastrados);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<FuncionarioTokenDto> login(@RequestBody FuncionarioLoginDto funcionarioLoginDto) {
+        FuncionarioTokenDto funcionarioTokenDto = this.funcionarioService.autenticar(funcionarioLoginDto);
+        return ResponseEntity.ok(funcionarioTokenDto);
     }
 
 }

@@ -3,11 +3,15 @@ package culinart.api.usuario;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
-import culinart.integration.ViaCep.ViaCepIntegrationService;
-import culinart.integration.ViaCep.dto.ViaCepResponse;
+import culinart.domain.usuario.dto.UsuarioInfoPessoalDTO;
+import culinart.domain.usuario.dto.UsuarioSenhaDTO;
+import culinart.domain.usuario.dto.mapper.UsuarioMapper;
+import culinart.domain.usuarioPreferencia.dto.UsuarioPreferenciaExibicaoDTO;
+import culinart.domain.usuarioPreferencia.dto.mapper.UsuarioPreferenciaMapper;
 import culinart.service.usuario.UsuarioService;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.service.usuario.preferencia.UsuarioPreferenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +20,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
+
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final ViaCepIntegrationService viaCepIntegrationService;
+
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, ViaCepIntegrationService viaCepIntegrationService) {
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        this.viaCepIntegrationService = viaCepIntegrationService;
     }
 
     @GetMapping
@@ -45,25 +49,16 @@ public class UsuarioController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<UsuarioExibicaoDTO> cadastrarUsuario(@RequestBody UsuarioCriacaoDTO usuarioCriacao) {
-        try {
-            return ResponseEntity.status(201).body(
-                    usuarioService.cadastrarUsuario(usuarioCriacao)
-            );
-        } catch (Exception e) {
-            return ResponseEntity.status(400).build();
-        }
+        return ResponseEntity.status(201).body(usuarioService.cadastrarUsuario(usuarioCriacao));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario){
-        if (usuarioService.usuarioIsEmpty(id)) {
-            return ResponseEntity.status(404).build();
-        }
-        return ResponseEntity.status(200).body(usuarioService.atualizarUsuario(id,usuario));
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarUsuario(@PathVariable int id, @RequestBody UsuarioInfoPessoalDTO usuario) {
+        return ResponseEntity.status(200).body(usuarioService.atualizarUsuario(id, usuario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> DesativarUsuario(@PathVariable int id){
+    public ResponseEntity<Void> DesativarUsuario(@PathVariable int id) {
         if (usuarioService.usuarioIsEmpty(id)) {
             return ResponseEntity.status(404).build();
         }
@@ -72,14 +67,49 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDTO){
+    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDTO) {
         UsuarioTokenDTO usuarioTokenDTO = this.usuarioService.autenticar(usuarioLoginDTO);
         return ResponseEntity.ok(usuarioTokenDTO);
     }
 
-    @GetMapping("/buscarCEP")
-    public ResponseEntity<ViaCepResponse> getCEP(@RequestParam String cep) {
-        return ResponseEntity.ok(viaCepIntegrationService.getCEP(cep));
+    @GetMapping("/ativos")
+    public ResponseEntity<List<UsuarioExibicaoDTO>> exibirUsuariosAtivos(){
+        if (usuarioService.exibirUsuariosAtivos().isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.ok(usuarioService.exibirUsuariosAtivos());
+    }
+    @GetMapping("/inativos")
+    public ResponseEntity<List<UsuarioExibicaoDTO>> exibirUsuariosInativos(){
+        if (usuarioService.exibirUsuariosInativos().isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.ok(usuarioService.exibirUsuariosInativos());
     }
 
+    @PatchMapping("/senhas/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> atualizarSenhaUsuario(@PathVariable int idUsuario,@RequestBody UsuarioSenhaDTO usuarioSenhaDTO){
+        //TODO: ARRUMAR ERRO CONTA BLOQUEADA
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.atualizarSenhaUsuario(idUsuario,usuarioSenhaDTO)));
+    }
+
+    @PutMapping("/permissionar/administrador/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioAdministrador(@PathVariable int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioAdministrador(idUsuario)));
+    }
+
+    @PutMapping("/permissionar/cliente/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioCliente(@PathVariable int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioCliente(idUsuario)));
+    }
+
+    @PutMapping("/permissionar/funcionario/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> permissionarUsuarioFuncionario(@PathVariable int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.permissionarUsuarioFuncionario(idUsuario)));
+    }
+
+    @PutMapping("/ativar/{idUsuario}")
+    public ResponseEntity<UsuarioExibicaoDTO> ativarUsuario(@PathVariable int idUsuario){
+        return ResponseEntity.ok(UsuarioMapper.toDTO(usuarioService.ativarUsuario(idUsuario)));
+    }
 }

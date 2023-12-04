@@ -1,14 +1,17 @@
 package culinart.service.usuario;
 
 import culinart.api.usuario.configuration.security.jwt.GerenciadorTokenJwt;
-import culinart.domain.endereco.Endereco;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.dto.UsuarioCriacaoDTO;
 import culinart.domain.usuario.dto.UsuarioExibicaoDTO;
-import culinart.domain.usuario.mapper.UsuarioMapper;
+import culinart.domain.usuario.dto.UsuarioInfoPessoalDTO;
+import culinart.domain.usuario.dto.UsuarioSenhaDTO;
+import culinart.domain.usuario.dto.mapper.UsuarioMapper;
 import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
 import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.utils.enums.PermissaoEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,54 +47,51 @@ public class UsuarioService {
     }
 
     public UsuarioExibicaoDTO cadastrarUsuario(UsuarioCriacaoDTO usuario) {
-        if (buscarUsuarioPorBuscaBinaria(usuario.getEmail())) {
-            throw new IllegalArgumentException("Usuario já cadastrado");
+        if (this.usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Usuario já cadastrado");
         }
-        Usuario novoUsuario = UsuarioMapper.of(usuario);
+        Usuario novoUsuario = UsuarioMapper.toEntity(usuario);
 
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
-
-        return UsuarioMapper.of(usuarioRepository.save(novoUsuario));
+        novoUsuario.setIsAtivo(StatusAtivoEnum.ATIVO);
+        novoUsuario.setPermissao(PermissaoEnum.USUARIO);
+        return UsuarioMapper.toDTO(usuarioRepository.save(novoUsuario));
     }
 
     public List<UsuarioExibicaoDTO> listarTodosOsUsuarios() {
         List<UsuarioExibicaoDTO> lista = new ArrayList<>();
         for (Usuario usuario : usuarioRepository.findAll()) {
-            lista.add(UsuarioMapper.of(usuario));
+            lista.add(UsuarioMapper.toDTO(usuario));
         }
         return lista;
     }
 
     public UsuarioExibicaoDTO listarUsuarioPorId(int id) {
-        return UsuarioMapper.of(usuarioRepository.findById(id).get());
+        return UsuarioMapper.toDTO(usuarioRepository.findById(id).get());
     }
 
 
-    public UsuarioExibicaoDTO atualizarUsuario(int id, Usuario usuario) {
-        usuario.setId(id);
-        Optional<Usuario> usuarioAnterior = usuarioRepository.findById(id);
-        if(usuarioAnterior.isEmpty()){
-            throw new IllegalArgumentException("Usuario não existe");
-        }
-        List<Endereco> listaEndereço = usuarioAnterior.get().getEndereco();
-        usuario.setEndereco(listaEndereço);
-        return UsuarioMapper.of(usuarioRepository.save(usuario));
+    public UsuarioExibicaoDTO atualizarUsuario(int id, UsuarioInfoPessoalDTO usuario) {
+        Usuario usuarioAnterior = usuarioRepository.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
+        Usuario entity = UsuarioMapper.toEntity(usuario);
+        entity.setSenha(usuarioAnterior.getSenha());
+        entity.setId(usuarioAnterior.getId());
+        entity.setPermissao(usuarioAnterior.getPermissao());
+        entity.setEmail(usuarioAnterior.getEmail());
+        entity.setCpf(usuarioAnterior.getCpf());
+        entity.setIsAtivo(usuarioAnterior.getIsAtivo());
+
+
+        return UsuarioMapper.toDTO(usuarioRepository.save(entity));
     }
 
     public void desativarUsuario(int id) {
         Usuario usuarioDesativado = usuarioRepository.findById(id).get();
-        usuarioRepository.delete(usuarioDesativado);
-    }
-
-    public Boolean buscarUsuarioPorBuscaBinaria(String email) {
-        List<Usuario> vetor = usuarioRepository.findAll();
-        for (int i = 0; i < vetor.toArray().length; i++) {
-            if (vetor.get(i).getEmail().equals(email)) {
-                return Boolean.TRUE;
-            }
-        }
-        return Boolean.FALSE;
+        usuarioDesativado.setIsAtivo(StatusAtivoEnum.INATIVO);
+        usuarioRepository.save(usuarioDesativado);
     }
 
     public Boolean buscaNaoPossuiResultado() {
@@ -122,6 +122,71 @@ public class UsuarioService {
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return UsuarioMapper.of(usuarioAutenticado,token);
+        return UsuarioMapper.toDTO(usuarioAutenticado,token);
+    }
+
+    public List<UsuarioExibicaoDTO> exibirUsuariosAtivos() {
+        List<UsuarioExibicaoDTO> lista = new ArrayList<>();
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.ATIVO)) {
+            lista.add(UsuarioMapper.toDTO(usuario));
+        }
+        return lista;
+    }
+
+    public List<UsuarioExibicaoDTO> exibirUsuariosInativos() {
+        List<UsuarioExibicaoDTO> lista = new ArrayList<>();
+        for (Usuario usuario : usuarioRepository.findByIsAtivoEquals(StatusAtivoEnum.INATIVO)) {
+            lista.add(UsuarioMapper.toDTO(usuario));
+        }
+        return lista;
+    }
+
+    public Usuario ativarUsuario(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+
+        usuario.setIsAtivo(StatusAtivoEnum.ATIVO);
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario permissionarUsuarioAdministrador(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+        usuario.setPermissao(PermissaoEnum.ADMINISTRADOR);
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario permissionarUsuarioCliente(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+        usuario.setPermissao(PermissaoEnum.CLIENTE);
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario permissionarUsuarioFuncionario(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+        usuario.setPermissao(PermissaoEnum.FUNCIONARIO);
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario atualizarSenhaUsuario(int idUsuario, UsuarioSenhaDTO usuarioSenhaDTO) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não cadastrado")
+                );
+
+        usuario.setSenha(usuarioSenhaDTO.getSenha());
+        String encode = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(encode);
+        return usuarioRepository.save(usuario);
     }
 }

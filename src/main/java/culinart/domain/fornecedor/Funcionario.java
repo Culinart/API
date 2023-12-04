@@ -1,5 +1,7 @@
 package culinart.domain.fornecedor;
 
+import culinart.utils.enums.PermissaoEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,16 +22,20 @@ public class Funcionario {
     private Integer id;
     private String nome;
     private String email;
-    private String senha;
-    private Integer permissao;
+    @Column(name = "data_contratacao")
+    private LocalDate dataContratacao;
     private String cpf;
     private String tel;
-    private String area;
-    private String cargo;
-    private String turno;
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
+    private String rg;
+    private String cargo;
+    private String turno;
+    @Enumerated(EnumType.STRING)
+    private PermissaoEnum permissao;
+    private String senha;
     @Column(name = "is_ativo")
-    private Integer isAtivo;
+    @Enumerated(EnumType.STRING)
+    private StatusAtivoEnum isAtivo;
     private LocalDate dataCriacao;
 }

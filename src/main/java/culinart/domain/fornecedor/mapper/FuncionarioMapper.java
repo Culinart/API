@@ -4,6 +4,8 @@ import culinart.domain.fornecedor.Funcionario;
 
 import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
 import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
+import culinart.domain.fornecedor.dto.FuncionarioTokenDto;
+import culinart.utils.enums.StatusAtivoEnum;
 
 import java.time.LocalDate;
 
@@ -14,15 +16,16 @@ public class FuncionarioMapper {
 
         func.setNome(funcionarioCriacaoDTO.getNome());
         func.setEmail(funcionarioCriacaoDTO.getEmail());
-        func.setSenha(funcionarioCriacaoDTO.getSenha());
-        func.setPermissao(funcionarioCriacaoDTO.getPermissao());
+        func.setDataContratacao(funcionarioCriacaoDTO.getDataContratacao());
         func.setCpf(funcionarioCriacaoDTO.getCpf());
         func.setTel(funcionarioCriacaoDTO.getTel());
         func.setDataNascimento(funcionarioCriacaoDTO.getDataNascimento());
-        func.setArea(funcionarioCriacaoDTO.getArea());
+        func.setRg(funcionarioCriacaoDTO.getRg());
         func.setCargo(funcionarioCriacaoDTO.getCargo());
         func.setTurno(funcionarioCriacaoDTO.getTurno());
-        func.setIsAtivo(1);
+        func.setPermissao(funcionarioCriacaoDTO.getPermissao());
+        func.setSenha("sptech123");
+        func.setIsAtivo(StatusAtivoEnum.ATIVO);
         func.setDataCriacao(LocalDate.now());
 
         return func;
@@ -33,13 +36,23 @@ public class FuncionarioMapper {
         FuncionarioExibicaoDTO.setId(funcionario.getId());
         FuncionarioExibicaoDTO.setNome(funcionario.getNome());
         FuncionarioExibicaoDTO.setEmail(funcionario.getEmail());
-        FuncionarioExibicaoDTO.setPermissao(funcionario.getPermissao());
         FuncionarioExibicaoDTO.setCpf(funcionario.getCpf());
         FuncionarioExibicaoDTO.setTel(funcionario.getTel());
-        FuncionarioExibicaoDTO.setArea(funcionario.getArea());
         FuncionarioExibicaoDTO.setCargo(funcionario.getCargo());
         FuncionarioExibicaoDTO.setTurno(funcionario.getTurno());
+        FuncionarioExibicaoDTO.setPermissao(funcionario.getPermissao());
 
         return FuncionarioExibicaoDTO;
+    }
+
+    public static FuncionarioTokenDto toFuncionarioTokenDto(Funcionario func, String token){
+        FuncionarioTokenDto funcToken = new FuncionarioTokenDto();
+        funcToken.setFuncId(func.getId());
+        funcToken.setNome(func.getNome());
+        funcToken.setTelefone(func.getTel());
+        funcToken.setPermissao(func.getPermissao());
+        funcToken.setEmail(func.getEmail());
+        funcToken.setToken(token);
+        return funcToken;
     }
 }

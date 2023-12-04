@@ -18,7 +18,7 @@ public class ViaCepIntegrationService {
     public ViaCepResponse getCEP(String cep) {
         try {
             return this.viaCepClient.getCEP(cep);
-        } catch (FeignException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cep não encontrado");
         }

@@ -2,21 +2,33 @@ package culinart.api.endereco;
 
 import culinart.domain.endereco.Endereco;
 import culinart.domain.endereco.dto.EnderecoExibicaoDTO;
-import culinart.domain.endereco.repository.EnderecoRepository;
+import culinart.domain.endereco.usuario.EnderecoUsuario;
+import culinart.domain.endereco.usuario.dto.EnderecoResponseToUsuarioDTO;
+import culinart.domain.endereco.usuario.dto.mapper.EnderecoUsuarioMapper;
+import culinart.integration.ViaCep.ViaCepIntegrationService;
+import culinart.integration.ViaCep.dto.ViaCepResponse;
 import culinart.service.endereco.EnderecoService;
+import culinart.service.endereco.usuario.EnderecoUsuarioService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/enderecos")
 public class EnderecoController {
 
     private final EnderecoService enderecoService;
+    private final ViaCepIntegrationService viaCepIntegrationService;
+    private final EnderecoUsuarioService enderecoUsuarioService;
 
-    public EnderecoController(EnderecoService enderecoService) {
+    public EnderecoController(EnderecoService enderecoService, ViaCepIntegrationService viaCepIntegrationService, EnderecoUsuarioService enderecoUsuarioService) {
         this.enderecoService = enderecoService;
+        this.viaCepIntegrationService = viaCepIntegrationService;
+        this.enderecoUsuarioService = enderecoUsuarioService;
     }
 
     @GetMapping
@@ -29,13 +41,54 @@ public class EnderecoController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarios() {
+        List<EnderecoResponseToUsuarioDTO> enderecoResponseToUsuarioDTOS = enderecoUsuarioService.mostrarTodosEnderecosUsuarios();
+        if (enderecoResponseToUsuarioDTOS.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(enderecoResponseToUsuarioDTOS);
+    }
+
+    @GetMapping("/usuarios/{idUsuario}")
+    public ResponseEntity<List<EnderecoResponseToUsuarioDTO>> getEnderecoUsuarioPorId(@PathVariable int idUsuario) {
+        List<EnderecoResponseToUsuarioDTO> response = new ArrayList<>();
+        for (EnderecoUsuario enderecoUsuario : enderecoUsuarioService.mostrarEnderecoUsuarioPorIdUsuario(idUsuario)) {
+            response.add(EnderecoUsuarioMapper.toDTO(enderecoUsuario));
+        }
+        if (response.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/usuarios/enderecoAtivo/{idUsuario}")
+    public ResponseEntity<EnderecoResponseToUsuarioDTO> getEnderecoAtivoDoUsuario(@PathVariable int idUsuario) {
+        Optional<EnderecoUsuario> enderecoUsuarioAtivo = enderecoUsuarioService.findEnderecoAtivoByUsuarioId(idUsuario);
+
+        if (enderecoUsuarioAtivo.isPresent()) {
+            EnderecoResponseToUsuarioDTO enderecoResponseToUsuarioDTO = EnderecoUsuarioMapper.toDTO(enderecoUsuarioAtivo.get());
+            return ResponseEntity.ok(enderecoResponseToUsuarioDTO);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+
+    @GetMapping("/buscarCEP")
+    public ResponseEntity<ViaCepResponse> getCEP(@RequestParam String cep) {
+        return ResponseEntity.ok(viaCepIntegrationService.getCEP(cep));
+    }
+
     @PostMapping("/{idUsuario}")
     public ResponseEntity<EnderecoExibicaoDTO> cadastrarEnderecoAoUsuarioPorId(
             @PathVariable int idUsuario,
             @RequestParam String cep,
-            @RequestParam int numero
+            @RequestParam int numero,
+            @RequestParam String complemento
     ) {
-        return ResponseEntity.ok(enderecoService.cadastrarEnderecoAoUsuarioPorId(cep, idUsuario, numero));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(enderecoService.cadastrarEnderecoAoUsuarioPorId(cep, complemento, idUsuario, numero));
     }
 
     @PutMapping("/{idEndereco}")
@@ -51,5 +104,11 @@ public class EnderecoController {
         enderecoService.deletarEnderecoDoUsuarioPorId(idEndereco);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("ativar/{idEnderecoUsuario}/{idUsuario}")
+    public ResponseEntity<EnderecoResponseToUsuarioDTO> ativarEnderecoUsuario(@PathVariable int idEnderecoUsuario, @PathVariable int idUsuario) {
+        return ResponseEntity.ok(EnderecoUsuarioMapper.toDTO(enderecoUsuarioService.ativarEnderecoUsuario(idEnderecoUsuario, idUsuario)));
+    }
+
 
 }

@@ -1,23 +1,35 @@
 package culinart.service.funcionario;
 
+import culinart.api.usuario.configuration.security.jwt.GerenciadorTokenJwt;
 import culinart.domain.fornecedor.Funcionario;
-import culinart.domain.fornecedor.dto.FuncionarioCriacaoDTO;
-import culinart.domain.fornecedor.dto.FuncionarioExibicaoDTO;
+import culinart.domain.fornecedor.dto.*;
 import culinart.domain.fornecedor.mapper.FuncionarioMapper;
 import culinart.domain.fornecedor.repository.FuncionarioRepository;
+import culinart.domain.usuario.Usuario;
+import culinart.domain.usuario.dto.mapper.UsuarioMapper;
+import culinart.service.usuario.autenticacao.dto.UsuarioLoginDTO;
+import culinart.service.usuario.autenticacao.dto.UsuarioTokenDTO;
+import culinart.utils.FilaObj;
+import culinart.utils.ListaObj;
+import culinart.utils.enums.PermissaoEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import culinart.domain.fornecedor.dto.FuncionarioDTO;
-import culinart.utils.ListaObj;
-import java.util.List;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -25,8 +37,10 @@ import java.util.Optional;
 public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final PasswordEncoder passwordEncoder;
-
-
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private GerenciadorTokenJwt gerenciadorTokenJwt;
     public List<FuncionarioExibicaoDTO> listarFunc() {
         List<Funcionario> funcionarios = this.funcionarioRepository.findAll();
         return funcionarios.stream()
@@ -39,7 +53,7 @@ public class FuncionarioService {
             throw new IllegalArgumentException("Usuario já cadastrado");
         }
         Funcionario novoFunc = FuncionarioMapper.of(func);
-        String senhaCriptografada = passwordEncoder.encode(func.getSenha());
+        String senhaCriptografada = passwordEncoder.encode(novoFunc.getSenha());
         novoFunc.setSenha(senhaCriptografada);
         return FuncionarioMapper.of(funcionarioRepository.save(novoFunc));
     }
@@ -50,15 +64,7 @@ public class FuncionarioService {
             Funcionario funcionarioExistente = func.get();
             funcionarioExistente.setNome(funcionario.getNome());
             funcionarioExistente.setEmail(funcionario.getEmail());
-            funcionarioExistente.setSenha(passwordEncoder.encode(funcionario.getSenha()));
             funcionarioExistente.setPermissao(funcionario.getPermissao());
-            funcionarioExistente.setCpf(funcionario.getCpf());
-            funcionarioExistente.setTel(funcionario.getTel());
-            funcionarioExistente.setArea(funcionario.getArea());
-            funcionarioExistente.setCargo(funcionario.getCargo());
-            funcionarioExistente.setTurno(funcionario.getTurno());
-            funcionarioExistente.setDataNascimento(funcionario.getDataNascimento());
-            funcionarioExistente.setIsAtivo(funcionario.getIsAtivo());
             Funcionario funcionarioAtualizado = funcionarioRepository.save(funcionarioExistente);
 
             return FuncionarioMapper.of(funcionarioAtualizado);
@@ -66,6 +72,16 @@ public class FuncionarioService {
             System.out.println("Funcionário não encontrado");
             return null;
         }
+    }
+
+    public void atualizarSenha(int id, String senhaNova){
+        Optional<Funcionario> func = funcionarioRepository.findById(id);
+        if (func.isEmpty()){
+            throw new IllegalStateException("FUNCIONARIO NÃO EXISTENTE");
+        }
+        String novaSenha = passwordEncoder.encode(senhaNova);
+        func.get().setSenha(novaSenha);
+        funcionarioRepository.save(func.get());
     }
 
     public String deletarFuncionario(Integer id) {
@@ -232,6 +248,134 @@ public class FuncionarioService {
         }
 
 
+    }
+
+
+    public List<FuncionarioExibicaoDTO> leArquivoTxt(MultipartFile file){
+        BufferedReader entrada = null;
+        String registro, tipoRegistro;
+        String email, nome, cpf, tel, rg, cargo, turno;
+        LocalDate dataContratacao, dataNascimento;
+        PermissaoEnum permissao;
+        int contaRegDadosLidos = 0;
+        int qtdRegDadosGravados;
+        List<FuncionarioExibicaoDTO> listaFuncsAdicionados = new ArrayList<>();
+        try {
+            entrada = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo " + e);
+        }
+
+        try {
+            registro = entrada.readLine();
+            while (registro != null){
+                tipoRegistro = registro.substring(0,2);
+                if (tipoRegistro.equals("00")){
+                    System.out.println("É um registro de header ");
+                    System.out.println("Tipo de arquivo " + registro.substring(2,4));
+                    System.out.println("Data e hora de geração do arquivo " + registro.substring(4,14));
+                    System.out.println("Versão do documento " + registro.substring(14,16));
+                } else if (tipoRegistro.equals("01")) {
+                    System.out.println("É um registro de trailer");
+                    qtdRegDadosGravados= Integer.parseInt(registro.substring(2, 4));
+                    if (contaRegDadosLidos == qtdRegDadosGravados){
+                        System.out.println("Quantidade de registros de dados gravados é compatível com a " +
+                                "quantidade de registros de dados lidos");
+                    }else {
+                        System.out.println("Quantidade de registros de dados gravados é incompatível com a " +
+                                "quantidade de registros de dados lidos");
+                    }
+                }else if (tipoRegistro.equals("02")) {
+                    System.out.println("É um registro de corpo");
+                    System.out.println("É um registro de corpo");
+                    System.out.println("É um registro de corpo");
+                    nome = registro.substring(2, 46).trim();
+                    System.out.println("Nome: " + registro.substring(2, 46));
+                    email = registro.substring(46, 91).trim();
+                    System.out.println("Email: " + registro.substring(46, 91));
+                    dataContratacao = LocalDate.parse(registro.substring(91, 101).trim());
+                    System.out.println("Data de Contratação: " + registro.substring(91, 101));
+                    cpf = registro.substring(101, 112).trim();
+                    System.out.println("CPF: " + registro.substring(101, 112));
+                    tel = registro.substring(112, 123).trim();
+                    System.out.println("Telefone: " + registro.substring(112, 123));
+                    dataNascimento = LocalDate.parse(registro.substring(123, 133).trim());
+                    System.out.println("Data de Nascimento: " + registro.substring(123, 133));
+                    rg = registro.substring(133, 142).trim();
+                    System.out.println("RG: " + registro.substring(133, 142));
+                    cargo = registro.substring(142, 162).trim();
+                    System.out.println("Cargo: " + registro.substring(142, 162));
+                    turno = registro.substring(162, 172).trim();
+                    System.out.println("Turno: " + registro.substring(162, 172));
+                    permissao = PermissaoEnum.valueOf(registro.substring(172, 185).trim());
+                    System.out.println("Permissão: " + registro.substring(172, 185));
+
+
+                    contaRegDadosLidos++;
+                    FuncionarioCriacaoDTO funcCriacao = new FuncionarioCriacaoDTO();
+                    funcCriacao.setNome(nome);
+                    funcCriacao.setEmail(email);
+                    funcCriacao.setDataContratacao(dataContratacao);
+                    funcCriacao.setCpf(cpf);
+                    funcCriacao.setTel(tel);
+                    funcCriacao.setDataNascimento(dataNascimento);
+                    funcCriacao.setRg(rg);
+                    funcCriacao.setCargo(cargo);
+                    funcCriacao.setTurno(turno);
+                    funcCriacao.setPermissao(permissao);
+                    listaFuncsAdicionados.add(cadastrarFuncionario(funcCriacao));
+                }else {
+                    System.out.println("Registro inválido");
+                }
+                registro = entrada.readLine();
+            }
+            entrada.close();
+        }catch (IOException err){
+            System.out.println("Erro ao ler os registros" + err);
+        }
+        return listaFuncsAdicionados;
+    }
+
+
+    public List<FuncionarioExibicaoDTO> toFila(List<MultipartFile> files){
+        FilaObj<MultipartFile> filaDeArquivos = new FilaObj(files.size());
+        for (MultipartFile file : files) {
+            if (!filaDeArquivos.isFull()) {
+                filaDeArquivos.insert(file);
+            } else {
+               throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+        }
+        List<FuncionarioExibicaoDTO> funcionariosCadastrados = new ArrayList<>();
+
+        while (!filaDeArquivos.isEmpty()) {
+            MultipartFile arquivo = filaDeArquivos.poll();
+            List<FuncionarioExibicaoDTO> funcionariosDoArquivo = leArquivoTxt(arquivo);
+            funcionariosCadastrados.addAll(funcionariosDoArquivo); // Adiciona todos os funcionários do arquivo na lista consolidada
+        }
+
+        return funcionariosCadastrados;
+
+    }
+
+    public FuncionarioTokenDto autenticar(FuncionarioLoginDto funcionarioLoginDto){
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                funcionarioLoginDto.getEmail(),funcionarioLoginDto.getSenha()
+        );
+
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        Funcionario usuarioAutenticado =
+                funcionarioRepository.findByEmail(funcionarioLoginDto.getEmail())
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não cadastrado")
+                        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final String token = gerenciadorTokenJwt.generateToken(authentication);
+
+        return FuncionarioMapper.toFuncionarioTokenDto(usuarioAutenticado,token);
     }
 }
 

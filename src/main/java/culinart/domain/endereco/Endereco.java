@@ -1,15 +1,20 @@
 package culinart.domain.endereco;
 
-import culinart.domain.usuario.Usuario;
-import jakarta.persistence.*;
+import culinart.utils.enums.StatusAtivoEnum;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Endereco {
 
     @Id
@@ -24,16 +29,4 @@ public class Endereco {
     private String complemento;
     private int numero;
 
-    public Endereco(String logradouro, String cep, String cidade, String uf, String bairro, String complemento, int numero) {
-        this.logradouro = logradouro;
-        this.cep = cep;
-        this.cidade = cidade;
-        this.uf = uf;
-        this.bairro = bairro;
-        this.complemento = complemento;
-        this.numero = numero;
-    }
-
-    public Endereco() {
-    }
 }
