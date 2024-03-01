@@ -1,27 +1,21 @@
-package culinart.domain.pagamento;
+package culinart.domain.assinatura;
 
 import culinart.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
-@Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pagamento {
+@Getter
+@Setter
+public class Assinatura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int idAssinatura;
+    private int assinaturaId;
     private String statusAssinatura;
-    private int idTransacao;
-    private String statusTransacao;
-    private String linkCobranca;
-    private LocalDate dataExpiracao;
 
     @ManyToOne
     private Usuario usuario;
