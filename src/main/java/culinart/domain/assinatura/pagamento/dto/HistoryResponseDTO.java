@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class HistoryResponseDTO {
     private Integer charge_id;
-    private LocalDate created_at;
+    private String created_at;
     private String status;
 
 }
