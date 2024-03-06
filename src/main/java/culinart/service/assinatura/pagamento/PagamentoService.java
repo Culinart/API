@@ -3,7 +3,6 @@ package culinart.service.assinatura.pagamento;
 import culinart.domain.assinatura.Assinatura;
 import culinart.domain.assinatura.pagamento.Pagamento;
 import culinart.domain.assinatura.pagamento.dto.HistoryResponseDTO;
-import culinart.domain.assinatura.pagamento.dto.StatusPagamentoDTO;
 import culinart.domain.assinatura.repository.AssinaturaRepository;
 import culinart.domain.usuario.Usuario;
 import culinart.domain.usuario.repository.UsuarioRepository;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -138,11 +138,19 @@ public class PagamentoService {
     private static Pagamento getPagamento(Assinatura assinatura, HistoryResponseDTO historyResponseDTO) {
         Pagamento pagamentoParaSalvar = new Pagamento();
         DetailChargeBillet detailChargeBillet = new DetailChargeBillet();
+
+        String linkPagamento =
+                detailChargeBillet.exibirChargeDetail(pagamentoParaSalvar.getTransacaoId()).getLinkPagamento();
+
+        String dataExpiracao =
+                detailChargeBillet.exibirChargeDetail(pagamentoParaSalvar.getTransacaoId()).getDataExpiracao();
+
+
         pagamentoParaSalvar.setTransacaoId(historyResponseDTO.getCharge_id());
         pagamentoParaSalvar.setStatusTransacao(historyResponseDTO.getStatus());
+        pagamentoParaSalvar.setLinkCobranca(linkPagamento);
+        pagamentoParaSalvar.setDataExpiracao(LocalDate.parse(dataExpiracao));
         pagamentoParaSalvar.setAssinatura(assinatura);
-        pagamentoParaSalvar.setLinkCobranca(detailChargeBillet
-                .exibirLinkCobranca(pagamentoParaSalvar.getTransacaoId()));
         return pagamentoParaSalvar;
     }
 }

@@ -2,13 +2,14 @@ package culinart.integration.gerencianet.subscription.map;
 
 import br.com.efi.efisdk.EfiPay;
 import br.com.efi.efisdk.exceptions.EfiPayException;
+import culinart.domain.assinatura.pagamento.dto.ChargeResponsePaymentDTO;
 import culinart.integration.gerencianet.Credentials;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DetailChargeBillet {
-    public String exibirLinkCobranca(Integer idSubscricao) {
+    public ChargeResponsePaymentDTO exibirChargeDetail(Integer idSubscricao) {
         /* *********  Set credential parameters ******** */
 
         Credentials credentials = new Credentials();
@@ -22,12 +23,12 @@ public class DetailChargeBillet {
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(idSubscricao));
-        String linkPagamento = "";
+        ChargeResponsePaymentDTO chargeResponse = new ChargeResponsePaymentDTO();
 
         try {
             EfiPay efi = new EfiPay(options);
             Map<String, Object> response = efi.call("detailCharge", params, new HashMap<String, Object>());
-            linkPagamento = mapearLinkPagamento(response);
+            chargeResponse = mapearChargeResponsePayment(response);
         }catch (EfiPayException e){
             System.out.println(e.getCode());
             System.out.println(e.getError());
@@ -37,14 +38,17 @@ public class DetailChargeBillet {
             System.out.println(e.getMessage());
         }
 
-        return linkPagamento;
+        return chargeResponse;
     }
 
-    public String mapearLinkPagamento(Map<String, Object> response) {
+    public ChargeResponsePaymentDTO mapearChargeResponsePayment(Map<String, Object> response) {
         Map<String, Object> data = (Map<String, Object>) response.get("data");
         Map<String, Object> payment = (Map<String, Object>) data.get("payment");
         Map<String, Object> banking_billet = (Map<String, Object>) payment.get("banking_billet");
-        System.out.println(banking_billet.get("link").toString());
-        return banking_billet.get("link").toString();
+
+        return ChargeResponsePaymentDTO.builder()
+                .dataExpiracao(banking_billet.get("expire_at").toString())
+                .linkPagamento(banking_billet.get("link").toString())
+                .build();
     }
 }
