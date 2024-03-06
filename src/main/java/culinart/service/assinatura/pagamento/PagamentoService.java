@@ -40,7 +40,7 @@ public class PagamentoService {
         List<HistoryResponseDTO> historyResponseDTOList =
                 detailSubscription.exibirListaDePagamentos(assinatura.getAssinaturaId());
 
-        salvarNovoPagamentoNaBase(historyResponseDTOList, pagamentoList, assinatura);
+        recuperarNovosPagamentosParaBase(historyResponseDTOList, pagamentoList, assinatura);
 
         for (HistoryResponseDTO historyResponseDTO : historyResponseDTOList) {
             for (Pagamento pagamento : pagamentoList) {
@@ -120,7 +120,7 @@ public class PagamentoService {
         return false;
     }
 
-    public void salvarNovoPagamentoNaBase(
+    private void recuperarNovosPagamentosParaBase(
             List<HistoryResponseDTO> historyResponseDTOList,
             List<Pagamento> pagamentoList,
             Assinatura assinatura

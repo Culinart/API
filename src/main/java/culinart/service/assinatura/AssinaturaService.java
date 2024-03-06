@@ -2,6 +2,7 @@ package culinart.service.assinatura;
 
 import culinart.domain.assinatura.Assinatura;
 import culinart.domain.assinatura.dto.AssinaturaComPagamentoDTO;
+import culinart.domain.assinatura.dto.AssinaturaDTO;
 import culinart.domain.assinatura.mapper.AssinaturaMapper;
 import culinart.domain.assinatura.repository.AssinaturaRepository;
 import culinart.domain.plano.Plano;
@@ -58,5 +59,15 @@ public class AssinaturaService {
         pagamentoService.criarPagamento(debit.getPagamento(), assinatura);
 
         return debit.getPagamento();
+    }
+
+    public AssinaturaDTO buscarAssinaturaPorUsuario(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
+        Assinatura assinatura = assinaturaRepository.findByUsuario_Id(usuario.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Assinatura não encontrada"));
+
+        return AssinaturaMapper.toDTO(assinatura);
     }
 }

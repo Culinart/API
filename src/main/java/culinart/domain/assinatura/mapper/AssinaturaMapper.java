@@ -12,4 +12,11 @@ public class AssinaturaMapper {
                 .usuario(usuario)
                 .build();
     }
+
+    public static AssinaturaDTO toDTO(Assinatura assinatura) {
+        return AssinaturaDTO.builder()
+                .idAssinatura(assinatura.getAssinaturaId())
+                .statusAssinatura(assinatura.getStatusAssinatura())
+                .build();
+    }
 }
