@@ -58,6 +58,16 @@ public class FuncionarioController {
         }
     }
 
+    @PutMapping("/perfil/{id}")
+    public ResponseEntity<FuncionarioExibicaoDTO> atualizarPerfilFuncionario(@PathVariable Integer id, @RequestBody Funcionario funcionario){
+        FuncionarioExibicaoDTO funcAtt = this.funcionarioService.atualizarPerfilFuncionario(id, funcionario);
+        if (funcAtt != null){
+            return ResponseEntity.status(200).body(funcAtt);
+        }else{
+            return ResponseEntity.status(400).build();
+        }
+    }
+
     @PutMapping("/senha/{id}")
     public ResponseEntity atualizarSenha(@PathVariable Integer id, @RequestBody String senha){
         funcionarioService.atualizarSenha(id, senha);
