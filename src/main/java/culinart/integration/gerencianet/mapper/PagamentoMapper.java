@@ -1,25 +1,21 @@
 package culinart.integration.gerencianet.mapper;
 
-import culinart.domain.pagamento.Pagamento;
-import culinart.domain.usuario.Usuario;
+import culinart.domain.assinatura.Assinatura;
+import culinart.domain.assinatura.pagamento.Pagamento;
 import culinart.integration.gerencianet.subscription.dto.PagamentoDTO;
 
-import java.time.LocalDate;
-
 public class PagamentoMapper {
-    public static Pagamento toEntity(PagamentoDTO pagamentoDTO, Usuario usuario) {
+    public static Pagamento toEntity(PagamentoDTO pagamentoDTO, Assinatura assinatura) {
         if (pagamentoDTO == null) {
             return null;
         }
         return Pagamento.builder()
                 .id(0)
-                .idTransacao(pagamentoDTO.getIdTransacao())
-                .idAssinatura(pagamentoDTO.getIdAssinatura())
+                .transacaoId(pagamentoDTO.getIdTransacao())
                 .dataExpiracao(pagamentoDTO.getDataExpiracao())
                 .linkCobranca(pagamentoDTO.getLinkCobranca())
                 .statusTransacao(pagamentoDTO.getStatusTransacao())
-                .statusAssinatura(pagamentoDTO.getStatusAssinatura())
-                .usuario(usuario)
+                .assinatura(assinatura)
                 .build();
     }
 
@@ -29,9 +25,7 @@ public class PagamentoMapper {
         }
 
         return PagamentoDTO.builder()
-                .idAssinatura(pagamento.getIdAssinatura())
-                .statusAssinatura(pagamento.getStatusAssinatura())
-                .idTransacao(pagamento.getIdTransacao())
+                .idTransacao(pagamento.getTransacaoId())
                 .statusTransacao(pagamento.getStatusTransacao())
                 .linkCobranca(pagamento.getLinkCobranca())
                 .dataExpiracao(pagamento.getDataExpiracao())
