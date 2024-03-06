@@ -10,6 +10,7 @@ import culinart.domain.usuario.repository.UsuarioRepository;
 import culinart.integration.gerencianet.mapper.PagamentoMapper;
 import culinart.integration.gerencianet.repository.PagamentoRepository;
 import culinart.integration.gerencianet.subscription.dto.PagamentoDTO;
+import culinart.integration.gerencianet.subscription.map.DetailChargeBillet;
 import culinart.integration.gerencianet.subscription.map.DetailSubscription;
 import culinart.utils.enums.StatusTransacao;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ public class PagamentoService {
         DetailSubscription detailSubscription = new DetailSubscription();
         List<HistoryResponseDTO> historyResponseDTOList =
                 detailSubscription.exibirListaDePagamentos(assinatura.getAssinaturaId());
+
+        salvarNovoPagamentoNaBase(historyResponseDTOList, pagamentoList, assinatura);
 
         for (HistoryResponseDTO historyResponseDTO : historyResponseDTOList) {
             for (Pagamento pagamento : pagamentoList) {
@@ -115,5 +118,31 @@ public class PagamentoService {
             return true;
         }
         return false;
+    }
+
+    public void salvarNovoPagamentoNaBase(
+            List<HistoryResponseDTO> historyResponseDTOList,
+            List<Pagamento> pagamentoList,
+            Assinatura assinatura
+    ) {
+        for (HistoryResponseDTO historyResponseDTO : historyResponseDTOList) {
+            for (Pagamento pagamento : pagamentoList) {
+                if (!historyResponseDTO.getCharge_id().equals(pagamento.getTransacaoId())) {
+                    Pagamento pagamentoParaSalvar = getPagamento(assinatura, historyResponseDTO);
+                    pagamentoRepository.save(pagamentoParaSalvar);
+                }
+            }
+        }
+    }
+
+    private static Pagamento getPagamento(Assinatura assinatura, HistoryResponseDTO historyResponseDTO) {
+        Pagamento pagamentoParaSalvar = new Pagamento();
+        DetailChargeBillet detailChargeBillet = new DetailChargeBillet();
+        pagamentoParaSalvar.setTransacaoId(historyResponseDTO.getCharge_id());
+        pagamentoParaSalvar.setStatusTransacao(historyResponseDTO.getStatus());
+        pagamentoParaSalvar.setAssinatura(assinatura);
+        pagamentoParaSalvar.setLinkCobranca(detailChargeBillet
+                .exibirLinkCobranca(pagamentoParaSalvar.getTransacaoId()));
+        return pagamentoParaSalvar;
     }
 }
