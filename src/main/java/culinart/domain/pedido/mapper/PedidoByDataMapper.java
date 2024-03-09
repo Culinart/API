@@ -21,6 +21,8 @@ public class PedidoByDataMapper {
         pedido.setDataEntrega(dataSql.toLocalDate());
         String statusString = (String) resultSet.get(0)[3];
         pedido.setStatus(StatusPedidoEnum.valueOf((String) statusString));
+        pedido.setLogradouro((String) resultSet.get(0)[4]);
+        pedido.setNumero((Integer) resultSet.get(0)[5]);
         List<ReceitaExibicaoPedidoDto> receitas = resultSet.stream()
                 .map(PedidoByDataMapper::mapToReceitaDto)
                 .collect(Collectors.toList());
@@ -31,11 +33,11 @@ public class PedidoByDataMapper {
 
     private static ReceitaExibicaoPedidoDto mapToReceitaDto(Object[] row) {
         ReceitaExibicaoPedidoDto receita = new ReceitaExibicaoPedidoDto();
-        receita.setId((Integer) row[4]);
-        receita.setNome((String) row[5]);
-        receita.setHoras((int) row[6]);
-        receita.setMinutos((int) row[7]);
-        receita.setQtd_porcoes(((Number) row[8]).intValue());
+        receita.setId((Integer) row[6]);
+        receita.setNome((String) row[7]);
+        receita.setHoras((int) row[8]);
+        receita.setMinutos((int) row[9]);
+        receita.setQtd_porcoes(((Number) row[10]).intValue());
 
         List<PreferenciaCardDto> preferencias = mapToPreferenciaDto(row);
         receita.setPreferencias(preferencias);
@@ -47,9 +49,9 @@ public class PedidoByDataMapper {
     }
 
     private static List<PreferenciaCardDto> mapToPreferenciaDto(Object[] row) {
-        String[] preferenciasNome = ((String) row[9]).split(",");
-        String[] coresFundo = ((String) row[10]).split(",");
-        String[] coresTexto = ((String) row[11]).split(",");
+        String[] preferenciasNome = ((String) row[11]).split(",");
+        String[] coresFundo = ((String) row[12]).split(",");
+        String[] coresTexto = ((String) row[13]).split(",");
 
         List<PreferenciaCardDto> preferencias = new ArrayList<>();
         for (int i = 0; i < preferenciasNome.length; i++) {

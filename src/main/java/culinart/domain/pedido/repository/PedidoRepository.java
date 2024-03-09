@@ -18,6 +18,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "            p.valor,\n" +
             "            p.data_entrega AS data_entrega,\n" +
             "            p.status,\n" +
+            "            e.logradouro , \n" +
+            "            e.numero , \n" +
             "            r.id AS receita_id,\n" +
             "            r.nome AS nome_receita,\n" +
             "            r.horas,\n" +
@@ -35,6 +37,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "            JOIN receita_preferencia rp ON r.id = rp.receita_id\n" +
             "            JOIN preferencia pref on rp.preferencia_id = pref.id\n" +
             "            JOIN plano pl ON p.plano_id = pl.id\n" +
+            "            JOIN endereco e ON p.endereco_id = e.id \n" +
             "            WHERE\n" +
             "            p.data_entrega = :dataEntrega AND pl.usuario_id = :userId" +
             "            GROUP BY\n" +

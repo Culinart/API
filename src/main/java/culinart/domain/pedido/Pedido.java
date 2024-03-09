@@ -1,5 +1,6 @@
 package culinart.domain.pedido;
 
+import culinart.domain.endereco.Endereco;
 import culinart.domain.plano.Plano;
 import culinart.domain.receita.Receita;
 import culinart.utils.enums.StatusPedidoEnum;
@@ -33,4 +34,7 @@ public class Pedido {
             inverseJoinColumns = @JoinColumn(name = "receita_id")
     )
     private List<Receita> listaReceitas;
+    @ManyToOne
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
 }
