@@ -153,4 +153,8 @@ public class PagamentoService {
         pagamentoParaSalvar.setAssinatura(assinatura);
         return pagamentoParaSalvar;
     }
+
+    public void apagarHistorico(int assinaturaId) {
+        pagamentoRepository.deleteByAssinatura_Id(assinaturaId);
+    }
 }

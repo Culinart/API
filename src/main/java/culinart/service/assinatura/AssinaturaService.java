@@ -34,9 +34,18 @@ public class AssinaturaService {
         return createPlan.criarPlano();
     }
 
-    public void cancelarAssinatura(int idAssinatura) {
+    public void cancelarAssinatura(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado para cobrar pagamento"));
+
+        Assinatura assinatura = assinaturaRepository.findByUsuario_Id(usuario.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Assinatura não encontrada"));
+
         CancelSubscription cancelSubscription = new CancelSubscription();
-        cancelSubscription.cancelarAssinatura(idAssinatura);
+        cancelSubscription.cancelarAssinatura(assinatura.getAssinaturaId());
+
+        pagamentoService.apagarHistorico(assinatura.getId());
+        assinaturaRepository.delete(assinatura);
     }
 
     public void cancelarPlano(int idPlano) {

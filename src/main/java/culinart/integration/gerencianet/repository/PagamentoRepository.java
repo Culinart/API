@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
     List<Pagamento> findByAssinatura_Id(int id);
     List<Pagamento> findByStatusTransacao(String status);
+    void deleteByAssinatura_Id(int AssinaturaId);
 }
