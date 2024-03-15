@@ -44,8 +44,8 @@ public class AssinaturaService {
         CancelSubscription cancelSubscription = new CancelSubscription();
         cancelSubscription.cancelarAssinatura(assinatura.getAssinaturaId());
 
-        pagamentoService.apagarHistorico(assinatura.getId());
-        assinaturaRepository.delete(assinatura);
+        assinatura.setStatusAssinatura("inactive");
+        assinaturaRepository.save(assinatura);
     }
 
     public void cancelarPlano(int idPlano) {
