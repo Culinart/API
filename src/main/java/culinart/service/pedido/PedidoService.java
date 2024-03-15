@@ -1,6 +1,11 @@
 package culinart.service.pedido;
 
 
+import culinart.domain.endereco.Endereco;
+import culinart.domain.endereco.usuario.EnderecoUsuario;
+import culinart.domain.endereco.usuario.dto.EnderecoResponseToUsuarioDTO;
+import culinart.domain.endereco.usuario.dto.mapper.EnderecoUsuarioMapper;
+import culinart.domain.endereco.usuario.repository.EnderecoUsuarioRepository;
 import culinart.domain.pedido.Pedido;
 import culinart.domain.pedido.dto.DeletarReceitaPedidoDto;
 import culinart.domain.pedido.repository.PedidoRepository;
@@ -10,12 +15,15 @@ import culinart.domain.planoCategoria.PlanoCategoria;
 import culinart.domain.receita.Receita;
 import culinart.domain.receita.dto.mapper.ReceitaMapper;
 import culinart.domain.receita.repository.ReceitaRepository;
+import culinart.service.endereco.EnderecoService;
 import culinart.service.plano.categoria.PlanoCategoriaService;
 import culinart.utils.DiaSemanaIngles;
 import culinart.utils.enums.DiaSemanaEnum;
+import culinart.utils.enums.StatusAtivoEnum;
 import culinart.utils.enums.StatusPedidoEnum;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -30,12 +38,14 @@ public class PedidoService {
     private final PlanoRepository planoRepository;
     private final PlanoCategoriaService planoCategoriaService;
     private final ReceitaRepository receitaRepository;
+    private final EnderecoUsuarioRepository enderecoUsuarioRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository, PlanoRepository planoRepository, PlanoCategoriaService planoCategoriaService, ReceitaRepository receitaRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, PlanoRepository planoRepository, PlanoCategoriaService planoCategoriaService, ReceitaRepository receitaRepository, EnderecoUsuarioRepository enderecoUsuarioRepository) {
         this.pedidoRepository = pedidoRepository;
         this.planoRepository = planoRepository;
         this.planoCategoriaService = planoCategoriaService;
         this.receitaRepository = receitaRepository;
+        this.enderecoUsuarioRepository = enderecoUsuarioRepository;
     }
 
     public List<Object[]> nextPedido(Integer idUser, LocalDate dataEntrega){
@@ -114,12 +124,18 @@ public class PedidoService {
         Collections.shuffle(listaReceitasBanco);
 
         List<Receita> tresReceitasAleatorias = listaReceitasBanco.subList(0, Math.min(listaReceitasBanco.size(), 3));
+        Optional<EnderecoUsuario> enderecoUser = enderecoUsuarioRepository.findEnderecoUsuarioAtivo(StatusAtivoEnum.ATIVO , userId);
+        Endereco endereco = null;
+        if (enderecoUser.isPresent()) {
+            endereco = enderecoUser.get().getEndereco();
+        }
         Pedido pedido = new Pedido();
         pedido.setStatus(StatusPedidoEnum.ATIVO);
         pedido.setPlano(plano);
         pedido.setValor(plano.getValorPlano().doubleValue() / 4.0);
         pedido.setDataCriacao(LocalDate.now());
         pedido.setListaReceitas(tresReceitasAleatorias);
+        pedido.setEndereco(endereco);
         if (tipoCriacao.equalsIgnoreCase("Pedido")){
             pedido.setDataEntrega(dataUltimoPedido.plusDays(7));
         }else if (tipoCriacao.equalsIgnoreCase("Plano")){
