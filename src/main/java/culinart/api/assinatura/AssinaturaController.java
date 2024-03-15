@@ -22,7 +22,7 @@ public class AssinaturaController {
         return ResponseEntity.ok(assinaturaService.criarPlano());
     }
 
-    @DeleteMapping("/{idAssinatura}")
+    @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Void> cancelarAssinatura(@PathVariable int idUsuario){
         assinaturaService.cancelarAssinatura(idUsuario);
         return ResponseEntity.noContent().build();
