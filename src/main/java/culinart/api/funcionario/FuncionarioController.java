@@ -69,8 +69,9 @@ public class FuncionarioController {
     }
 
     @PutMapping("/senha/{id}")
-    public ResponseEntity atualizarSenha(@PathVariable Integer id, @RequestBody String senha){
-        funcionarioService.atualizarSenha(id, senha);
+    public ResponseEntity atualizarSenha(@PathVariable Integer id, @RequestBody FuncionarioNovaSenha senha){
+        String senhaNova = senha.getSenhaNova();
+        funcionarioService.atualizarSenha(id, senhaNova);
         return ResponseEntity.ok().build();
     }
 
