@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface AssinaturaRepository extends JpaRepository<Assinatura, Integer> {
     Optional<Assinatura> findByUsuario_Id(Integer id);
 
-    Optional<Assinatura> findByAssinatura_Id(int idAssinatura);
+    Optional<Assinatura> findByAssinaturaId(int idAssinatura);
 }

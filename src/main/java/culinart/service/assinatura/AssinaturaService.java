@@ -36,7 +36,7 @@ public class AssinaturaService {
 
     public void cancelarAssinatura(int idAssinatura) {
 
-        Assinatura assinatura = assinaturaRepository.findByAssinatura_Id(idAssinatura).orElseThrow(() ->
+        Assinatura assinatura = assinaturaRepository.findByAssinaturaId(idAssinatura).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Assinatura não encontrada"));
 
         CancelSubscription cancelSubscription = new CancelSubscription();
