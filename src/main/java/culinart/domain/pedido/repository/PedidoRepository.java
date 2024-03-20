@@ -77,7 +77,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "    JOIN endereco e ON e.id = eu.endereco_id \n" +
             "    JOIN pedido_receita pr ON pr.pedido_id = p.id\n" +
             "    JOIN receita r ON r.id = pr.receita_id\n" +
-            "    WHERE p.data_entrega BETWEEN CURDATE() AND :dataLimite AND p.status = 'ATIVO' \n" +
+            "    WHERE p.data_entrega AND p.status = 'ATIVO' \n" +
             "    AND eu.is_ativo = 'ATIVO'\n" +
             "    GROUP BY p.id, p.data_entrega, u.nome, e.logradouro, e.numero\n" +
             ") AS pedidos_agrupados\n" +
