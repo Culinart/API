@@ -70,21 +70,21 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "        e.logradouro,\n" +
             "        e.numero,\n" +
             "        SUM(r.qtd_porcoes) AS quantidade_porcoes\n" +
-            "    FROM Pedido p\n" +
-            "    JOIN Plano pl ON p.plano_id = pl.id\n" +
-            "    JOIN Usuario u ON pl.usuario_id = u.id\n" +
+            "    FROM pedido p\n" +
+            "    JOIN plano pl ON p.plano_id = pl.id\n" +
+            "    JOIN usuario u ON pl.usuario_id = u.id\n" +
             "    JOIN endereco_usuario eu ON u.id = eu.usuario_id\n" +
             "    JOIN endereco e ON e.id = eu.endereco_id \n" +
-            "    JOIN Pedido_Receita pr ON pr.pedido_id = p.id\n" +
-            "    JOIN Receita r ON r.id = pr.receita_id\n" +
+            "    JOIN pedido_receita pr ON pr.pedido_id = p.id\n" +
+            "    JOIN receita r ON r.id = pr.receita_id\n" +
             "    WHERE p.data_entrega BETWEEN CURDATE() AND :dataLimite AND p.status = 'ATIVO' \n" +
             "    AND eu.is_ativo = 'ATIVO'\n" +
             "    GROUP BY p.id, p.data_entrega, u.nome, e.logradouro, e.numero\n" +
             ") AS pedidos_agrupados\n" +
-            "JOIN Pedido_Receita pr ON pedidos_agrupados.pedido_id = pr.pedido_id\n" +
-            "JOIN Receita receitas ON pr.receita_id = receitas.id\n" +
-            "JOIN Receita_Categoria rc ON rc.receita_id = receitas.id\n" +
-            "JOIN Categoria categorias ON rc.categoria_id = categorias.id\n" +
+            "JOIN pedido_receita pr ON pedidos_agrupados.pedido_id = pr.pedido_id\n" +
+            "JOIN receita receitas ON pr.receita_id = receitas.id\n" +
+            "JOIN receita_categoria rc ON rc.receita_id = receitas.id\n" +
+            "JOIN categoria categorias ON rc.categoria_id = categorias.id\n" +
             "GROUP BY pedidos_agrupados.pedido_id, pedidos_agrupados.data_entrega, pedidos_agrupados.nome_usuario, pedidos_agrupados.logradouro, pedidos_agrupados.numero, pedidos_agrupados.quantidade_porcoes;", nativeQuery = true)
     List<Object[]> findProximosPedidos(LocalDate dataLimite);
 
