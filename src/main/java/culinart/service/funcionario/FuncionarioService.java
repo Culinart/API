@@ -95,7 +95,8 @@ public class FuncionarioService {
         if (func.isEmpty()){
             throw new IllegalStateException("FUNCIONARIO NÃO EXISTENTE");
         }
-        String novaSenha = passwordEncoder.encode(senhaNova);
+        String senhaSemAspas = senhaNova.trim();
+        String novaSenha = passwordEncoder.encode(senhaSemAspas);
         func.get().setSenha(novaSenha);
         funcionarioRepository.save(func.get());
     }
