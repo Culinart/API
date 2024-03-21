@@ -19,9 +19,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("SELECT c.nome, COUNT(pc.preferencia.id) AS total FROM UsuarioPreferencia pc JOIN pc.preferencia c GROUP BY c.nome ORDER BY total DESC")
     List<Object[]> findPreferenciasMaisPresentes();
 
-    @Query("SELECT MONTH(u.dataCriacao) as mes, COUNT(u) as quantidade " +
-            "FROM Usuario u " +
-            "WHERE YEAR(u.dataCriacao) = :ano " +
-            "GROUP BY MONTH(u.dataCriacao)")
+    @Query("SELECT MONTH(dataCriacao) as mes, COUNT(id) as quantidade " +
+            "FROM Usuario " +
+            "WHERE YEAR(dataCriacao) = :ano " +
+            "GROUP BY MONTH(dataCriacao)")
     List<Map<String, Object>>  countNewUserByMonth(int ano);
 }
