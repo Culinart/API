@@ -2,6 +2,8 @@ package culinart.integration.gerencianet.subscription.map;
 
 import br.com.efi.efisdk.EfiPay;
 import br.com.efi.efisdk.exceptions.EfiPayException;
+import culinart.domain.assinatura.dto.AssinaturaComPagamentoDTO;
+import culinart.domain.assinatura.dto.AssinaturaDTO;
 import culinart.domain.plano.Plano;
 import culinart.domain.usuario.Usuario;
 import culinart.integration.gerencianet.Credentials;
@@ -14,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class CreateOneStepBilletSubscription {
-    public PagamentoDTO cobrarPagamento(Usuario usuario, Plano plano) {
+    public AssinaturaComPagamentoDTO criarSubscricao(Usuario usuario, Plano plano) {
 
         /* *********  Set credentials parameters ******** */
         final LocalDate dataVencimentoBoleto = LocalDate.now().plusDays(3);
-        final String idPlano = "107418";
+        final String idPlano = "11726";
 
         Credentials credentials = new Credentials();
         HashMap<String, Object> options = new HashMap<String, Object>();
@@ -68,11 +70,13 @@ public class CreateOneStepBilletSubscription {
         body.put("items", items);
         body.put("metadata", metadata);
 
-        PagamentoDTO pagamentoDTO = null;
+        PagamentoDTO pagamentoDTO = new PagamentoDTO();
+        AssinaturaDTO assinaturaDTO = new AssinaturaDTO();
         try {
             EfiPay efi = new EfiPay(options);
             Map<String, Object> response = efi.call("createOneStepSubscription", params, body);
-            pagamentoDTO = mapearResposta(response);
+            assinaturaDTO = mapearRespostaAssinatura(response);
+            pagamentoDTO = mapearRespostaPagamento(response);
             System.out.println(response);
         } catch (EfiPayException e) {
             System.out.println(e.getCode());
@@ -82,11 +86,25 @@ public class CreateOneStepBilletSubscription {
             System.out.println(e.getMessage());
         }
 
-
-        return pagamentoDTO;
+        AssinaturaComPagamentoDTO debit = new AssinaturaComPagamentoDTO();
+        debit.setAssinatura(assinaturaDTO);
+        debit.setPagamento(pagamentoDTO);
+        return debit;
     }
 
-    public PagamentoDTO mapearResposta(Map<String, Object> response) {
+
+    public AssinaturaDTO mapearRespostaAssinatura(Map<String, Object> response) {
+
+        Map<String, Object> data = (Map<String, Object>) response.get("data");
+
+        AssinaturaDTO assinaturaDTO = new AssinaturaDTO();
+        assinaturaDTO.setIdAssinatura((int) data.get("subscription_id"));
+        assinaturaDTO.setStatusAssinatura((String) data.get("status"));
+
+        return assinaturaDTO;
+    }
+
+    public PagamentoDTO mapearRespostaPagamento(Map<String, Object> response) {
         PagamentoDTO pagamentoDTO = new PagamentoDTO();
 
         Map<String, Object> data = (Map<String, Object>) response.get("data");
@@ -98,11 +116,8 @@ public class CreateOneStepBilletSubscription {
         pagamentoDTO.setLinkCobranca((String) data.get("link"));
         pagamentoDTO.setDataExpiracao(LocalDate.parse((String) data.get("expire_at")));
 
-
-        pagamentoDTO.setIdAssinatura((int) data.get("subscription_id"));
-        pagamentoDTO.setStatusAssinatura((String) data.get("status"));
-
         return pagamentoDTO;
     }
+
 }
 

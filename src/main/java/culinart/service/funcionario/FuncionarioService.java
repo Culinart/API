@@ -74,12 +74,29 @@ public class FuncionarioService {
         }
     }
 
+    public FuncionarioExibicaoDTO atualizarPerfilFuncionario(Integer id, Funcionario funcionario) {
+        Optional<Funcionario> func = funcionarioRepository.findById(id);
+        if (func.isPresent()) {
+            Funcionario funcionarioExistente = func.get();
+            funcionarioExistente.setNome(funcionario.getNome());
+            funcionarioExistente.setEmail(funcionario.getEmail());
+            funcionarioExistente.setTel(funcionario.getTel());
+            Funcionario funcionarioAtualizado = funcionarioRepository.save(funcionarioExistente);
+
+            return FuncionarioMapper.of(funcionarioAtualizado);
+        } else {
+            System.out.println("Funcionário não encontrado");
+            return null;
+        }
+    }
+
     public void atualizarSenha(int id, String senhaNova){
         Optional<Funcionario> func = funcionarioRepository.findById(id);
         if (func.isEmpty()){
             throw new IllegalStateException("FUNCIONARIO NÃO EXISTENTE");
         }
-        String novaSenha = passwordEncoder.encode(senhaNova);
+        String senhaSemAspas = senhaNova.trim();
+        String novaSenha = passwordEncoder.encode(senhaSemAspas);
         func.get().setSenha(novaSenha);
         funcionarioRepository.save(func.get());
     }

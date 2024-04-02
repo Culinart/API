@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PagamentoDTO {
-    private int idAssinatura;
-    private String statusAssinatura;
     private int idTransacao;
     private String statusTransacao;
     private String linkCobranca;
