@@ -26,7 +26,7 @@ public class ReceitaExibicaoDTO {
     private Integer horas;
     private Integer minutos;
     private String descricao;
-    private byte[] imagem;
+    private String imagem;
     private List<IngredienteExibicaoDTO> ingredientes;
     private List<ReceitaCategoriaExibicaoDTO> categorias;
     private List<ReceitaPreferenciaExibicaoDTO> preferencias;

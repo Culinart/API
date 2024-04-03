@@ -76,20 +76,4 @@ public class ReceitaController {
         return ResponseEntity.ok(receitas.stream().map(ReceitaMapper::toDTO).toList());
     }
 
-    @PostMapping("/salvar-imagem/{idReceita}")
-    public ResponseEntity<?> upload(@RequestParam ("imagem") MultipartFile imagem, @PathVariable Integer idReceita) throws IOException{
-        receitaService.adcionarImagemReceita(imagem,idReceita);
-        return ResponseEntity.ok("Imagem recebida com sucesso!");
-    }
-
-    @GetMapping("/imagem/{idReceita}")
-    public ResponseEntity<String> dowload(@PathVariable Integer idReceita) throws DataFormatException {
-
-        String imagem = receitaService.visualizarImagemReceita(idReceita);
-
-        if(imagem == null){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem); //TODO: colocar para jpg dps
-    }
 }
