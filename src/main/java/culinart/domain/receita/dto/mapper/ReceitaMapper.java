@@ -49,6 +49,7 @@ public class ReceitaMapper {
                 .horas(receita.getHoras())
                 .minutos(receita.getMinutos())
                 .descricao(receita.getDescricao())
+                .imagem(receita.getImagem())
                 .ingredientes(ingredientesDTO)
                 .categorias(getCategoriasDTO(receita))
                 .preferencias(getPreferenciasDTO(receita))
