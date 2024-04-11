@@ -34,10 +34,7 @@ public class Receita {
 
     private Integer qtdPorcoes;
 
-    @JsonIgnore // ignoramos no JSON pois não faz sentido retornar um vetor de bytes num JSON!
-    @Column(length = 50 * 1024 * 1024) // 50 Mega Bytes
-    @Lob
-    private byte[] imagem;
+    private String imagem;
 
     @OneToMany
     @JoinColumn(name = "receita_id")

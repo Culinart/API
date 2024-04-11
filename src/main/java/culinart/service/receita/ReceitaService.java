@@ -11,8 +11,6 @@ import culinart.domain.preferencia.Preferencia;
 import culinart.domain.receita.Receita;
 import culinart.domain.receita.dto.ReceitaCadastroDTO;
 import culinart.domain.receita.dto.mapper.ReceitaMapper;
-import culinart.domain.receita.imagem.ImagemReceita;
-import culinart.domain.receita.imagem.repository.ImagemReceitaRepository;
 import culinart.domain.receita.repository.ReceitaRepository;
 import culinart.domain.receitaCategoria.ReceitaCategoria;
 import culinart.domain.receitaCategoria.repository.ReceitaCategoriaRepository;
@@ -22,20 +20,14 @@ import culinart.service.receita.ingrediente.IngredienteService;
 import culinart.service.receita.modoPreparo.ModoPreparoService;
 import culinart.service.receita.receitaCategoria.ReceitaCategoriaService;
 import culinart.service.receita.receitaPreferencia.ReceitaPreferenciaService;
-import culinart.utils.ImageCompressionUtil;
 import culinart.utils.ReceitaSpecifications;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.zip.DataFormatException;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +42,6 @@ public class ReceitaService {
     private final ModoPreparoService modoPreparoService;
     private final ReceitaPreferenciaService receitaPreferenciaService;
     private final ReceitaPreferenciaRepository receitaPreferenciaRepository;
-    private final ImagemReceitaRepository imagemReceitaRepository;
 
     public List<Receita> exibirTodasReceitas() {
         return receitaRepository.findAll();
@@ -284,41 +275,4 @@ List<ModoPreparo> modoPreparosNovos = new ArrayList<>();
         return receitaRepository.findAll(ReceitaSpecifications.porNomeOuIngredienteOuCategoria(termo));
     }
 
-    public String adcionarImagemReceita(MultipartFile imagem, int idReceita) throws IOException {
-
-        Receita receita = receitaRepository.findById(idReceita).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrado"));
-
-        Optional<ImagemReceita> imagemOPT = imagemReceitaRepository.findByReceita_Id(idReceita);
-
-        if(imagemOPT.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receita já possui imagem cadastrada");
-        }
-
-        imagemReceitaRepository.save(ImagemReceita
-                .builder()
-                .nome(imagem.getOriginalFilename())
-                .foto(imagem.getBytes())
-                .receita(receita)
-                .build());
-
-        if(imagem!=null){
-            return "upload com sucesso : "+ imagem.getOriginalFilename();
-        }
-       return null;
-    }
-
-    public String visualizarImagemReceita(Integer idReceita) throws DataFormatException {
-
-        ImagemReceita foto = imagemReceitaRepository.findByReceita_Id(idReceita).orElse(null);
-
-        if (foto != null) {
-            byte[] imagemBytes = foto.getFoto();
-            String imagemBase64 = Base64.encodeBase64String(imagemBytes);
-            return imagemBase64;
-        } else {
-            // Se a imagem não existir, retorne uma imagem padrão ou outra resposta apropriada
-            return null;
-        }
-    }
 }
