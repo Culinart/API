@@ -1,0 +1,14 @@
+00022023-12-04 18:39:3701
+02Lasanha à Bolonhesa                          
+03013,0
+02Risoto de Cogumelos                          
+03024,0
+02Strogonoff de Carne                          
+03014,0
+02Bolo de Chocolate                            
+03024,5
+02Salada Caesar                                
+03024,5
+02Sopa de Legumes                              
+03015,0
+0100006

@@ -67,18 +67,14 @@ public class SecurityConfiguracao {
                 .and()
                 .csrf()
                 .disable()
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(URL_PERMITIDAS)
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().permitAll()  // Permite acesso a todos os endpoints
                 )
                 .exceptionHandling()
                 .authenticationEntryPoint(autenticacaoJwtEntryPoint)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.addFilterBefore(jwtAuthenticationFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
