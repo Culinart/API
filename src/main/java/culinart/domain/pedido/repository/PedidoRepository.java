@@ -25,6 +25,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             "            r.horas,\n" +
             "            r.minutos,\n" +
             "            r.qtd_porcoes,\n" +
+            "            r.imagem,\n" +
             "            GROUP_CONCAT(DISTINCT pref.nome) AS preferencias_nome,\n" +
             "            GROUP_CONCAT(DISTINCT pref.cor_fundo) AS cor_fundo,\n" +
             "            GROUP_CONCAT(DISTINCT pref.cor_texto) AS cor_texto,\n" +

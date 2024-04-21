@@ -38,6 +38,7 @@ public class PedidoByDataMapper {
         receita.setHoras((int) row[8]);
         receita.setMinutos((int) row[9]);
         receita.setQtd_porcoes(((Number) row[10]).intValue());
+        receita.setImagem((String) row[11]);
 
         List<PreferenciaCardDto> preferencias = mapToPreferenciaDto(row);
         receita.setPreferencias(preferencias);

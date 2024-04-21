@@ -39,8 +39,8 @@ public class AssinaturaController {
         return ResponseEntity.ok(assinaturaService.criarAssinatura(idUsuario));
     }
 
-    @GetMapping
-    public ResponseEntity<AssinaturaDTO> buscarAssinaturaPorUsuario(@RequestParam int idUsuario) {
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<AssinaturaDTO> buscarAssinaturaPorUsuario(@PathVariable int idUsuario) {
         return ResponseEntity.ok(assinaturaService.buscarAssinaturaPorUsuario(idUsuario));
     }
 }
