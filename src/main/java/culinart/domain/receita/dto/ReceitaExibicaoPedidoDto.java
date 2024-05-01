@@ -15,4 +15,6 @@ public class ReceitaExibicaoPedidoDto {
     private String imagem;
     private List<PreferenciaCardDto> preferencias;
     private List<CategoriaCardDto> categorias;
+    private Double media_notas;
+    private int qtd_avaliacoes;
 }

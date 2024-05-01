@@ -19,4 +19,5 @@ public class PedidoByDataDto {
     private String logradouro;
     private Integer numero;
     private List<ReceitaExibicaoPedidoDto> listaReceitas;
+
 }
