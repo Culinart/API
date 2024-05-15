@@ -28,9 +28,12 @@ public class PedidoController {
 
 
     @PostMapping("/entrega/{idUser}")
-    public ResponseEntity<PedidoByDataDto> proximoPedido(@PathVariable int idUser, @RequestBody Pedido dataEntrega) {
+    public ResponseEntity<PedidoByDataDto> proximoPedido(@PathVariable int idUser, @RequestBody String dataEntrega) {
 
-        List<Object[]> pedido = pedidoService.nextPedido(idUser, dataEntrega.getDataEntrega());
+        String dataEntregaSemAspas = dataEntrega.substring(1, dataEntrega.length() - 1);
+        LocalDate dataDaEntrega = LocalDate.parse(dataEntregaSemAspas);
+
+        List<Object[]> pedido = pedidoService.nextPedido(idUser, dataDaEntrega);
         if (pedido.isEmpty()){
             return ResponseEntity.noContent().build();
         }

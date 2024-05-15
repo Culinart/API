@@ -29,8 +29,7 @@ public class ReceitaCadastroDTO {
     private Integer minutos;
     private String descricao;
     private Integer qtdPorcoes;
-    @Lob
-    private byte[] imagem;
+    private String imagem;
     private List<IngredienteExibicaoDTO> ingredientes;
     private List<ModoPreparoExibicaoDTO> modoPreparos;
     private List<Categoria> categorias;

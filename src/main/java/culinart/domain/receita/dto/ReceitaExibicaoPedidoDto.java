@@ -12,6 +12,9 @@ public class ReceitaExibicaoPedidoDto {
     private Integer horas;
     private Integer minutos;
     private Integer qtd_porcoes;
+    private String imagem;
     private List<PreferenciaCardDto> preferencias;
     private List<CategoriaCardDto> categorias;
+    private Double media_notas;
+    private int qtd_avaliacoes;
 }

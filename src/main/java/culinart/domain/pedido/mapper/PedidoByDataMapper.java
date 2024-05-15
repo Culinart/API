@@ -6,6 +6,7 @@ import culinart.domain.preferencia.dto.PreferenciaCardDto;
 import culinart.domain.receita.dto.ReceitaExibicaoPedidoDto;
 import culinart.utils.enums.StatusPedidoEnum;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,20 +39,26 @@ public class PedidoByDataMapper {
         receita.setHoras((int) row[8]);
         receita.setMinutos((int) row[9]);
         receita.setQtd_porcoes(((Number) row[10]).intValue());
+        receita.setImagem((String) row[11]);
 
         List<PreferenciaCardDto> preferencias = mapToPreferenciaDto(row);
         receita.setPreferencias(preferencias);
 
         List<CategoriaCardDto> categorias = mapToCategoriaDto(row);
         receita.setCategorias(categorias);
+        BigDecimal bigDecimal = (BigDecimal) row[16];
+        Double valorDouble = bigDecimal.doubleValue();
+        receita.setMedia_notas(valorDouble);
+        long valorLong = (long) row[17];
+        receita.setQtd_avaliacoes(Long.valueOf(valorLong).intValue() );
 
         return receita;
     }
 
     private static List<PreferenciaCardDto> mapToPreferenciaDto(Object[] row) {
-        String[] preferenciasNome = ((String) row[11]).split(",");
-        String[] coresFundo = ((String) row[12]).split(",");
-        String[] coresTexto = ((String) row[13]).split(",");
+        String[] preferenciasNome = ((String) row[12]).split(",");
+        String[] coresFundo = ((String) row[13]).split(",");
+        String[] coresTexto = ((String) row[14]).split(",");
 
         List<PreferenciaCardDto> preferencias = new ArrayList<>();
         for (int i = 0; i < preferenciasNome.length; i++) {
@@ -69,7 +76,7 @@ public class PedidoByDataMapper {
     }
 
     private static List<CategoriaCardDto> mapToCategoriaDto(Object[] row) {
-        String[] categoriasNome = ((String) row[12]).split(",");
+        String[] categoriasNome = ((String) row[15]).split(",");
         List<CategoriaCardDto> categorias = new ArrayList<>();
         for (String nome : categoriasNome) {
             CategoriaCardDto categoria = new CategoriaCardDto();
