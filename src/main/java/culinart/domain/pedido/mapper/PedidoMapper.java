@@ -5,6 +5,9 @@ import culinart.domain.pedido.dto.DatasPedidosDto;
 import culinart.domain.pedido.dto.ProximosPedidosDto;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class PedidoMapper {
     public DatasPedidosDto toDatasPedidosDto(Pedido pedido){
         return new DatasPedidosDto(pedido.getDataEntrega());
@@ -14,7 +17,8 @@ public class PedidoMapper {
         ProximosPedidosDto pedidoDto = new ProximosPedidosDto();
         pedidoDto.setIdPedido((Integer) linha[0]);
         java.sql.Date dataSql = (java.sql.Date) linha[1];
-        pedidoDto.setDataEntrega(dataSql.toLocalDate());
+        Timestamp timestamp = new Timestamp(dataSql.getTime());
+        pedidoDto.setDataEntrega(timestamp.toLocalDateTime().toLocalDate());
         pedidoDto.setNomeUsuario((String) linha[2]);
         pedidoDto.setLogradouro((String) linha[3]);
         pedidoDto.setNumero((Integer) linha[4]);
