@@ -14,7 +14,8 @@ public enum StatusPedidoEnum {
     PENDENTE ("PENDENTE"),
     ATIVO ("ATIVO"),
     ENTREGUE ("ENTREGUE"),
-    CANCELADO ("CANCELADO");
+    CANCELADO ("CANCELADO"),
+    PREPARANDO ("PREPARANDO") ;
 
     private String status;
 

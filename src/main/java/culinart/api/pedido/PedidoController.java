@@ -38,6 +38,16 @@ public class PedidoController {
             return ResponseEntity.noContent().build();
         }
         PedidoByDataDto pedidoFormatado = PedidoByDataMapper.toPedidoByDataDto(pedido);
+
+        LocalDate dataAtual = LocalDate.now();
+        LocalDate tresDiasAntes = dataDaEntrega.minusDays(3);
+        if(dataAtual.isAfter(dataDaEntrega)){
+            pedidoFormatado.setStatus(StatusPedidoEnum.ENTREGUE);
+        }else if (!dataAtual.isBefore(tresDiasAntes) && !dataAtual.isAfter(dataDaEntrega)) {
+            pedidoFormatado.setStatus(StatusPedidoEnum.PREPARANDO);
+        } else {
+            pedidoFormatado.setStatus(StatusPedidoEnum.ATIVO);
+        }
         return ResponseEntity.ok().body(pedidoFormatado);
 
 
