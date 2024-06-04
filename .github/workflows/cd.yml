@@ -1,0 +1,22 @@
+name: "CD - Culinart"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Pull Docker image
+        run: docker pull gabsmvb/culinart:latest
+
+      - name: Stop Docker container
+        run: docker stop culinart || true
+
+      - name: Remove Docker container
+        run: docker rm culinart || true
+
+      - name: Run Docker container
+        run: docker run --name culinart -d -p 8080:8080 gabsmvb/culinart:latest

@@ -4,14 +4,14 @@ services:
 
   back1:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: ../../Dockerfile
     ports:
       - "8080:8080"
 
   back2:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: ../../Dockerfile
     ports:
       - "8081:8080"
